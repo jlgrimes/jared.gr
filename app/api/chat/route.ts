@@ -8,6 +8,15 @@ import {
 } from './utils';
 import { ChatRequest } from './types';
 
+const isPlaceholderSuggestion = (suggestion: string) => {
+  return (
+    suggestion.includes('[Question') ||
+    suggestion === '[Question 1]' ||
+    suggestion === '[Question 2]' ||
+    suggestion === '[Question 3]'
+  );
+};
+
 export async function POST(req: Request) {
   try {
     const {
@@ -53,6 +62,13 @@ Follow-up questions:
     // Extract follow-up questions from the response
     const followUpQuestions = extractFollowUpQuestions(text);
 
+    // Only include suggestions if they're not placeholders
+    const validSuggestions = isInitialGreeting
+      ? generateSuggestions()
+      : isFirstFollowUp
+      ? followUpQuestions.filter(q => !isPlaceholderSuggestion(q))
+      : [];
+
     // Return the response
     return NextResponse.json({
       response: [
@@ -61,11 +77,7 @@ Follow-up questions:
           content: text.split('---')[0].trim(),
         },
       ],
-      suggestions: isInitialGreeting
-        ? generateSuggestions()
-        : isFirstFollowUp
-        ? followUpQuestions
-        : [],
+      suggestions: validSuggestions.length > 0 ? validSuggestions : [],
     });
   } catch (error) {
     console.error('Error generating response:', error);

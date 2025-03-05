@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Message, ChatResponse } from '../types';
+import { Message } from '../types';
 
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -24,8 +24,7 @@ export const useChat = () => {
         }),
       });
 
-      const data: ChatResponse = await response.json();
-      return data;
+      return await response.json();
     } catch (error) {
       console.error('Error:', error);
       throw error;
@@ -45,7 +44,7 @@ export const useChat = () => {
       );
       setMessages(prev => [...prev, ...data.response]);
 
-      if (!hasShownFollowUpSuggestions) {
+      if (!hasShownFollowUpSuggestions && data.suggestions.length > 0) {
         setSuggestions(data.suggestions);
         setHasShownFollowUpSuggestions(true);
       } else {
