@@ -203,7 +203,7 @@ export default function Home() {
                         hover: { duration: 0.1, ease: 'easeOut' },
                       }}
                       onClick={() => handleSuggestionClick(suggestion)}
-                      className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono cursor-pointer'
+                      className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono cursor-pointer'
                     >
                       {suggestion}
                     </motion.button>
@@ -224,13 +224,13 @@ export default function Home() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 placeholder='Ask me anything...'
-                className='flex-1 p-2 text-sm border border-gray-300 dark:border-gray-700 rounded font-mono bg-transparent'
+                className='flex-1 p-2 text-sm border border-gray-300 dark:border-gray-700 rounded-lg font-mono bg-transparent'
                 disabled={isLoading}
               />
               <button
                 type='submit'
                 disabled={isLoading}
-                className='px-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono disabled:opacity-50'
+                className='px-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono disabled:opacity-50'
               >
                 Send
               </button>
