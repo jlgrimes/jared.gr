@@ -19,6 +19,7 @@ export default function Home() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -179,42 +180,37 @@ export default function Home() {
             </div>
 
             <AnimatePresence mode='wait'>
-              {suggestions.length > 0 && (
+              {suggestions.length > 0 && isInputFocused && (
                 <motion.div
                   key='suggestions'
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.2 }}
-                  className='flex flex-col gap-2 mb-4'
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                  className='fixed bottom-[120px] left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 z-50'
                 >
-                  {suggestions.map((suggestion, index) => (
-                    <motion.button
-                      key={suggestion}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      whileHover={{ x: 3 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{
-                        duration: 0.2,
-                        delay: index * 0.1,
-                        ease: [0.4, 0, 0.2, 1],
-                        hover: { duration: 0.1, ease: 'easeOut' },
-                      }}
-                      onClick={() => handleSuggestionClick(suggestion)}
-                      className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono cursor-pointer'
-                    >
-                      {suggestion}
-                    </motion.button>
-                  ))}
+                  <div className='bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg p-2 flex flex-col gap-1'>
+                    {suggestions.map((suggestion, index) => (
+                      <motion.button
+                        key={suggestion}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.1, delay: index * 0.05 }}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className='w-full text-left px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-mono cursor-pointer'
+                      >
+                        {suggestion}
+                      </motion.button>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
             <motion.form
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
               onSubmit={handleSubmit}
               className='flex gap-2'
@@ -223,14 +219,16 @@ export default function Home() {
                 type='text'
                 value={input}
                 onChange={e => setInput(e.target.value)}
+                onFocus={() => setIsInputFocused(true)}
+                onBlur={() => setTimeout(() => setIsInputFocused(false), 200)}
                 placeholder='Ask me anything...'
-                className='flex-1 p-2 text-sm border border-gray-300 dark:border-gray-700 rounded-lg font-mono bg-transparent'
+                className='flex-1 p-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg font-mono bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-colors'
                 disabled={isLoading}
               />
               <button
                 type='submit'
                 disabled={isLoading}
-                className='px-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono disabled:opacity-50'
+                className='px-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-mono disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50'
               >
                 Send
               </button>
