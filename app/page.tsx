@@ -155,7 +155,23 @@ export default function Home() {
                   className='text-left'
                 >
                   <div className='inline-block p-3 rounded-lg bg-gray-100 dark:bg-gray-800'>
-                    <p className='text-sm font-mono'>Thinking...</p>
+                    <div className='flex items-center gap-3'>
+                      <span className='text-xl'>🤔</span>
+                      <div className='flex gap-0.5'>
+                        {[...Array(4)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className='w-1 h-1 rounded-full bg-gray-500 dark:bg-gray-400'
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{
+                              duration: 0.2,
+                              delay: i * 0.3,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               )}
