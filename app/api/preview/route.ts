@@ -27,13 +27,14 @@ async function fetchPreview(url: string): Promise<PreviewData> {
       $('meta[property="og:description"]').attr('content') ||
       'No description available';
 
-    // Get image
-    const image = $('meta[property="og:image"]').attr('content');
+    // Get image - only return if it exists and is valid
+    const imageUrl = $('meta[property="og:image"]').attr('content');
+    const image = imageUrl ? imageUrl : undefined;
 
     return {
       title,
       description,
-      image: image || undefined,
+      image,
     };
   } catch (error) {
     console.error('Error fetching preview:', error);

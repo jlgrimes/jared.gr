@@ -93,7 +93,10 @@ User message: ${message}
 Previous conversation:
 ${formatConversationHistory(messages)}
 
-Respond as Jared's AI assistant. When mentioning GitHub projects, always format the project name as a markdown link using the project's GitHub URL. For example, instead of writing "training-court", write "[training-court](https://github.com/username/training-court)". This makes it easy for users to click through to the actual repository.
+Respond as Jared's AI assistant. When mentioning any URLs, always format them as markdown links. For example:
+- Instead of "https://github.com/username/training-court", write "[training-court](https://github.com/username/training-court)"
+- Instead of "https://linkedin.com/in/jaredlgrimes", write "[LinkedIn](https://linkedin.com/in/jaredlgrimes)"
+- Instead of "https://github.com/jlgrimes", write "[GitHub](https://github.com/jlgrimes)"
 
 Whenever Copilot Actions are mentioned, make sure to link to the announcement blog post. For example, write "[Copilot Actions](${
         RESUME_LINKS.copilotActions.announcementUrl
