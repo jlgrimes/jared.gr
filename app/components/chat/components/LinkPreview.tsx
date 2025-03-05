@@ -3,45 +3,15 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
-import { useState, useEffect } from 'react';
+import { usePreview } from '@/app/hooks/usePreview';
 
 interface LinkPreviewProps {
   href: string;
   children: React.ReactNode;
 }
 
-interface PreviewData {
-  title: string;
-  description: string;
-  image?: string;
-}
-
 export const LinkPreview = ({ href, children }: LinkPreviewProps) => {
-  const [preview, setPreview] = useState<PreviewData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchPreview = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(
-          `/api/preview?url=${encodeURIComponent(href)}`
-        );
-        const data = await response.json();
-        setPreview(data);
-      } catch (error) {
-        console.error('Error fetching preview:', error);
-        setPreview({
-          title: new URL(href).hostname,
-          description: 'Failed to load preview',
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPreview();
-  }, [href]);
+  const { preview, isLoading } = usePreview(href);
 
   return (
     <HoverCard>
@@ -57,11 +27,13 @@ export const LinkPreview = ({ href, children }: LinkPreviewProps) => {
       </HoverCardTrigger>
       <HoverCardContent className='w-80'>
         <div className='space-y-2'>
-          <h4 className='text-sm font-semibold'>{preview?.title}</h4>
-          <p className='text-sm text-muted-foreground'>
-            {isLoading ? 'Loading preview...' : preview?.description}
-          </p>
-          {preview?.image && (
+          <div className='space-y-1'>
+            <h4 className='text-sm font-semibold'>{preview.title}</h4>
+            <p className='text-sm text-muted-foreground'>
+              {isLoading ? 'Loading preview...' : preview.description}
+            </p>
+          </div>
+          {preview.image && (
             <img
               src={preview.image}
               alt={preview.title}
