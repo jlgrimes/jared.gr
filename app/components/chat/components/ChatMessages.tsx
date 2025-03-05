@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Message } from '../types';
+import ReactMarkdown from 'react-markdown';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -12,6 +13,12 @@ export const ChatMessages = ({
   isLoading,
   containerRef,
 }: ChatMessagesProps) => {
+  // Debug log to see the message content
+  console.log(
+    'Messages:',
+    messages.map(m => ({ role: m.role, content: m.content }))
+  );
+
   return (
     <div
       ref={containerRef}
@@ -39,9 +46,22 @@ export const ChatMessages = ({
                   : 'bg-gray-100 dark:bg-gray-800'
               }`}
             >
-              <p className='text-sm font-mono whitespace-pre-wrap'>
-                {message.content}
-              </p>
+              <div className='text-sm font-mono prose dark:prose-invert max-w-none'>
+                <ReactMarkdown
+                  components={{
+                    a: ({ ...props }) => (
+                      <a
+                        {...props}
+                        className='text-blue-600 dark:text-blue-400 underline underline-offset-2 hover:text-blue-800 dark:hover:text-blue-300'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                      />
+                    ),
+                  }}
+                >
+                  {message.content}
+                </ReactMarkdown>
+              </div>
             </motion.div>
           </motion.div>
         ))}

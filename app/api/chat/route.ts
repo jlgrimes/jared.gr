@@ -8,6 +8,7 @@ import {
 } from './utils';
 import { ChatRequest } from './types';
 import { INITIAL_GREETING_PROMPT } from './constants';
+import { getGitHubProjects } from '@/app/data/github';
 
 const isPlaceholderSuggestion = (suggestion: string) => {
   return (
@@ -53,6 +54,8 @@ export async function POST(req: Request) {
 
     // Only fetch GitHub data for project-related questions that aren't the initial greeting
     let githubData = externalData.githubProjects;
+    let projectUrls = '';
+
     if (
       message !== INITIAL_GREETING_PROMPT &&
       isProjectRelatedQuestion(message) &&
@@ -65,6 +68,10 @@ export async function POST(req: Request) {
       );
       const data = await response.json();
       githubData = data.githubProjects;
+
+      // Get project URLs for the prompt
+      const projects = await getGitHubProjects();
+      projectUrls = projects.map(p => `${p.name}: ${p.url}`).join('\n');
     }
 
     // Generate initial response
@@ -73,6 +80,8 @@ export async function POST(req: Request) {
 
 ${githubData}
 
+${projectUrls ? `\nProject GitHub URLs:\n${projectUrls}\n` : ''}
+
 ${externalData.relevantKnowledge}
 
 User message: ${message}
@@ -80,7 +89,7 @@ User message: ${message}
 Previous conversation:
 ${formatConversationHistory(messages)}
 
-Respond as Jared's AI assistant. If asked about side projects, always provide a detailed example of one project, explaining what it does and why it's interesting.
+Respond as Jared's AI assistant. When mentioning GitHub projects, always format the project name as a markdown link using the project's GitHub URL. For example, instead of writing "training-court", write "[training-court](https://github.com/username/training-court)". This makes it easy for users to click through to the actual repository.
 
 ${
   isFirstFollowUp
@@ -97,6 +106,9 @@ Follow-up questions:
     const response = await initialResponse.response;
     const text = response.text();
 
+    // Debug log to see the response content
+    console.log('Response text:', text);
+
     // Check if this is the initial greeting message
     const isInitialGreeting = text.includes("Hi, I'm Jared 👋");
 
@@ -110,12 +122,15 @@ Follow-up questions:
       ? followUpQuestions.filter(q => !isPlaceholderSuggestion(q))
       : [];
 
+    // Process the response text to ensure markdown links are preserved
+    const processedText = text.split('---')[0].trim().replace(/\n/g, '  \n'); // Add two spaces before newlines to preserve line breaks
+
     // Return the response
     return NextResponse.json({
       response: [
         {
           role: 'assistant',
-          content: text.split('---')[0].trim(),
+          content: processedText,
         },
       ],
       suggestions: validSuggestions.length > 0 ? validSuggestions : [],

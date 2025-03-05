@@ -33,6 +33,7 @@ export const ChatInput = ({
         animate={{
           width: isInputFocused ? 'calc(100% - 4rem)' : '100%',
         }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
         className='relative'
       >
         <Input
@@ -52,18 +53,27 @@ export const ChatInput = ({
         />
       </motion.div>
       <motion.div
+        initial={{ opacity: 0, width: 0 }}
         animate={{
           opacity: isInputFocused ? 1 : 0,
-          width: isInputFocused ? '4rem' : '0',
+          width: isInputFocused ? 'auto' : 0,
+        }}
+        transition={{
+          type: isInputFocused ? 'spring' : 'tween',
+          stiffness: 400,
+          damping: 15,
+          mass: 0.6,
+          duration: 0.15,
         }}
         className='overflow-hidden'
       >
         <Button
           type='submit'
           disabled={!input.trim() || isLoading}
-          className='w-full font-mono'
+          variant='outline'
+          className='font-mono cursor-pointer whitespace-nowrap'
         >
-          Send
+          Ask
         </Button>
       </motion.div>
     </motion.form>

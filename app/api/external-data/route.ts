@@ -34,8 +34,9 @@ export async function GET(req: Request) {
       for (const project of githubProjects) {
         const details = projectDetails[project.name];
         const activity = getProjectContext(project.updatedAt);
+        const projectLink = `[${project.name}](${project.url})`;
 
-        githubProjectsText += `${project.name} (${activity}): `;
+        githubProjectsText += `${projectLink} (${activity}): `;
 
         if (details) {
           githubProjectsText += `${details.description}. `;

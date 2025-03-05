@@ -1,8 +1,12 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
+
+.markdown > * {
+  all: revert;
+}
 
 @theme inline {
   --color-background: var(--background);
