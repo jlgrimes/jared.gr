@@ -13,6 +13,11 @@ export const knowledgeData: KnowledgeData = {
     'Born on August 12th, 2000',
     'Graduated from West Bloomfield High School (2013-2017)',
     'Graduated from University of Michigan with a BSE in Computer Science from the College of Engineering (2017-2020)',
+    'From Michigan',
+    'Has two younger sisters as only siblings',
+    'Has perfect (absolute) pitch',
+    'Enjoys composing and arranging songs for band in free time',
+    'Enjoys painting in free time',
   ],
   interests: [
     'Deep knowledge of Pokemon games, mechanics, and competitive play',
