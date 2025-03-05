@@ -4,6 +4,7 @@ import {
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import { usePreview } from '@/app/hooks/usePreview';
+import Image from 'next/image';
 
 interface LinkPreviewProps {
   href: string;
@@ -27,19 +28,24 @@ export const LinkPreview = ({ href, children }: LinkPreviewProps) => {
       </HoverCardTrigger>
       <HoverCardContent className='w-80'>
         <div className='space-y-2'>
+          {preview.image && (
+            <div className='relative w-full h-32'>
+              <Image
+                src={preview.image}
+                alt={preview.title}
+                fill
+                sizes='320px'
+                className='object-cover rounded-md'
+                unoptimized
+              />
+            </div>
+          )}
           <div className='space-y-1'>
             <h4 className='text-sm font-semibold'>{preview.title}</h4>
             <p className='text-sm text-muted-foreground'>
               {isLoading ? 'Loading preview...' : preview.description}
             </p>
           </div>
-          {preview.image && (
-            <img
-              src={preview.image}
-              alt={preview.title}
-              className='w-full h-32 object-cover rounded-md'
-            />
-          )}
         </div>
       </HoverCardContent>
     </HoverCard>

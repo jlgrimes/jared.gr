@@ -22,7 +22,7 @@ export function usePreview(href: string) {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateIfStale: false,
-      revalidateOnMount: false,
+      revalidateOnMount: true,
       dedupingInterval: Infinity,
       keepPreviousData: true,
     }
