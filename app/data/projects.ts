@@ -7,6 +7,27 @@ export interface ProjectDetails {
 }
 
 export const projectDetails: Record<string, ProjectDetails> = {
+  'jared.gr': {
+    name: 'jared.gr',
+    description:
+      "It's the website you're using right now! An AI-powered personal website unlike any other",
+    features: [
+      'AI-powered chat interface for natural conversation',
+      'Real-time link previews with hover cards',
+      'Dynamic project showcase with GitHub integration',
+      'Beautiful animations and transitions',
+    ],
+    technologies: [
+      'TypeScript',
+      'React',
+      'Next.js',
+      'Tailwind CSS',
+      'Google AI',
+      'SWR',
+    ],
+    purpose:
+      'Create an engaging and interactive personal website that showcases my work and personality through AI-powered conversations',
+  },
   'training-court': {
     name: 'training-court',
     description:
