@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Message } from '../types';
 import ReactMarkdown from 'react-markdown';
 import { LinkPreview } from './LinkPreview';
+import React from 'react';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -53,6 +54,16 @@ export const ChatMessages = ({
                     a: ({ href, children }) => (
                       <LinkPreview href={href || ''}>{children}</LinkPreview>
                     ),
+                    p: ({ children }) => {
+                      // If the only child is a LinkPreview, return it directly
+                      if (
+                        React.Children.count(children) === 1 &&
+                        React.isValidElement(children)
+                      ) {
+                        return children;
+                      }
+                      return <p>{children}</p>;
+                    },
                   }}
                 >
                   {message.content}
