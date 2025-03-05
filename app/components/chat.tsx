@@ -237,9 +237,9 @@ export default function Chat() {
           type='submit'
           disabled={isLoading}
           variant='outline'
-          className='font-mono'
+          className='font-mono cursor-pointer'
         >
-          Send
+          Ask
         </Button>
       </motion.form>
     </div>
