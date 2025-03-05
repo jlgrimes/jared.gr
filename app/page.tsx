@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -119,48 +120,79 @@ export default function Home() {
               ref={chatContainerRef}
               className='flex-1 overflow-y-auto border border-gray-200 dark:border-gray-800 rounded-lg mb-4 p-4'
             >
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`mb-4 ${
-                    message.role === 'user' ? 'text-right' : 'text-left'
-                  }`}
-                >
-                  <div
-                    className={`inline-block p-3 rounded-lg ${
-                      message.role === 'user'
-                        ? 'bg-blue-100 dark:bg-blue-900'
-                        : 'bg-gray-100 dark:bg-gray-800'
+              <AnimatePresence initial={false}>
+                {messages.map((message, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.2 }}
+                    className={`mb-4 ${
+                      message.role === 'user' ? 'text-right' : 'text-left'
                     }`}
                   >
-                    <p className='text-sm font-mono'>{message.content}</p>
-                  </div>
-                </div>
-              ))}
+                    <motion.div
+                      initial={{ scale: 0.95 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.2 }}
+                      className={`inline-block p-3 rounded-lg ${
+                        message.role === 'user'
+                          ? 'bg-blue-100 dark:bg-blue-900'
+                          : 'bg-gray-100 dark:bg-gray-800'
+                      }`}
+                    >
+                      <p className='text-sm font-mono'>{message.content}</p>
+                    </motion.div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
               {isLoading && (
-                <div className='text-left'>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className='text-left'
+                >
                   <div className='inline-block p-3 rounded-lg bg-gray-100 dark:bg-gray-800'>
                     <p className='text-sm font-mono'>Thinking...</p>
                   </div>
-                </div>
+                </motion.div>
               )}
             </div>
 
-            {suggestions.length > 0 && (
-              <div className='flex flex-col gap-2 mb-4'>
-                {suggestions.map((suggestion, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {suggestions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.2 }}
+                  className='flex flex-col gap-2 mb-4'
+                >
+                  {suggestions.map((suggestion, index) => (
+                    <motion.button
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.2, delay: index * 0.1 }}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
+                    >
+                      {suggestion}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            <form onSubmit={handleSubmit} className='flex gap-2'>
+            <motion.form
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+              onSubmit={handleSubmit}
+              className='flex gap-2'
+            >
               <input
                 type='text'
                 value={input}
@@ -176,7 +208,7 @@ export default function Home() {
               >
                 Send
               </button>
-            </form>
+            </motion.form>
           </div>
         </div>
       </div>
