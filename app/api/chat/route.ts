@@ -1,28 +1,10 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from '@/app/data/resume';
-import { getGitHubProjects } from '@/app/data/github';
 import { knowledgeData } from '@/app/data/knowledge';
-import { externalKnowledge } from '@/app/data/external-knowledge';
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-
-// Function to get relevant external knowledge based on the message
-const getRelevantKnowledge = (message: string): string => {
-  const relevantKnowledge = externalKnowledge.filter(knowledge =>
-    message.toLowerCase().includes(knowledge.topic.toLowerCase())
-  );
-
-  if (relevantKnowledge.length === 0) return '';
-
-  return `\nRelevant External Knowledge:\n${relevantKnowledge
-    .map(
-      knowledge =>
-        `Topic: ${knowledge.topic}\nDescription: ${knowledge.description}\nReference: ${knowledge.url}`
-    )
-    .join('\n\n')}`;
-};
 
 // This is your knowledge base about Jared
 const KNOWLEDGE_BASE = `
@@ -121,7 +103,11 @@ interface Message {
 
 export async function POST(req: Request) {
   try {
-    const { message, messages = [] } = await req.json();
+    const {
+      message,
+      messages = [],
+      externalData = { githubProjects: '', relevantKnowledge: '' },
+    } = await req.json();
 
     // Get the Gemini model
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-lite' });
@@ -135,49 +121,13 @@ export async function POST(req: Request) {
       ];
     };
 
-    // Start loading GitHub data in parallel
-    const githubPromise = getGitHubProjects();
-
-    // Try to get GitHub data if it's available
-    let githubProjects = '';
-    try {
-      const projects = await githubPromise;
-      if (projects) {
-        // Group Pokemon TCG related projects
-        const ptcgProjects = projects.filter(
-          p =>
-            p.name.toLowerCase().includes('ptcg') ||
-            p.name.toLowerCase().includes('pokemon') ||
-            p.name.toLowerCase().includes('tcg') ||
-            p.name.toLowerCase().includes('deck') ||
-            p.name.toLowerCase().includes('sim')
-        );
-
-        // Group other projects
-        const otherProjects = projects.filter(p => !ptcgProjects.includes(p));
-
-        githubProjects = `\nSide Projects (from GitHub):\nI've been working on a bunch of fun side projects! Most of them are Pokemon TCG related - I've built several simulators and tools like ${ptcgProjects
-          .map(p => p.name)
-          .join(
-            ', '
-          )}. I've also built some other cool stuff like ${otherProjects
-          .map(p => p.name)
-          .join(', ')}.`;
-      }
-    } catch (error) {
-      console.error('Error loading GitHub projects:', error);
-    }
-
-    // Get relevant external knowledge
-    const relevantKnowledge = getRelevantKnowledge(message);
-
-    // Generate initial response without waiting for GitHub data
+    // Generate initial response
     const initialResponse = await model.generateContent(
       `${SYSTEM_PROMPT}
 
-${githubProjects}
+${externalData.githubProjects}
 
-${relevantKnowledge}
+${externalData.relevantKnowledge}
 
 User message: ${message}
 
@@ -206,7 +156,7 @@ Follow-up questions:
         .match(/---\nFollow-up questions:\n1\. (.*?)\n2\. (.*?)\n3\. (.*?)$/m)
         ?.slice(1) || [];
 
-    // Return the response with GitHub data if available
+    // Return the response
     return NextResponse.json({
       response: [
         {
@@ -217,7 +167,6 @@ Follow-up questions:
       suggestions: isInitialGreeting
         ? generateSuggestions()
         : followUpQuestions,
-      githubProjects,
     });
   } catch (error) {
     console.error('Error generating response:', error);
