@@ -12,7 +12,24 @@ interface LinkPreviewProps {
 }
 
 export const LinkPreview = ({ href, children }: LinkPreviewProps) => {
-  const { preview, isLoading } = usePreview(href);
+  const { preview } = usePreview(href);
+
+  // Don't render hover card if preview failed to load or is still loading
+  if (
+    preview.description === 'Failed to load preview' ||
+    preview.description === 'Loading preview...'
+  ) {
+    return (
+      <a
+        href={href}
+        className='text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full'
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        {children}
+      </a>
+    );
+  }
 
   return (
     <HoverCard>
@@ -43,7 +60,7 @@ export const LinkPreview = ({ href, children }: LinkPreviewProps) => {
           <div className='space-y-1'>
             <h4 className='text-sm font-semibold'>{preview.title}</h4>
             <p className='text-sm text-muted-foreground'>
-              {isLoading ? 'Loading preview...' : preview.description}
+              {preview.description}
             </p>
           </div>
         </div>
