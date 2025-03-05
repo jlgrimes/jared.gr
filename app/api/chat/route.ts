@@ -71,7 +71,10 @@ export async function POST(req: Request) {
 
       // Get project URLs for the prompt
       const projects = await getGitHubProjects();
-      projectUrls = projects.map(p => `${p.name}: ${p.url}`).join('\n');
+      const projectLinks = projects
+        .map(project => `[${project.name}](${project.url})`)
+        .join(', ');
+      projectUrls = projectLinks;
     }
 
     // Generate initial response

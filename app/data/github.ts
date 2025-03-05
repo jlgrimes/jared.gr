@@ -10,6 +10,7 @@ export interface GitHubProject {
   language: string | null;
   stars: number | undefined;
   url: string;
+  githubUrl: string;
   topics: string[];
   updatedAt: string | null;
 }
@@ -27,7 +28,8 @@ export async function getGitHubProjects(): Promise<GitHubProject[]> {
       description: repo.description,
       language: repo.language || null,
       stars: repo.stargazers_count,
-      url: repo.html_url,
+      url: repo.homepage || repo.html_url,
+      githubUrl: repo.html_url,
       topics: repo.topics || [],
       updatedAt: repo.updated_at || null,
     }));
