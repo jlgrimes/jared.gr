@@ -60,7 +60,7 @@ export default function Chat({ className = '' }: ChatProps) {
       />
 
       <ChatSuggestions
-        suggestions={suggestions}
+        suggestions={input.trim() === '' ? suggestions : []}
         isInputFocused={isInputFocused}
         onSuggestionClick={handleSuggestionClick}
       />
