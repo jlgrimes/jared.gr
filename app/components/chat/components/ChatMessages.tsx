@@ -33,13 +33,15 @@ export const ChatMessages = ({
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.2 }}
-              className={`inline-block p-3 rounded-xl ${
+              className={`inline-block max-w-[85%] p-3 rounded-xl ${
                 message.role === 'user'
                   ? 'bg-blue-100 dark:bg-blue-900'
                   : 'bg-gray-100 dark:bg-gray-800'
               }`}
             >
-              <p className='text-sm font-mono'>{message.content}</p>
+              <p className='text-sm font-mono whitespace-pre-wrap'>
+                {message.content}
+              </p>
             </motion.div>
           </motion.div>
         ))}
