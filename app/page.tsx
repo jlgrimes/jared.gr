@@ -178,9 +178,10 @@ export default function Home() {
               )}
             </div>
 
-            <AnimatePresence>
+            <AnimatePresence mode='wait'>
               {suggestions.length > 0 && (
                 <motion.div
+                  key='suggestions'
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
@@ -189,10 +190,15 @@ export default function Home() {
                 >
                   {suggestions.map((suggestion, index) => (
                     <motion.button
-                      key={index}
+                      key={suggestion}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.2, delay: index * 0.1 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{
+                        duration: 0.2,
+                        delay: index * 0.1,
+                        ease: [0.4, 0, 0.2, 1],
+                      }}
                       onClick={() => handleSuggestionClick(suggestion)}
                       className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
                     >
