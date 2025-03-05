@@ -236,25 +236,48 @@ export default function Chat() {
         onSubmit={handleSubmit}
         className='flex gap-2'
       >
-        <Input
-          ref={inputRef}
-          type='text'
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setTimeout(() => setIsInputFocused(false), 200)}
-          placeholder='Ask me anything...'
-          disabled={isLoading}
-          className='font-mono'
-        />
-        <Button
-          type='submit'
-          disabled={isLoading}
-          variant='outline'
-          className='font-mono cursor-pointer'
+        <motion.div
+          animate={{
+            width: isInputFocused ? 'calc(100% - 4rem)' : '100%',
+          }}
+          transition={{ duration: 0.2, ease: 'easeInOut' }}
+          className='relative'
         >
-          Ask
-        </Button>
+          <Input
+            ref={inputRef}
+            type='text'
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
+            placeholder='Ask me anything...'
+            disabled={isLoading}
+            className='font-mono w-full'
+          />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, width: 0 }}
+          animate={{
+            opacity: isInputFocused ? 1 : 0,
+            width: isInputFocused ? 'auto' : 0,
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 15,
+            mass: 0.6,
+          }}
+          className='overflow-hidden'
+        >
+          <Button
+            type='submit'
+            disabled={isLoading}
+            variant='outline'
+            className='font-mono cursor-pointer whitespace-nowrap'
+          >
+            Ask
+          </Button>
+        </motion.div>
       </motion.form>
     </div>
   );
