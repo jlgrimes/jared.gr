@@ -23,16 +23,18 @@ export async function getGitHubProjects(): Promise<GitHubProject[]> {
       per_page: 100,
     });
 
-    return repos.map(repo => ({
-      name: repo.name,
-      description: repo.description,
-      language: repo.language || null,
-      stars: repo.stargazers_count,
-      url: repo.homepage || repo.html_url,
-      githubUrl: repo.html_url,
-      topics: repo.topics || [],
-      updatedAt: repo.updated_at || null,
-    }));
+    return repos
+      .filter(repo => (repo.size ?? 0) > 0) // Filter out empty repositories
+      .map(repo => ({
+        name: repo.name,
+        description: repo.description,
+        language: repo.language || null,
+        stars: repo.stargazers_count,
+        url: repo.homepage || repo.html_url,
+        githubUrl: repo.html_url,
+        topics: repo.topics || [],
+        updatedAt: repo.updated_at || null,
+      }));
   } catch (error) {
     console.error('Error fetching GitHub projects:', error);
     return [];
