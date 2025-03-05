@@ -46,7 +46,6 @@ Contact:
 - LinkedIn: ${resumeData.contact.linkedin}
 - GitHub: ${resumeData.contact.github}
 - Email: ${resumeData.contact.email}
-- Phone: ${resumeData.contact.phone}
 
 Interests and Knowledge:
 ${knowledgeData.interests.map((item: string) => `- ${item}`).join('\n')}
@@ -111,54 +110,7 @@ export async function POST(req: Request) {
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-lite' });
 
     // Generate context-aware suggestions based on the conversation
-    const generateSuggestions = (latestResponse: string) => {
-      // Check if this is the initial greeting message
-      const isInitialGreeting = latestResponse.includes("Hi, I'm Jared 👋");
-
-      // For the initial greeting, always use default suggestions
-      if (isInitialGreeting) {
-        return [
-          'What are you currently working on at Microsoft?',
-          'What side projects are you working on?',
-          'How much experience do you have as a software engineer?',
-        ];
-      }
-
-      // Use the latest response to determine relevant follow-up questions
-      if (
-        latestResponse.includes('Microsoft') ||
-        latestResponse.includes('Copilot')
-      ) {
-        return [
-          "What's your favorite part about working on Copilot?",
-          "What's the most challenging aspect of your role?",
-          "What's the most exciting project you've worked on?",
-        ];
-      }
-
-      if (
-        latestResponse.includes('projects') ||
-        latestResponse.includes('GitHub')
-      ) {
-        return [
-          'Tell me more about your MI Symptoms project',
-          'What technologies do you use most often?',
-          "What's your favorite programming language?",
-        ];
-      }
-
-      if (
-        latestResponse.includes('experience') ||
-        latestResponse.includes('background')
-      ) {
-        return [
-          'What was your first programming job?',
-          'How did you get started in software engineering?',
-          "What's your favorite part about being a software engineer?",
-        ];
-      }
-
-      // Default suggestions for new conversations
+    const generateSuggestions = () => {
       return [
         'What are you currently working on at Microsoft?',
         'What side projects are you working on?',
@@ -210,16 +162,39 @@ User message: ${message}
 Previous conversation:
 ${messages.map((m: Message) => `${m.role}: ${m.content}`).join('\n')}
 
-Respond as Jared's AI assistant. If asked about side projects, always provide a detailed example of one project, explaining what it does and why it's interesting.`
+Respond as Jared's AI assistant. If asked about side projects, always provide a detailed example of one project, explaining what it does and why it's interesting.
+
+After your response, on a new line, add:
+---
+Follow-up questions:
+1. [Question 1]
+2. [Question 2]
+3. [Question 3]`
     );
 
     const response = await initialResponse.response;
     const text = response.text();
 
+    // Check if this is the initial greeting message
+    const isInitialGreeting = text.includes("Hi, I'm Jared 👋");
+
+    // Extract follow-up questions from the response
+    const followUpQuestions =
+      text
+        .match(/---\nFollow-up questions:\n1\. (.*?)\n2\. (.*?)\n3\. (.*?)$/m)
+        ?.slice(1) || [];
+
     // Return the response with GitHub data if available
     return NextResponse.json({
-      response: [{ role: 'assistant', content: text }],
-      suggestions: generateSuggestions(text),
+      response: [
+        {
+          role: 'assistant',
+          content: text.split('---')[0].trim(),
+        },
+      ],
+      suggestions: isInitialGreeting
+        ? generateSuggestions()
+        : followUpQuestions,
       githubProjects,
     });
   } catch (error) {
