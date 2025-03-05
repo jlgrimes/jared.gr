@@ -64,6 +64,22 @@ export const ChatMessages = ({
                       }
                       return <p>{children}</p>;
                     },
+                    // Handle block elements
+                    div: ({ children }) => <div>{children}</div>,
+                    // Prevent nesting of block elements in paragraphs
+                    blockquote: ({ children }) => (
+                      <blockquote>{children}</blockquote>
+                    ),
+                    pre: ({ children }) => <pre>{children}</pre>,
+                    ul: ({ children }) => <ul>{children}</ul>,
+                    ol: ({ children }) => <ol>{children}</ol>,
+                    li: ({ children }) => <li>{children}</li>,
+                    table: ({ children }) => <table>{children}</table>,
+                    thead: ({ children }) => <thead>{children}</thead>,
+                    tbody: ({ children }) => <tbody>{children}</tbody>,
+                    tr: ({ children }) => <tr>{children}</tr>,
+                    th: ({ children }) => <th>{children}</th>,
+                    td: ({ children }) => <td>{children}</td>,
                   }}
                 >
                   {message.content}

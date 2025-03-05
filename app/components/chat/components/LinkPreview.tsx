@@ -47,7 +47,7 @@ export const LinkPreview = ({ href, children }: LinkPreviewProps) => {
         <HoverCardContent className='w-80'>
           <div className='space-y-2'>
             {preview.image && (
-              <div className='relative w-full h-32'>
+              <span className='relative block w-full h-32'>
                 <Image
                   src={preview.image}
                   alt={preview.title}
@@ -56,7 +56,7 @@ export const LinkPreview = ({ href, children }: LinkPreviewProps) => {
                   className='object-cover rounded-md'
                   unoptimized
                 />
-              </div>
+              </span>
             )}
             <div className='space-y-1'>
               <h4 className='text-sm font-semibold'>{preview.title}</h4>
