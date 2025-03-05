@@ -53,6 +53,9 @@ export async function POST(req: Request) {
       isFirstFollowUp = false,
     }: ChatRequest = await req.json();
 
+    const areSuggestionsDisabled = true;
+    const shouldFetchSuggestions = isFirstFollowUp && !areSuggestionsDisabled;
+
     // Only fetch GitHub data for project-related questions that aren't the initial greeting
     let githubData = externalData.githubProjects;
     let projectUrls = '';
@@ -107,7 +110,7 @@ Whenever MI Symptoms is mentioned, make sure to link to the announcement. For ex
       })".
 
 ${
-  isFirstFollowUp
+  shouldFetchSuggestions
     ? `After your response, on a new line, add:
 ---
 Follow-up questions:
@@ -133,7 +136,7 @@ Follow-up questions:
     // Only include suggestions if they're not placeholders
     const validSuggestions = isInitialGreeting
       ? generateSuggestions()
-      : isFirstFollowUp
+      : shouldFetchSuggestions
       ? followUpQuestions.filter(q => !isPlaceholderSuggestion(q))
       : [];
 

@@ -41,6 +41,7 @@ async function fetchPreview(url: string): Promise<PreviewData> {
     return {
       title: new URL(url).hostname,
       description: 'Failed to load preview',
+      image: undefined,
     };
   }
 }
