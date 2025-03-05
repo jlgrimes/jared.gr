@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -17,6 +17,18 @@ export default function Home() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
     const fetchInitialMessage = async () => {
@@ -76,6 +88,7 @@ export default function Home() {
 
   const handleSuggestionClick = async (suggestion: string) => {
     setIsLoading(true);
+    setMessages(prev => [...prev, { role: 'user', content: suggestion }]);
 
     try {
       const response = await fetch('/api/chat', {
@@ -88,11 +101,7 @@ export default function Home() {
       });
 
       const data: ChatResponse = await response.json();
-      setMessages(prev => [
-        ...prev,
-        { role: 'user', content: suggestion },
-        ...data.response,
-      ]);
+      setMessages(prev => [...prev, ...data.response]);
       setSuggestions(data.suggestions);
     } catch (error) {
       console.error('Error:', error);
@@ -106,7 +115,10 @@ export default function Home() {
       <div className='container mx-auto px-4 py-8 h-screen flex flex-col'>
         <div className='max-w-2xl mx-auto w-full flex flex-col h-[calc(100vh-4rem)]'>
           <div className='flex-1 flex flex-col min-h-0'>
-            <div className='flex-1 overflow-y-auto border border-gray-200 dark:border-gray-800 rounded-lg mb-4 p-4'>
+            <div
+              ref={chatContainerRef}
+              className='flex-1 overflow-y-auto border border-gray-200 dark:border-gray-800 rounded-lg mb-4 p-4'
+            >
               {messages.map((message, index) => (
                 <div
                   key={index}
