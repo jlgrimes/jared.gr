@@ -194,13 +194,16 @@ export default function Home() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
+                      whileHover={{ x: 3 }}
+                      whileTap={{ scale: 0.98 }}
                       transition={{
                         duration: 0.2,
                         delay: index * 0.1,
                         ease: [0.4, 0, 0.2, 1],
+                        hover: { duration: 0.1, ease: 'easeOut' },
                       }}
                       onClick={() => handleSuggestionClick(suggestion)}
-                      className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
+                      className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono cursor-pointer'
                     >
                       {suggestion}
                     </motion.button>
