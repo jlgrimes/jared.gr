@@ -44,7 +44,7 @@ export const LinkPreview = ({ href, children }: LinkPreviewProps) => {
             {children}
           </a>
         </HoverCardTrigger>
-        <HoverCardContent className='w-80'>
+        <HoverCardContent className='w-80' align='start' sideOffset={5}>
           <div className='space-y-2'>
             {preview.image && (
               <span className='relative block w-full h-32'>
