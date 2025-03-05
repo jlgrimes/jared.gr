@@ -23,7 +23,6 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      // TODO: Replace with actual API call
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -31,10 +30,7 @@ export default function Home() {
       });
 
       const data = await response.json();
-      setMessages(prev => [
-        ...prev,
-        { role: 'assistant', content: data.response },
-      ]);
+      setMessages(prev => [...prev, ...data.response]);
     } catch (error) {
       console.error('Error:', error);
     } finally {
