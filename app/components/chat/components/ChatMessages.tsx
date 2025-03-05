@@ -34,7 +34,7 @@ export const ChatMessages = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className={`mb-4 ${
+            className={`mb-6 ${
               message.role === 'user' ? 'text-right' : 'text-left'
             }`}
           >
@@ -42,13 +42,13 @@ export const ChatMessages = ({
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.2 }}
-              className={`inline-block max-w-[85%] p-3 rounded-xl ${
+              className={`inline-block max-w-[85%] p-4 rounded-xl ${
                 message.role === 'user'
                   ? 'bg-blue-100 dark:bg-blue-900'
                   : 'bg-gray-100 dark:bg-gray-800'
               }`}
             >
-              <div className='text-sm font-mono prose dark:prose-invert max-w-none'>
+              <div className='text-sm font-mono prose dark:prose-invert max-w-none leading-relaxed'>
                 <ReactMarkdown
                   components={{
                     a: ({ href, children }) => (
