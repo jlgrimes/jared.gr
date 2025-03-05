@@ -149,7 +149,7 @@ export default function Chat() {
     <div className='flex-1 flex flex-col min-h-0'>
       <div
         ref={chatContainerRef}
-        className='flex-1 overflow-y-auto  rounded-lg mb-4 p-4'
+        className='flex-1 overflow-y-auto rounded-xl mb-4 p-4'
       >
         <AnimatePresence initial={false}>
           {messages.map((message, index) => (
@@ -167,7 +167,7 @@ export default function Chat() {
                 initial={{ scale: 0.95 }}
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.2 }}
-                className={`inline-block p-3 rounded-lg ${
+                className={`inline-block p-3 rounded-xl ${
                   message.role === 'user'
                     ? 'bg-blue-100 dark:bg-blue-900'
                     : 'bg-gray-100 dark:bg-gray-800'
@@ -185,7 +185,7 @@ export default function Chat() {
             exit={{ opacity: 0 }}
             className='text-left'
           >
-            <div className='inline-block p-3 rounded-lg bg-gray-100 dark:bg-gray-800'>
+            <div className='inline-block p-3 rounded-xl bg-gray-100 dark:bg-gray-800'>
               <div className='flex items-center gap-3'>
                 <span className='text-xl'>🤔</span>
                 <div className='flex gap-0.5'>
