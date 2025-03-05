@@ -270,10 +270,11 @@ export default function Chat() {
             width: isInputFocused ? 'auto' : 0,
           }}
           transition={{
-            type: 'spring',
+            type: isInputFocused ? 'spring' : 'tween',
             stiffness: 400,
             damping: 15,
             mass: 0.6,
+            duration: 0.15,
           }}
           className='overflow-hidden'
         >
