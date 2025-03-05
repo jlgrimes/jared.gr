@@ -1,12 +1,51 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 export default function Home() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    const userMessage: Message = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      // TODO: Replace with actual API call
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: input }),
+      });
+
+      const data = await response.json();
+      setMessages(prev => [
+        ...prev,
+        { role: 'assistant', content: data.response },
+      ]);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className='min-h-screen bg-white dark:bg-gray-900'>
-      {/* Hero Section */}
-      <section className='container mx-auto px-4 py-8'>
-        <div className='flex flex-col items-center text-center'>
+      <div className='container mx-auto px-4 py-8'>
+        <div className='flex flex-col items-center mb-8'>
           <div className='relative w-16 h-16 mb-4'>
             <Image
               src='/profile.jpg'
@@ -17,103 +56,59 @@ export default function Home() {
             />
           </div>
           <h1 className='text-2xl font-mono mb-1'>Jared Grimes</h1>
-          <p className='text-sm text-gray-600 dark:text-gray-400 mb-4 font-mono'>
-            Software Engineer
-          </p>
-          <div className='flex gap-2'>
-            <Link
-              href='#contact'
-              className='px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
-            >
-              Contact
-            </Link>
-            <Link
-              href='#projects'
-              className='px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
-            >
-              Projects
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section className='container mx-auto px-4 py-8'>
-        <div className='max-w-xl mx-auto'>
-          <p className='text-sm text-gray-600 dark:text-gray-400 leading-relaxed font-mono'>
-            I&apos;m a software engineer focused on building elegant solutions
-            to complex problems. Currently working with modern web technologies
-            and always exploring new tools and frameworks.
+          <p className='text-sm text-gray-600 dark:text-gray-400 font-mono'>
+            Ask me anything
           </p>
         </div>
-      </section>
 
-      {/* Projects Section */}
-      <section id='projects' className='container mx-auto px-4 py-8'>
-        <h2 className='text-sm font-mono mb-4 text-center text-gray-600 dark:text-gray-400'>
-          Selected Projects
-        </h2>
-        <div className='grid md:grid-cols-2 gap-4 max-w-2xl mx-auto'>
-          {[
-            {
-              title: 'Project 1',
-              description: 'A brief description of your first project',
-              tech: 'React, Node.js, MongoDB',
-            },
-            {
-              title: 'Project 2',
-              description: 'A brief description of your second project',
-              tech: 'Next.js, TypeScript, Tailwind',
-            },
-          ].map(project => (
-            <div
-              key={project.title}
-              className='p-3 border border-gray-200 dark:border-gray-800 rounded'
-            >
-              <h3 className='text-sm font-mono mb-1'>{project.title}</h3>
-              <p className='text-sm text-gray-600 dark:text-gray-400 mb-1 font-mono'>
-                {project.description}
-              </p>
-              <p className='text-xs text-gray-500 dark:text-gray-500 font-mono'>
-                {project.tech}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id='contact' className='container mx-auto px-4 py-8'>
-        <h2 className='text-sm font-mono mb-4 text-center text-gray-600 dark:text-gray-400'>
-          Get in Touch
-        </h2>
-        <div className='max-w-sm mx-auto'>
-          <div className='flex flex-col gap-1'>
-            <a
-              href='mailto:your.email@example.com'
-              className='text-sm text-center p-2 border border-gray-200 dark:border-gray-800 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
-            >
-              Email
-            </a>
-            <a
-              href='https://github.com/yourusername'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-sm text-center p-2 border border-gray-200 dark:border-gray-800 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
-            >
-              GitHub
-            </a>
-            <a
-              href='https://linkedin.com/in/yourusername'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-sm text-center p-2 border border-gray-200 dark:border-gray-800 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
-            >
-              LinkedIn
-            </a>
+        <div className='max-w-2xl mx-auto'>
+          <div className='border border-gray-200 dark:border-gray-800 rounded-lg h-[60vh] overflow-y-auto mb-4 p-4'>
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`mb-4 ${
+                  message.role === 'user' ? 'text-right' : 'text-left'
+                }`}
+              >
+                <div
+                  className={`inline-block p-3 rounded-lg ${
+                    message.role === 'user'
+                      ? 'bg-blue-100 dark:bg-blue-900'
+                      : 'bg-gray-100 dark:bg-gray-800'
+                  }`}
+                >
+                  <p className='text-sm font-mono'>{message.content}</p>
+                </div>
+              </div>
+            ))}
+            {isLoading && (
+              <div className='text-left'>
+                <div className='inline-block p-3 rounded-lg bg-gray-100 dark:bg-gray-800'>
+                  <p className='text-sm font-mono'>Thinking...</p>
+                </div>
+              </div>
+            )}
           </div>
+
+          <form onSubmit={handleSubmit} className='flex gap-2'>
+            <input
+              type='text'
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder='Ask me anything...'
+              className='flex-1 p-2 text-sm border border-gray-300 dark:border-gray-700 rounded font-mono bg-transparent'
+              disabled={isLoading}
+            />
+            <button
+              type='submit'
+              disabled={isLoading}
+              className='px-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono disabled:opacity-50'
+            >
+              Send
+            </button>
+          </form>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
