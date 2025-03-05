@@ -141,6 +141,11 @@ export async function POST(req: Request) {
           content: text.trim(),
         },
       ],
+      suggestions: [
+        'What are you currently working on at Microsoft?',
+        'What projects are you working on?',
+        'How much experience do you have as a software engineer?',
+      ],
     });
   } catch (error) {
     console.error('Error:', error);

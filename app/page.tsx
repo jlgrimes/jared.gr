@@ -1,17 +1,22 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
 
+interface ChatResponse {
+  response: Message[];
+  suggestions: string[];
+}
+
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchInitialMessage = async () => {
@@ -26,8 +31,9 @@ export default function Home() {
           }),
         });
 
-        const data = await response.json();
+        const data: ChatResponse = await response.json();
         setMessages(data.response);
+        setSuggestions(data.suggestions);
       } catch (error) {
         console.error('Error:', error);
       } finally {
@@ -54,8 +60,33 @@ export default function Home() {
         body: JSON.stringify({ message: input }),
       });
 
-      const data = await response.json();
+      const data: ChatResponse = await response.json();
       setMessages(prev => [...prev, ...data.response]);
+      setSuggestions(data.suggestions);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSuggestionClick = async (suggestion: string) => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: suggestion }),
+      });
+
+      const data: ChatResponse = await response.json();
+      setMessages(prev => [
+        ...prev,
+        { role: 'user', content: suggestion },
+        ...data.response,
+      ]);
+      setSuggestions(data.suggestions);
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -65,25 +96,9 @@ export default function Home() {
 
   return (
     <div className='min-h-screen bg-white dark:bg-gray-900'>
-      <div className='container mx-auto px-4 py-8'>
-        <div className='flex flex-col items-center mb-8'>
-          <div className='relative w-16 h-16 mb-4'>
-            <Image
-              src='/profile.jpg'
-              alt='Profile picture'
-              fill
-              className='rounded-full object-cover'
-              priority
-            />
-          </div>
-          <h1 className='text-2xl font-mono mb-1'>Jared Grimes</h1>
-          <p className='text-sm text-gray-600 dark:text-gray-400 font-mono'>
-            Ask me anything
-          </p>
-        </div>
-
-        <div className='max-w-2xl mx-auto'>
-          <div className='border border-gray-200 dark:border-gray-800 rounded-lg h-[60vh] overflow-y-auto mb-4 p-4'>
+      <div className='container mx-auto px-4 py-8 h-screen flex flex-col'>
+        <div className='max-w-2xl mx-auto w-full flex flex-col flex-1'>
+          <div className='border border-gray-200 dark:border-gray-800 rounded-lg overflow-y-auto flex-1 mb-4 p-4'>
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -110,6 +125,20 @@ export default function Home() {
               </div>
             )}
           </div>
+
+          {suggestions.length > 0 && (
+            <div className='flex flex-col gap-2 mb-4'>
+              {suggestions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className='flex gap-2'>
             <input
