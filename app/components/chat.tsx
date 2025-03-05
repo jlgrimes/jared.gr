@@ -22,6 +22,8 @@ export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isInputFocused, setIsInputFocused] = useState(true);
+  const [hasShownFollowUpSuggestions, setHasShownFollowUpSuggestions] =
+    useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -86,12 +88,18 @@ export default function Chat() {
         body: JSON.stringify({
           message: input,
           messages: [...messages, userMessage],
+          isFirstFollowUp: !hasShownFollowUpSuggestions,
         }),
       });
 
       const data: ChatResponse = await response.json();
       setMessages(prev => [...prev, ...data.response]);
-      setSuggestions(data.suggestions);
+      if (!hasShownFollowUpSuggestions) {
+        setSuggestions(data.suggestions);
+        setHasShownFollowUpSuggestions(true);
+      } else {
+        setSuggestions([]);
+      }
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -110,12 +118,18 @@ export default function Chat() {
         body: JSON.stringify({
           message: suggestion,
           messages: [...messages, { role: 'user', content: suggestion }],
+          isFirstFollowUp: !hasShownFollowUpSuggestions,
         }),
       });
 
       const data: ChatResponse = await response.json();
       setMessages(prev => [...prev, ...data.response]);
-      setSuggestions(data.suggestions);
+      if (!hasShownFollowUpSuggestions) {
+        setSuggestions(data.suggestions);
+        setHasShownFollowUpSuggestions(true);
+      } else {
+        setSuggestions([]);
+      }
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -127,7 +141,7 @@ export default function Chat() {
     <div className='flex-1 flex flex-col min-h-0'>
       <div
         ref={chatContainerRef}
-        className='flex-1 overflow-y-auto border border-gray-200 dark:border-gray-800 rounded-lg mb-4 p-4'
+        className='flex-1 overflow-y-auto  rounded-lg mb-4 p-4'
       >
         <AnimatePresence initial={false}>
           {messages.map((message, index) => (

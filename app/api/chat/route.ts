@@ -109,6 +109,7 @@ export async function POST(req: Request) {
       message,
       messages = [],
       externalData = { githubProjects: '', relevantKnowledge: '' },
+      isFirstFollowUp = false,
     } = await req.json();
 
     // Get the Gemini model
@@ -138,12 +139,16 @@ ${messages.map((m: Message) => `${m.role}: ${m.content}`).join('\n')}
 
 Respond as Jared's AI assistant. If asked about side projects, always provide a detailed example of one project, explaining what it does and why it's interesting.
 
-After your response, on a new line, add:
+${
+  isFirstFollowUp
+    ? `After your response, on a new line, add:
 ---
 Follow-up questions:
 1. [Question 1]
 2. [Question 2]
 3. [Question 3]`
+    : ''
+}`
     );
 
     const response = await initialResponse.response;
@@ -168,7 +173,9 @@ Follow-up questions:
       ],
       suggestions: isInitialGreeting
         ? generateSuggestions()
-        : followUpQuestions,
+        : isFirstFollowUp
+        ? followUpQuestions
+        : [],
     });
   } catch (error) {
     console.error('Error generating response:', error);
