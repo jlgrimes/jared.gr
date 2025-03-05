@@ -3,9 +3,26 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from '@/app/data/resume';
 import { getGitHubProjects } from '@/app/data/github';
 import { knowledgeData } from '@/app/data/knowledge';
+import { externalKnowledge } from '@/app/data/external-knowledge';
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+
+// Function to get relevant external knowledge based on the message
+const getRelevantKnowledge = (message: string): string => {
+  const relevantKnowledge = externalKnowledge.filter(knowledge =>
+    message.toLowerCase().includes(knowledge.topic.toLowerCase())
+  );
+
+  if (relevantKnowledge.length === 0) return '';
+
+  return `\nRelevant External Knowledge:\n${relevantKnowledge
+    .map(
+      knowledge =>
+        `Topic: ${knowledge.topic}\nDescription: ${knowledge.description}\nReference: ${knowledge.url}`
+    )
+    .join('\n\n')}`;
+};
 
 // This is your knowledge base about Jared
 const KNOWLEDGE_BASE = `
@@ -151,11 +168,16 @@ export async function POST(req: Request) {
       console.error('Error loading GitHub projects:', error);
     }
 
+    // Get relevant external knowledge
+    const relevantKnowledge = getRelevantKnowledge(message);
+
     // Generate initial response without waiting for GitHub data
     const initialResponse = await model.generateContent(
       `${SYSTEM_PROMPT}
 
 ${githubProjects}
+
+${relevantKnowledge}
 
 User message: ${message}
 
