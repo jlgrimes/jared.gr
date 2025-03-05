@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -22,10 +24,6 @@ export default function Chat() {
   const [isInputFocused, setIsInputFocused] = useState(true);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -64,6 +62,13 @@ export default function Chat() {
 
     fetchInitialMessage();
   }, []);
+
+  // Separate effect to handle focus after initial message loads
+  useEffect(() => {
+    if (messages.length > 0 && !isLoading) {
+      inputRef.current?.focus();
+    }
+  }, [messages, isLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -200,7 +205,7 @@ export default function Chat() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.1, delay: index * 0.05 }}
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className='w-full text-left px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-mono cursor-pointer'
+                  className='w-full text-left px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer font-mono'
                 >
                   {suggestion}
                 </motion.button>
@@ -217,7 +222,7 @@ export default function Chat() {
         onSubmit={handleSubmit}
         className='flex gap-2'
       >
-        <input
+        <Input
           ref={inputRef}
           type='text'
           value={input}
@@ -225,16 +230,17 @@ export default function Chat() {
           onFocus={() => setIsInputFocused(true)}
           onBlur={() => setTimeout(() => setIsInputFocused(false), 200)}
           placeholder='Ask me anything...'
-          className='flex-1 p-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg font-mono bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-colors'
           disabled={isLoading}
+          className='font-mono'
         />
-        <button
+        <Button
           type='submit'
           disabled={isLoading}
-          className='px-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-mono disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50'
+          variant='outline'
+          className='font-mono'
         >
           Send
-        </button>
+        </Button>
       </motion.form>
     </div>
   );
