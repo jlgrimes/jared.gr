@@ -23,8 +23,12 @@ export function usePreview(href: string) {
       revalidateOnReconnect: false,
       revalidateIfStale: false,
       revalidateOnMount: true,
-      dedupingInterval: Infinity,
+      dedupingInterval: 24 * 60 * 60 * 1000, // Cache for 24 hours
       keepPreviousData: true,
+      shouldRetryOnError: false, // Don't retry on error
+      errorRetryCount: 0, // Don't retry on error
+      loadingTimeout: 5000, // Timeout after 5 seconds
+      suspense: false,
     }
   );
 

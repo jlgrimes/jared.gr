@@ -59,10 +59,10 @@ export const LinkPreview = ({ href, children }: LinkPreviewProps) => {
               </span>
             )}
             <div className='space-y-1'>
-              <h4 className='text-sm font-semibold'>{preview.title}</h4>
-              <p className='text-sm text-muted-foreground'>
+              <div className='text-sm font-semibold'>{preview.title}</div>
+              <div className='text-sm text-muted-foreground'>
                 {preview.description}
-              </p>
+              </div>
             </div>
           </div>
         </HoverCardContent>
