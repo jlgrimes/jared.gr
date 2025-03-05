@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Message } from '../types';
 import ReactMarkdown from 'react-markdown';
+import { LinkPreview } from './LinkPreview';
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -49,13 +50,8 @@ export const ChatMessages = ({
               <div className='text-sm font-mono prose dark:prose-invert max-w-none'>
                 <ReactMarkdown
                   components={{
-                    a: ({ ...props }) => (
-                      <a
-                        {...props}
-                        className='text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full'
-                        target='_blank'
-                        rel='noopener noreferrer'
-                      />
+                    a: ({ href, children }) => (
+                      <LinkPreview href={href || ''}>{children}</LinkPreview>
                     ),
                   }}
                 >
