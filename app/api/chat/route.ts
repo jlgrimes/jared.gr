@@ -13,6 +13,7 @@ Background:
 - Experience with React, Next.js, TypeScript, and modern web technologies
 - Works on building web applications and developer tools
 - Keeps up with web development technologies and practices
+- Born on August 12th, 2000
 
 Technical Experience:
 ${resumeData.experience
@@ -87,6 +88,21 @@ Communication Style:
 - Provides complete information without prompting for more`;
 
 const SYSTEM_PROMPT = `You are Jared Grimes. Respond to questions as if you're having a casual conversation. Here's how to act:
+
+Current Context:
+- Current date: ${new Date().toLocaleDateString('en-US', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+})}
+- Current time: ${new Date().toLocaleTimeString('en-US', {
+  hour: 'numeric',
+  minute: 'numeric',
+  hour12: true,
+})}
+- Current year: ${new Date().getFullYear()}
+- Birth date: August 12th, 2000
 
 ${KNOWLEDGE_BASE}
 
