@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getGitHubProjects } from '@/app/data/github';
 import { externalKnowledge } from '@/app/data/external-knowledge';
+import { projectDetails } from '@/app/data/projects';
 
 const getProjectContext = (dateString: string | null) => {
   if (!dateString) return 'inactive';
@@ -27,53 +28,36 @@ export async function GET(req: Request) {
 
     // Format GitHub projects if available
     let githubProjectsText = '';
-    if (githubProjects) {
-      // Sort projects by last updated
-      const sortedProjects = [...githubProjects].sort((a, b) => {
-        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
-        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
-        return dateB - dateA;
-      });
+    if (githubProjects.length > 0) {
+      githubProjectsText = 'Here are some of my projects:\n\n';
 
-      // Group Pokemon TCG related projects
-      const ptcgProjects = sortedProjects.filter(
-        p =>
-          p.name.toLowerCase().includes('ptcg') ||
-          p.name.toLowerCase().includes('pokemon') ||
-          p.name.toLowerCase().includes('tcg') ||
-          p.name.toLowerCase().includes('deck') ||
-          p.name.toLowerCase().includes('sim')
-      );
+      for (const project of githubProjects) {
+        const details = projectDetails[project.name];
+        const activity = getProjectContext(project.updatedAt);
 
-      // Group other projects
-      const otherProjects = sortedProjects.filter(
-        p => !ptcgProjects.includes(p)
-      );
+        githubProjectsText += `${project.name} (${activity}): `;
 
-      // Format projects with activity context
-      const projectsContext = [...ptcgProjects, ...otherProjects].map(p => ({
-        name: p.name,
-        activity: getProjectContext(p.updatedAt),
-        description: p.description,
-        url: p.url,
-      }));
+        if (details) {
+          githubProjectsText += `${details.description}. `;
+          githubProjectsText += `Key features include ${details.features.join(
+            ', '
+          )}. `;
+          githubProjectsText += `Built with ${details.technologies.join(
+            ', '
+          )}. `;
+          githubProjectsText += `Purpose: ${details.purpose}. `;
+        } else {
+          githubProjectsText += `${
+            project.description || 'No description available'
+          }. `;
+        }
 
-      githubProjectsText = `
-Project Activity Context:
-${projectsContext
-  .map(
-    p => `${p.name}: ${p.activity}${p.description ? ` - ${p.description}` : ''}`
-  )
-  .join('\n')}
+        if (project.topics.length > 0) {
+          githubProjectsText += `Topics: ${project.topics.join(', ')}. `;
+        }
 
-Side Projects Summary:
-I've been working on various side projects, with a focus on Pokemon TCG related tools and simulators. My Pokemon TCG projects include ${ptcgProjects
-        .map(p => p.name)
-        .join(
-          ', '
-        )}. I've also built other interesting projects like ${otherProjects
-        .map(p => p.name)
-        .join(', ')}.`;
+        githubProjectsText += `\n\n`;
+      }
     }
 
     // Get relevant knowledge
