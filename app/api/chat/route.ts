@@ -9,6 +9,7 @@ import {
 import { ChatRequest } from './types';
 import { INITIAL_GREETING_PROMPT } from './constants';
 import { getGitHubProjects } from '@/app/data/github';
+import { RESUME_LINKS } from '@/app/data/resume-links';
 
 const isPlaceholderSuggestion = (suggestion: string) => {
   return (
@@ -93,6 +94,14 @@ Previous conversation:
 ${formatConversationHistory(messages)}
 
 Respond as Jared's AI assistant. When mentioning GitHub projects, always format the project name as a markdown link using the project's GitHub URL. For example, instead of writing "training-court", write "[training-court](https://github.com/username/training-court)". This makes it easy for users to click through to the actual repository.
+
+Whenever Copilot Actions are mentioned, make sure to link to the announcement blog post. For example, write "[Copilot Actions](${
+        RESUME_LINKS.copilotActions.announcementUrl
+      })".
+
+Whenever MI Symptoms is mentioned, make sure to link to the announcement. For example, write "[MI Symptoms](${
+        RESUME_LINKS.miSymptoms.announcementUrl
+      })".
 
 ${
   isFirstFollowUp
