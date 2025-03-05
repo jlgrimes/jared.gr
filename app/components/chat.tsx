@@ -196,7 +196,7 @@ export default function Chat() {
             transition={{ duration: 0.15, ease: 'easeOut' }}
             className='fixed bottom-[80px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-50'
           >
-            <div className='bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg p-2 flex flex-col gap-2'>
+            <div className='bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg flex flex-col overflow-hidden'>
               {suggestions.map((suggestion, index) => (
                 <motion.button
                   key={suggestion}
@@ -205,7 +205,7 @@ export default function Chat() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.1, delay: index * 0.05 }}
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className='w-full text-left px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer font-mono'
+                  className='w-full text-left p-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer font-mono'
                 >
                   {suggestion}
                 </motion.button>
