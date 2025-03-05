@@ -3,8 +3,7 @@ export const resumeData = {
   contact: {
     linkedin: 'linkedin.com/in/jaredlgrimes',
     github: 'github.com/jlgrimes',
-    email: 'jaredlgrimes@hotmail.com',
-    phone: '248-762-5414',
+    email: 'jaredlancegrimes@gmail.com',
   },
   experience: [
     {
