@@ -8,10 +8,10 @@ export interface GitHubProject {
   name: string;
   description: string | null;
   language: string | null;
-  stars: number;
+  stars: number | undefined;
   url: string;
   topics: string[];
-  updatedAt: string;
+  updatedAt: string | null;
 }
 
 export async function getGitHubProjects(): Promise<GitHubProject[]> {
@@ -25,11 +25,11 @@ export async function getGitHubProjects(): Promise<GitHubProject[]> {
     return repos.map(repo => ({
       name: repo.name,
       description: repo.description,
-      language: repo.language,
+      language: repo.language || null,
       stars: repo.stargazers_count,
       url: repo.html_url,
       topics: repo.topics || [],
-      updatedAt: repo.updated_at,
+      updatedAt: repo.updated_at || null,
     }));
   } catch (error) {
     console.error('Error fetching GitHub projects:', error);
