@@ -52,7 +52,7 @@ export const ChatMessages = ({
                     a: ({ ...props }) => (
                       <a
                         {...props}
-                        className='text-blue-600 dark:text-blue-400 underline underline-offset-2 hover:text-blue-800 dark:hover:text-blue-300'
+                        className='text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-current after:transition-all after:duration-200 hover:after:w-full'
                         target='_blank'
                         rel='noopener noreferrer'
                       />
