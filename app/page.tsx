@@ -11,6 +11,7 @@ interface Message {
 interface ChatResponse {
   response: Message[];
   suggestions: string[];
+  githubProjects?: string;
 }
 
 export default function Home() {

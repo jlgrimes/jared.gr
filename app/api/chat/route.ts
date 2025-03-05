@@ -104,16 +104,14 @@ Guidelines for responses:
 11. Use exclamations occasionally for emphasis
 12. Keep it friendly and conversational
 13. Keep it flowing and natural like spoken conversation
-14. Feel free to go on tangents about interesting topics
-15. Make unexpected connections between different subjects
-16. Share relevant technical trivia when appropriate
-17. Start new topics abruptly without transitions
-18. Provide detailed explanations for your opinions
-19. Keep responses focused and coherent
-20. Never asks questions or seeks follow-ups from the user
-21. Responds to questions without asking for clarification
-22. Makes assumptions when needed rather than asking for details
-23. Provides complete information without prompting for more`;
+14. Stay focused on the user's question
+15. Share relevant technical facts that support the main point
+16. Provide detailed explanations for your opinions
+17. Keep responses focused and coherent
+18. Never asks questions or seeks follow-ups from the user
+19. Responds to questions without asking for clarification
+20. Makes assumptions when needed rather than asking for details
+21. Provides complete information without prompting for more`;
 
 interface Message {
   role: 'user' | 'assistant';
@@ -136,7 +134,7 @@ export async function POST(req: Request) {
       if (isInitialGreeting) {
         return [
           'What are you currently working on at Microsoft?',
-          'What projects are you working on?',
+          'What side projects are you working on?',
           'How much experience do you have as a software engineer?',
         ];
       }
@@ -178,38 +176,69 @@ export async function POST(req: Request) {
       // Default suggestions for new conversations
       return [
         'What are you currently working on at Microsoft?',
-        'What projects are you working on?',
+        'What side projects are you working on?',
         'How much experience do you have as a software engineer?',
       ];
     };
 
-    // Use system prompt for first message, otherwise use conversation history
-    const prompt =
-      messages.length === 0
-        ? `${SYSTEM_PROMPT}\n\nUser: ${message}\n\nJared:`
-        : [
-            KNOWLEDGE_BASE,
-            ...messages.map((m: Message) => `${m.role}: ${m.content}`),
-            `user: ${message}`,
-          ];
+    // Start loading GitHub data in parallel
+    const githubPromise = getGitHubProjects();
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
+    // Try to get GitHub data if it's available
+    let githubProjects = '';
+    try {
+      const projects = await githubPromise;
+      if (projects) {
+        // Group Pokemon TCG related projects
+        const ptcgProjects = projects.filter(
+          p =>
+            p.name.toLowerCase().includes('ptcg') ||
+            p.name.toLowerCase().includes('pokemon') ||
+            p.name.toLowerCase().includes('tcg') ||
+            p.name.toLowerCase().includes('deck') ||
+            p.name.toLowerCase().includes('sim')
+        );
+
+        // Group other projects
+        const otherProjects = projects.filter(p => !ptcgProjects.includes(p));
+
+        githubProjects = `\nSide Projects (from GitHub):\nI've been working on a bunch of fun side projects! Most of them are Pokemon TCG related - I've built several simulators and tools like ${ptcgProjects
+          .map(p => p.name)
+          .join(
+            ', '
+          )}. I've also built some other cool stuff like ${otherProjects
+          .map(p => p.name)
+          .join(', ')}.`;
+      }
+    } catch (error) {
+      console.error('Error loading GitHub projects:', error);
+    }
+
+    // Generate initial response without waiting for GitHub data
+    const initialResponse = await model.generateContent(
+      `${SYSTEM_PROMPT}
+
+${githubProjects}
+
+User message: ${message}
+
+Previous conversation:
+${messages.map((m: Message) => `${m.role}: ${m.content}`).join('\n')}
+
+Respond as Jared's AI assistant. If asked about side projects, always provide a detailed example of one project, explaining what it does and why it's interesting.`
+    );
+
+    const response = await initialResponse.response;
     const text = response.text();
 
-    const suggestions = generateSuggestions(text);
-
-    // Load GitHub projects in parallel without waiting for them
-    getGitHubProjects().catch(error => {
-      console.error('Error loading GitHub projects:', error);
-    });
-
+    // Return the response with GitHub data if available
     return NextResponse.json({
       response: [{ role: 'assistant', content: text }],
-      suggestions,
+      suggestions: generateSuggestions(text),
+      githubProjects,
     });
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error generating response:', error);
     return NextResponse.json(
       { error: 'Failed to generate response' },
       { status: 500 }
