@@ -3,7 +3,7 @@ import * as cheerio from 'cheerio';
 
 interface PreviewData {
   title: string;
-  description: string;
+  description?: string;
   image?: string;
 }
 
@@ -25,7 +25,7 @@ async function fetchPreview(url: string): Promise<PreviewData> {
     const description =
       $('meta[name="description"]').attr('content') ||
       $('meta[property="og:description"]').attr('content') ||
-      'No description available';
+      undefined;
 
     // Get image - only return if it exists and is valid
     const imageUrl = $('meta[property="og:image"]').attr('content');
