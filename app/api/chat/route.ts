@@ -7,6 +7,7 @@ import {
   formatConversationHistory,
 } from './utils';
 import { ChatRequest } from './types';
+import { INITIAL_GREETING_PROMPT } from './constants';
 
 const isPlaceholderSuggestion = (suggestion: string) => {
   return (
@@ -14,6 +15,30 @@ const isPlaceholderSuggestion = (suggestion: string) => {
     suggestion === '[Question 1]' ||
     suggestion === '[Question 2]' ||
     suggestion === '[Question 3]'
+  );
+};
+
+const isProjectRelatedQuestion = (message: string) => {
+  const projectKeywords = [
+    'project',
+    'built',
+    'working on',
+    'develop',
+    'create',
+    'made',
+    'portfolio',
+    'github',
+    'repo',
+    'code',
+    'programming',
+    'side project',
+    'hobby',
+    'pokemon',
+    'tcg',
+    'simulator',
+  ];
+  return projectKeywords.some(keyword =>
+    message.toLowerCase().includes(keyword.toLowerCase())
   );
 };
 
@@ -26,11 +51,27 @@ export async function POST(req: Request) {
       isFirstFollowUp = false,
     }: ChatRequest = await req.json();
 
+    // Only fetch GitHub data for project-related questions that aren't the initial greeting
+    let githubData = externalData.githubProjects;
+    if (
+      message !== INITIAL_GREETING_PROMPT &&
+      isProjectRelatedQuestion(message) &&
+      !githubData
+    ) {
+      const response = await fetch(
+        `${req.headers.get(
+          'origin'
+        )}/api/external-data?message=${encodeURIComponent(message)}`
+      );
+      const data = await response.json();
+      githubData = data.githubProjects;
+    }
+
     // Generate initial response
     const initialResponse = await model.generateContent(
       `${getSystemPrompt()}
 
-${externalData.githubProjects}
+${githubData}
 
 ${externalData.relevantKnowledge}
 

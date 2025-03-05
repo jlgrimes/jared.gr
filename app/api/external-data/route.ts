@@ -2,19 +2,41 @@ import { NextResponse } from 'next/server';
 import { getGitHubProjects } from '@/app/data/github';
 import { externalKnowledge } from '@/app/data/external-knowledge';
 
+const getProjectContext = (dateString: string | null) => {
+  if (!dateString) return 'inactive';
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffDays = Math.ceil(
+    Math.abs(now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  if (diffDays < 7) return 'very active';
+  if (diffDays < 30) return 'active';
+  if (diffDays < 90) return 'somewhat active';
+  if (diffDays < 365) return 'occasionally maintained';
+  return 'inactive';
+};
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const message = searchParams.get('message') || '';
 
-    // Fetch GitHub projects and get relevant knowledge in parallel
+    // Always fetch GitHub projects
     const [githubProjects] = await Promise.all([getGitHubProjects()]);
 
     // Format GitHub projects if available
     let githubProjectsText = '';
     if (githubProjects) {
+      // Sort projects by last updated
+      const sortedProjects = [...githubProjects].sort((a, b) => {
+        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+        return dateB - dateA;
+      });
+
       // Group Pokemon TCG related projects
-      const ptcgProjects = githubProjects.filter(
+      const ptcgProjects = sortedProjects.filter(
         p =>
           p.name.toLowerCase().includes('ptcg') ||
           p.name.toLowerCase().includes('pokemon') ||
@@ -24,13 +46,32 @@ export async function GET(req: Request) {
       );
 
       // Group other projects
-      const otherProjects = githubProjects.filter(
+      const otherProjects = sortedProjects.filter(
         p => !ptcgProjects.includes(p)
       );
 
-      githubProjectsText = `\nSide Projects (from GitHub):\nI've been working on a bunch of fun side projects! Most of them are Pokemon TCG related - I've built several simulators and tools like ${ptcgProjects
+      // Format projects with activity context
+      const projectsContext = [...ptcgProjects, ...otherProjects].map(p => ({
+        name: p.name,
+        activity: getProjectContext(p.updatedAt),
+        description: p.description,
+        url: p.url,
+      }));
+
+      githubProjectsText = `
+Project Activity Context:
+${projectsContext
+  .map(
+    p => `${p.name}: ${p.activity}${p.description ? ` - ${p.description}` : ''}`
+  )
+  .join('\n')}
+
+Side Projects Summary:
+I've been working on various side projects, with a focus on Pokemon TCG related tools and simulators. My Pokemon TCG projects include ${ptcgProjects
         .map(p => p.name)
-        .join(', ')}. I've also built some other cool stuff like ${otherProjects
+        .join(
+          ', '
+        )}. I've also built other interesting projects like ${otherProjects
         .map(p => p.name)
         .join(', ')}.`;
     }
