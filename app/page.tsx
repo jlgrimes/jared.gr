@@ -187,9 +187,9 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.15, ease: 'easeOut' }}
-                  className='fixed bottom-[120px] left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 z-50'
+                  className='fixed bottom-[80px] left-1/2 -translate-x-1/2 w-full max-w-2xl z-50'
                 >
-                  <div className='bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg p-2 flex flex-col gap-1'>
+                  <div className='bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg p-2 flex flex-col gap-2'>
                     {suggestions.map((suggestion, index) => (
                       <motion.button
                         key={suggestion}
