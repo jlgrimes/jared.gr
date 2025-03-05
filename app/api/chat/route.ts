@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { resumeData } from '@/app/data/resume';
+import { getGitHubProjects } from '@/app/data/github';
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
@@ -127,6 +128,11 @@ export async function POST(req: Request) {
     );
     const response = await result.response;
     const text = response.text();
+
+    // Load GitHub projects in parallel without waiting for them
+    getGitHubProjects().catch(error => {
+      console.error('Error loading GitHub projects:', error);
+    });
 
     return NextResponse.json({
       response: [
