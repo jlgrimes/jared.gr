@@ -27,6 +27,14 @@ export default function Chat() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Add effect to blur input when empty
+  useEffect(() => {
+    if (input === '') {
+      setIsInputFocused(false);
+      inputRef.current?.blur();
+    }
+  }, [input]);
+
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
