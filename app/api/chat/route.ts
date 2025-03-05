@@ -115,19 +115,89 @@ Guidelines for responses:
 22. Makes assumptions when needed rather than asking for details
 23. Provides complete information without prompting for more`;
 
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export async function POST(req: Request) {
   try {
-    const { message } = await req.json();
+    const { message, messages = [] } = await req.json();
 
     // Get the Gemini model
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-lite' });
 
-    // Generate response
-    const result = await model.generateContent(
-      `${SYSTEM_PROMPT}\n\nUser: ${message}\n\nJared:`
-    );
+    // Generate context-aware suggestions based on the conversation
+    const generateSuggestions = (latestResponse: string) => {
+      // Check if this is the initial greeting message
+      const isInitialGreeting = latestResponse.includes("Hi, I'm Jared 👋");
+
+      // For the initial greeting, always use default suggestions
+      if (isInitialGreeting) {
+        return [
+          'What are you currently working on at Microsoft?',
+          'What projects are you working on?',
+          'How much experience do you have as a software engineer?',
+        ];
+      }
+
+      // Use the latest response to determine relevant follow-up questions
+      if (
+        latestResponse.includes('Microsoft') ||
+        latestResponse.includes('Copilot')
+      ) {
+        return [
+          "What's your favorite part about working on Copilot?",
+          "What's the most challenging aspect of your role?",
+          "What's the most exciting project you've worked on?",
+        ];
+      }
+
+      if (
+        latestResponse.includes('projects') ||
+        latestResponse.includes('GitHub')
+      ) {
+        return [
+          'Tell me more about your MI Symptoms project',
+          'What technologies do you use most often?',
+          "What's your favorite programming language?",
+        ];
+      }
+
+      if (
+        latestResponse.includes('experience') ||
+        latestResponse.includes('background')
+      ) {
+        return [
+          'What was your first programming job?',
+          'How did you get started in software engineering?',
+          "What's your favorite part about being a software engineer?",
+        ];
+      }
+
+      // Default suggestions for new conversations
+      return [
+        'What are you currently working on at Microsoft?',
+        'What projects are you working on?',
+        'How much experience do you have as a software engineer?',
+      ];
+    };
+
+    // Use system prompt for first message, otherwise use conversation history
+    const prompt =
+      messages.length === 0
+        ? `${SYSTEM_PROMPT}\n\nUser: ${message}\n\nJared:`
+        : [
+            KNOWLEDGE_BASE,
+            ...messages.map((m: Message) => `${m.role}: ${m.content}`),
+            `user: ${message}`,
+          ];
+
+    const result = await model.generateContent(prompt);
     const response = await result.response;
     const text = response.text();
+
+    const suggestions = generateSuggestions(text);
 
     // Load GitHub projects in parallel without waiting for them
     getGitHubProjects().catch(error => {
@@ -135,22 +205,13 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({
-      response: [
-        {
-          role: 'assistant',
-          content: text.trim(),
-        },
-      ],
-      suggestions: [
-        'What are you currently working on at Microsoft?',
-        'What projects are you working on?',
-        'How much experience do you have as a software engineer?',
-      ],
+      response: [{ role: 'assistant', content: text }],
+      suggestions,
     });
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json(
-      { error: 'Failed to process request' },
+      { error: 'Failed to generate response' },
       { status: 500 }
     );
   }

@@ -28,6 +28,7 @@ export default function Home() {
           body: JSON.stringify({
             message:
               'Give me a very brief introduction in exactly 4 parts, each on a new line: 1) Start with "Hi, I\'m Jared 👋", 2) My current work, 3) My notable projects, 4) Where to find me online. Keep each part under 2 sentences and use first person language.',
+            messages: [],
           }),
         });
 
@@ -57,7 +58,10 @@ export default function Home() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({
+          message: input,
+          messages: [...messages, userMessage],
+        }),
       });
 
       const data: ChatResponse = await response.json();
@@ -77,7 +81,10 @@ export default function Home() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: suggestion }),
+        body: JSON.stringify({
+          message: suggestion,
+          messages: [...messages, { role: 'user', content: suggestion }],
+        }),
       });
 
       const data: ChatResponse = await response.json();
@@ -97,66 +104,68 @@ export default function Home() {
   return (
     <div className='min-h-screen bg-white dark:bg-gray-900'>
       <div className='container mx-auto px-4 py-8 h-screen flex flex-col'>
-        <div className='max-w-2xl mx-auto w-full flex flex-col flex-1'>
-          <div className='border border-gray-200 dark:border-gray-800 rounded-lg overflow-y-auto flex-1 mb-4 p-4'>
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`mb-4 ${
-                  message.role === 'user' ? 'text-right' : 'text-left'
-                }`}
-              >
+        <div className='max-w-2xl mx-auto w-full flex flex-col h-[calc(100vh-4rem)]'>
+          <div className='flex-1 flex flex-col min-h-0'>
+            <div className='flex-1 overflow-y-auto border border-gray-200 dark:border-gray-800 rounded-lg mb-4 p-4'>
+              {messages.map((message, index) => (
                 <div
-                  className={`inline-block p-3 rounded-lg ${
-                    message.role === 'user'
-                      ? 'bg-blue-100 dark:bg-blue-900'
-                      : 'bg-gray-100 dark:bg-gray-800'
+                  key={index}
+                  className={`mb-4 ${
+                    message.role === 'user' ? 'text-right' : 'text-left'
                   }`}
                 >
-                  <p className='text-sm font-mono'>{message.content}</p>
+                  <div
+                    className={`inline-block p-3 rounded-lg ${
+                      message.role === 'user'
+                        ? 'bg-blue-100 dark:bg-blue-900'
+                        : 'bg-gray-100 dark:bg-gray-800'
+                    }`}
+                  >
+                    <p className='text-sm font-mono'>{message.content}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-            {isLoading && (
-              <div className='text-left'>
-                <div className='inline-block p-3 rounded-lg bg-gray-100 dark:bg-gray-800'>
-                  <p className='text-sm font-mono'>Thinking...</p>
+              ))}
+              {isLoading && (
+                <div className='text-left'>
+                  <div className='inline-block p-3 rounded-lg bg-gray-100 dark:bg-gray-800'>
+                    <p className='text-sm font-mono'>Thinking...</p>
+                  </div>
                 </div>
+              )}
+            </div>
+
+            {suggestions.length > 0 && (
+              <div className='flex flex-col gap-2 mb-4'>
+                {suggestions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
+                  >
+                    {suggestion}
+                  </button>
+                ))}
               </div>
             )}
+
+            <form onSubmit={handleSubmit} className='flex gap-2'>
+              <input
+                type='text'
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                placeholder='Ask me anything...'
+                className='flex-1 p-2 text-sm border border-gray-300 dark:border-gray-700 rounded font-mono bg-transparent'
+                disabled={isLoading}
+              />
+              <button
+                type='submit'
+                disabled={isLoading}
+                className='px-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono disabled:opacity-50'
+              >
+                Send
+              </button>
+            </form>
           </div>
-
-          {suggestions.length > 0 && (
-            <div className='flex flex-col gap-2 mb-4'>
-              {suggestions.map((suggestion, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSuggestionClick(suggestion)}
-                  className='w-full text-left px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono'
-                >
-                  {suggestion}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className='flex gap-2'>
-            <input
-              type='text'
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              placeholder='Ask me anything...'
-              className='flex-1 p-2 text-sm border border-gray-300 dark:border-gray-700 rounded font-mono bg-transparent'
-              disabled={isLoading}
-            />
-            <button
-              type='submit'
-              disabled={isLoading}
-              className='px-4 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-mono disabled:opacity-50'
-            >
-              Send
-            </button>
-          </form>
         </div>
       </div>
     </div>
