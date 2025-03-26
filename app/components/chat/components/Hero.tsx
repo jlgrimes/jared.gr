@@ -43,11 +43,42 @@ export const Hero = ({
           Full-stack developer passionate about building great experiences. Ask
           me anything about my work or experience!
         </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="flex gap-4"
+        >
+          <a
+            href="https://github.com/jaredgrimes"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://linkedin.com/in/jaredgrimes"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+          >
+            LinkedIn
+          </a>
+          <a
+            href="https://twitter.com/jgrimesey"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+          >
+            Twitter
+          </a>
+        </motion.div>
       </div>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
+        transition={{ delay: 0.5 }}
         className="w-full max-w-2xl"
       >
         <ChatInput
