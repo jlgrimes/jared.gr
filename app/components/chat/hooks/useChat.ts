@@ -1,13 +1,8 @@
 import { useState } from "react";
 import { Message } from "../types";
 
-const INITIAL_MESSAGE: Message = {
-  role: "assistant",
-  content: `Hi, I'm Jared 👋 I'm a software engineer at Microsoft working on Copilot Actions. Feel free to ask me anything about my experience, projects, or tech in general!`,
-};
-
 export const useChat = () => {
-  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const fetchChatResponse = async (message: string, messages: Message[]) => {
     try {
