@@ -9,6 +9,7 @@ interface ChatInputProps {
   setIsInputFocused: (value: boolean) => void;
   onSubmit: (e: React.FormEvent) => void;
   inputRef: React.RefObject<HTMLInputElement | null>;
+  className?: string;
 }
 
 export const ChatInput = ({
@@ -18,15 +19,10 @@ export const ChatInput = ({
   setIsInputFocused,
   onSubmit,
   inputRef,
+  className = "",
 }: ChatInputProps) => {
   return (
-    <motion.form
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.2 }}
-      onSubmit={onSubmit}
-      className="flex gap-2"
-    >
+    <form onSubmit={onSubmit} className={`flex gap-2 ${className}`}>
       <motion.div
         animate={{
           width: isInputFocused ? "calc(100% - 4rem)" : "100%",
@@ -73,6 +69,6 @@ export const ChatInput = ({
           Ask
         </Button>
       </motion.div>
-    </motion.form>
+    </form>
   );
 };

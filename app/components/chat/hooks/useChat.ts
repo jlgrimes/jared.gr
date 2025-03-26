@@ -3,6 +3,7 @@ import { Message } from "../types";
 
 export const useChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchChatResponse = async (message: string, messages: Message[]) => {
     try {
@@ -25,17 +26,21 @@ export const useChat = () => {
   const sendMessage = async (message: string) => {
     const userMessage: Message = { role: "user", content: message };
     setMessages((prev) => [...prev, userMessage]);
+    setIsLoading(true);
 
     try {
       const data = await fetchChatResponse(message, [...messages, userMessage]);
       setMessages((prev) => [...prev, ...data.response]);
     } catch (error) {
       console.error("Error sending message:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return {
     messages,
+    isLoading,
     sendMessage,
   };
 };

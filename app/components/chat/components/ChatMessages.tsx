@@ -4,10 +4,18 @@ import React from "react";
 
 interface ChatMessagesProps {
   messages: Message[];
-  containerRef: React.RefObject<HTMLDivElement | null>;
+  isLoading: boolean;
 }
 
-export const ChatMessages = ({ messages, containerRef }: ChatMessagesProps) => {
+export const ChatMessages = ({ messages, isLoading }: ChatMessagesProps) => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   // Debug log to see the message content
   console.log(
     "Messages:",
