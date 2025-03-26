@@ -12,7 +12,11 @@ const Chat = () => {
   const [input, setInput] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const { messages, isLoading, sendMessage } = useChat();
+  const { messages, isLoading, sendMessage } = useChat({
+    onMessagesUpdate: () => {
+      inputRef.current?.focus();
+    },
+  });
 
   useEffect(() => {
     if (isChatStarted) {

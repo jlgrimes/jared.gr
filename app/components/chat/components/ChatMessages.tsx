@@ -1,6 +1,9 @@
+"use client";
+
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Message } from "../types";
-import React from "react";
+import ReactMarkdown from "react-markdown";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -49,8 +52,8 @@ export const ChatMessages = ({ messages, isLoading }: ChatMessagesProps) => {
                   : "bg-gray-100 dark:bg-gray-800"
               }`}
             >
-              <div className="text-sm leading-relaxed whitespace-pre-wrap">
-                {message.content}
+              <div className="text-sm leading-relaxed">
+                <ReactMarkdown>{message.content}</ReactMarkdown>
               </div>
             </motion.div>
           </motion.div>

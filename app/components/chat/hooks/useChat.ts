@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Message } from "../types";
 
-export const useChat = () => {
+interface UseChatProps {
+  onMessagesUpdate?: () => void;
+}
+
+export const useChat = ({ onMessagesUpdate }: UseChatProps = {}) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,7 +34,11 @@ export const useChat = () => {
 
     try {
       const data = await fetchChatResponse(message, [...messages, userMessage]);
-      setMessages((prev) => [...prev, ...data.response]);
+      setMessages((prev) => {
+        const newMessages = [...prev, ...data.response];
+        setTimeout(() => onMessagesUpdate?.(), 0);
+        return newMessages;
+      });
     } catch (error) {
       console.error("Error sending message:", error);
     } finally {
