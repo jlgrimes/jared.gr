@@ -1,12 +1,15 @@
 export interface Message {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
 }
 
 export interface ChatResponse {
   response: Message[];
-  suggestions: string[];
-  githubProjects?: string;
+}
+
+export interface ChatRequest {
+  message: string;
+  messages?: Message[];
 }
 
 export interface ChatProps {

@@ -1,10 +1,10 @@
-import { Message } from './types';
+import { Message } from "./types";
 
 export const generateSuggestions = () => {
   return [
-    'What are you currently working on at Microsoft?',
-    'What side projects are you working on?',
-    'How much experience do you have as a software engineer?',
+    "What are you currently working on at Microsoft?",
+    "What side projects are you working on?",
+    "How much experience do you have as a software engineer?",
   ];
 };
 
@@ -16,6 +16,10 @@ export const extractFollowUpQuestions = (text: string) => {
   );
 };
 
-export const formatConversationHistory = (messages: Message[]) => {
-  return messages.map((m: Message) => `${m.role}: ${m.content}`).join('\n');
+export const formatConversationHistory = (messages: Message[]): string => {
+  return messages
+    .map(
+      (msg) => `${msg.role === "user" ? "User" : "Assistant"}: ${msg.content}`
+    )
+    .join("\n\n");
 };

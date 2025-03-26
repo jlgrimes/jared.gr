@@ -1,8 +1,7 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { Message } from '../types';
-import ReactMarkdown from 'react-markdown';
-import { LinkPreview } from './LinkPreview';
-import React from 'react';
+import { motion, AnimatePresence } from "framer-motion";
+import { Message } from "../types";
+import ReactMarkdown from "react-markdown";
+import React from "react";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -17,16 +16,16 @@ export const ChatMessages = ({
 }: ChatMessagesProps) => {
   // Debug log to see the message content
   console.log(
-    'Messages:',
-    messages.map(m => ({ role: m.role, content: m.content }))
+    "Messages:",
+    messages.map((m) => ({ role: m.role, content: m.content }))
   );
 
   return (
     <div
       ref={containerRef}
-      className='flex-1 overflow-y-auto rounded-xl mb-4 p-4'
+      className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth"
     >
-      <AnimatePresence initial={false}>
+      <AnimatePresence mode="popLayout">
         {messages.map((message, index) => (
           <motion.div
             key={index}
@@ -34,8 +33,8 @@ export const ChatMessages = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className={`mb-6 ${
-              message.role === 'user' ? 'text-right' : 'text-left'
+            className={`flex ${
+              message.role === "user" ? "justify-end" : "justify-start"
             }`}
           >
             <motion.div
@@ -43,16 +42,23 @@ export const ChatMessages = ({
               animate={{ scale: 1 }}
               transition={{ duration: 0.2 }}
               className={`inline-block max-w-[85%] p-4 rounded-xl ${
-                message.role === 'user'
-                  ? 'bg-blue-100 dark:bg-blue-900'
-                  : 'bg-gray-100 dark:bg-gray-800'
+                message.role === "user"
+                  ? "bg-blue-100 dark:bg-blue-900"
+                  : "bg-gray-100 dark:bg-gray-800"
               }`}
             >
-              <div className='text-sm font-mono prose dark:prose-invert max-w-none leading-relaxed'>
+              <div className="text-sm prose dark:prose-invert max-w-none leading-relaxed">
                 <ReactMarkdown
                   components={{
                     a: ({ href, children }) => (
-                      <LinkPreview href={href || ''}>{children}</LinkPreview>
+                      <a
+                        href={href}
+                        className="text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {children}
+                      </a>
                     ),
                     p: ({ children }) => {
                       // If the only child is a LinkPreview, return it directly
@@ -94,16 +100,16 @@ export const ChatMessages = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className='text-left'
+          className="text-left"
         >
-          <div className='inline-block p-3 rounded-xl bg-gray-100 dark:bg-gray-800'>
-            <div className='flex items-center gap-3'>
-              <span className='text-xl'>🤔</span>
-              <div className='flex gap-0.5'>
+          <div className="inline-block p-3 rounded-xl bg-gray-100 dark:bg-gray-800">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🤔</span>
+              <div className="flex gap-0.5">
                 {[...Array(4)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className='w-1 h-1 rounded-full bg-gray-500 dark:bg-gray-400'
+                    className="w-1 h-1 rounded-full bg-gray-500 dark:bg-gray-400"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{

@@ -1,15 +1,14 @@
-import { motion } from 'framer-motion';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useRef } from "react";
+import { Send } from "lucide-react";
 
 interface ChatInputProps {
   input: string;
-  setInput: (value: string) => void;
+  setInput: (input: string) => void;
   isLoading: boolean;
   isInputFocused: boolean;
-  setIsInputFocused: (value: boolean) => void;
+  setIsInputFocused: (focused: boolean) => void;
   onSubmit: (e: React.FormEvent) => void;
-  inputRef: React.RefObject<HTMLInputElement | null>;
+  inputRef: React.RefObject<HTMLTextAreaElement>;
 }
 
 export const ChatInput = ({
@@ -21,63 +20,38 @@ export const ChatInput = ({
   onSubmit,
   inputRef,
 }: ChatInputProps) => {
+  const [rows, setRows] = useState(1);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = "auto";
+      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+      setRows(Math.min(Math.ceil(inputRef.current.scrollHeight / 24), 5));
+    }
+  }, [input]);
+
   return (
-    <motion.form
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.2 }}
-      onSubmit={onSubmit}
-      className='flex gap-2'
-    >
-      <motion.div
-        animate={{
-          width: isInputFocused ? 'calc(100% - 4rem)' : '100%',
-        }}
-        transition={{ duration: 0.2, ease: 'easeInOut' }}
-        className='relative'
-      >
-        <Input
+    <form onSubmit={onSubmit} className="p-4 border-t">
+      <div className="relative">
+        <textarea
           ref={inputRef}
-          type='text'
           value={input}
-          onChange={e => setInput(e.target.value)}
+          onChange={(e) => setInput(e.target.value)}
           onFocus={() => setIsInputFocused(true)}
-          onBlur={() => {
-            setTimeout(() => {
-              if (input === '') {
-                setIsInputFocused(false);
-              }
-            }, 100);
-          }}
-          placeholder='Ask me anything...'
-          className='w-full font-mono'
+          onBlur={() => setIsInputFocused(false)}
+          placeholder="Type a message..."
+          className="w-full p-4 pr-12 text-sm border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+          rows={rows}
           disabled={isLoading}
         />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, width: 0 }}
-        animate={{
-          opacity: isInputFocused ? 1 : 0,
-          width: isInputFocused ? 'auto' : 0,
-        }}
-        transition={{
-          type: isInputFocused ? 'spring' : 'tween',
-          stiffness: 400,
-          damping: 15,
-          mass: 0.6,
-          duration: 0.15,
-        }}
-        className='overflow-hidden'
-      >
-        <Button
-          type='submit'
+        <button
+          type="submit"
           disabled={!input.trim() || isLoading}
-          variant='outline'
-          className='font-mono cursor-pointer whitespace-nowrap'
+          className="absolute right-2 bottom-2 p-2 text-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Ask
-        </Button>
-      </motion.div>
-    </motion.form>
+          <Send size={20} />
+        </button>
+      </div>
+    </form>
   );
 };
