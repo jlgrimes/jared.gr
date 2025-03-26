@@ -41,7 +41,7 @@ export const ChatInput = ({
               setIsInputFocused(false);
             }
           }}
-          placeholder="Ask me anything..."
+          placeholder="Ask AI-me anything..."
           className="w-full"
         />
       </motion.div>

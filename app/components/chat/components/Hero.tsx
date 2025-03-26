@@ -11,7 +11,6 @@ interface HeroProps {
   inputRef: React.RefObject<HTMLInputElement | null>;
 }
 
-const emojis = ["💻", "🃏", "🎺"];
 const greetings = [
   { text: "Hi, I'm Jared", lang: "en" },
   { text: "Γεια, είμαι ο Jared", lang: "el" },
@@ -32,7 +31,7 @@ export const Hero = ({
   useEffect(() => {
     const greetingInterval = setInterval(() => {
       setCurrentGreetingIndex((prev) => (prev + 1) % greetings.length);
-    }, 5000);
+    }, 6000);
 
     return () => {
       clearInterval(greetingInterval);
