@@ -14,7 +14,7 @@ export default function Chat({ className = "" }: ChatProps) {
   const [isInputFocused, setIsInputFocused] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const { messages, isLoading, sendMessage } = useChat();
+  const { messages, sendMessage } = useChat();
 
   // Add effect to blur input when empty
   useEffect(() => {
@@ -35,16 +35,9 @@ export default function Chat({ className = "" }: ChatProps) {
     scrollToBottom();
   }, [messages]);
 
-  // Separate effect to handle focus after initial message loads
-  useEffect(() => {
-    if (messages.length > 0 && !isLoading) {
-      inputRef.current?.focus();
-    }
-  }, [messages, isLoading]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if (!input.trim()) return;
 
     await sendMessage(input.trim());
     setInput("");
@@ -52,16 +45,11 @@ export default function Chat({ className = "" }: ChatProps) {
 
   return (
     <div className={`flex-1 flex flex-col min-h-0 ${className}`}>
-      <ChatMessages
-        messages={messages}
-        isLoading={isLoading}
-        containerRef={chatContainerRef}
-      />
+      <ChatMessages messages={messages} containerRef={chatContainerRef} />
 
       <ChatInput
         input={input}
         setInput={setInput}
-        isLoading={isLoading}
         isInputFocused={isInputFocused}
         setIsInputFocused={setIsInputFocused}
         onSubmit={handleSubmit}

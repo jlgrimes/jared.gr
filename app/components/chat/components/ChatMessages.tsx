@@ -5,15 +5,10 @@ import React from "react";
 
 interface ChatMessagesProps {
   messages: Message[];
-  isLoading: boolean;
   containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export const ChatMessages = ({
-  messages,
-  isLoading,
-  containerRef,
-}: ChatMessagesProps) => {
+export const ChatMessages = ({ messages, containerRef }: ChatMessagesProps) => {
   // Debug log to see the message content
   console.log(
     "Messages:",
@@ -95,34 +90,6 @@ export const ChatMessages = ({
           </motion.div>
         ))}
       </AnimatePresence>
-      {isLoading && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="text-left"
-        >
-          <div className="inline-block p-3 rounded-xl bg-gray-100 dark:bg-gray-800">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">🤔</span>
-              <div className="flex gap-0.5">
-                {[...Array(4)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="w-1 h-1 rounded-full bg-gray-500 dark:bg-gray-400"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{
-                      duration: 0.2,
-                      delay: i * 0.3,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
     </div>
   );
 };

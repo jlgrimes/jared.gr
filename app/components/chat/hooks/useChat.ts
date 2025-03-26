@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Message } from "../types";
-import { INITIAL_GREETING_PROMPT } from "@/app/api/chat/constants";
+
+const INITIAL_MESSAGE: Message = {
+  role: "assistant",
+  content: `Hi, I'm Jared 👋 I'm a software engineer at Microsoft working on Copilot Actions. Feel free to ask me anything about my experience, projects, or tech in general!`,
+};
 
 export const useChat = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
 
   const fetchChatResponse = async (message: string, messages: Message[]) => {
     try {
@@ -25,35 +28,19 @@ export const useChat = () => {
   };
 
   const sendMessage = async (message: string) => {
-    setIsLoading(true);
     const userMessage: Message = { role: "user", content: message };
     setMessages((prev) => [...prev, userMessage]);
 
     try {
       const data = await fetchChatResponse(message, [...messages, userMessage]);
       setMessages((prev) => [...prev, ...data.response]);
-    } finally {
-      setIsLoading(false);
+    } catch (error) {
+      console.error("Error sending message:", error);
     }
   };
-
-  const fetchInitialMessage = async () => {
-    setIsLoading(true);
-    try {
-      const data = await fetchChatResponse(INITIAL_GREETING_PROMPT, []);
-      setMessages(data.response);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchInitialMessage();
-  }, []);
 
   return {
     messages,
-    isLoading,
     sendMessage,
   };
 };

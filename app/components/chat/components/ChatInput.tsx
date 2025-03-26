@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 interface ChatInputProps {
   input: string;
   setInput: (value: string) => void;
-  isLoading: boolean;
   isInputFocused: boolean;
   setIsInputFocused: (value: boolean) => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -15,7 +14,6 @@ interface ChatInputProps {
 export const ChatInput = ({
   input,
   setInput,
-  isLoading,
   isInputFocused,
   setIsInputFocused,
   onSubmit,
@@ -51,7 +49,6 @@ export const ChatInput = ({
           }}
           placeholder="Ask me anything..."
           className="w-full"
-          disabled={isLoading}
         />
       </motion.div>
       <motion.div
@@ -71,7 +68,7 @@ export const ChatInput = ({
       >
         <Button
           type="submit"
-          disabled={!input.trim() || isLoading}
+          disabled={!input.trim()}
           variant="outline"
           className="cursor-pointer whitespace-nowrap"
         >
