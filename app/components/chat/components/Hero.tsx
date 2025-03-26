@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChatInput } from "./ChatInput";
+import { useState, useEffect } from "react";
 
 interface HeroProps {
   input: string;
@@ -10,6 +11,8 @@ interface HeroProps {
   inputRef: React.RefObject<HTMLInputElement | null>;
 }
 
+const emojis = ["💻", "🃏", "🎺"];
+
 export const Hero = ({
   input,
   setInput,
@@ -18,6 +21,16 @@ export const Hero = ({
   onSubmit,
   inputRef,
 }: HeroProps) => {
+  const [currentEmojiIndex, setCurrentEmojiIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentEmojiIndex((prev) => (prev + 1) % emojis.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -26,22 +39,27 @@ export const Hero = ({
       className="flex flex-col items-start justify-center min-h-[60vh] gap-8 px-4"
     >
       <div className="space-y-4">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500"
-        >
-          Hi, I'm Jared
-        </motion.h1>
+        <div className="flex items-center gap-4">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500"
+          >
+            Hi, I'm Jared
+          </motion.h1>
+        </div>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           className="text-gray-600 dark:text-gray-300 text-lg"
         >
-          Full-stack developer passionate about building great experiences. Ask
-          me anything about my work or experience!
+          I'm a front-end engineer at Microsoft. I work on UI/UX for Copilot
+          Actions, focusing on creating thoughtful, intuitive experiences for
+          the new AI scape. Collaborating closely with design, I aim to optimize
+          the delivery of high-performance applications that don't sacrifice
+          user experience.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
