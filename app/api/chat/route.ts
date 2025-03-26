@@ -3,13 +3,10 @@ import { model } from "./config";
 import { getSystemPrompt } from "./prompts";
 import { formatConversationHistory } from "./utils";
 import { ChatRequest } from "./types";
-import { INITIAL_GREETING_PROMPT } from "./constants";
 
 export async function POST(req: Request) {
   try {
     const { message, messages = [] } = (await req.json()) as ChatRequest;
-
-    const isInitialGreeting = message === INITIAL_GREETING_PROMPT;
 
     const history = formatConversationHistory(messages);
 

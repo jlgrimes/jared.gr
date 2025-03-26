@@ -68,11 +68,11 @@ export const Hero = ({
           transition={{ delay: 0.3 }}
           className="text-gray-600 dark:text-gray-300 text-lg"
         >
-          I'm a front-end engineer at Microsoft. I work on UI/UX for Copilot
+          {`I'm a front-end engineer at Microsoft. I work on UI/UX for Copilot
           Actions, focusing on creating thoughtful, intuitive experiences for
           the new AI scape. Collaborating closely with design, I aim to optimize
           the delivery of high-performance applications that don't sacrifice
-          user experience.
+          user experience.`}
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

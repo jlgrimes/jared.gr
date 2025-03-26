@@ -7,10 +7,9 @@ import ReactMarkdown from "react-markdown";
 
 interface ChatMessagesProps {
   messages: Message[];
-  isLoading: boolean;
 }
 
-export const ChatMessages = ({ messages, isLoading }: ChatMessagesProps) => {
+export const ChatMessages = ({ messages }: ChatMessagesProps) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {

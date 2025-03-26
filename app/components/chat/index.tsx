@@ -58,7 +58,7 @@ const Chat = () => {
             exit={{ opacity: 0 }}
             className="flex-1 flex flex-col"
           >
-            <ChatMessages messages={messages} isLoading={isLoading} />
+            <ChatMessages messages={messages} />
             <div className="p-4 border-t">
               <ChatInput
                 input={input}
