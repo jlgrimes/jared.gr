@@ -12,6 +12,12 @@ interface HeroProps {
 }
 
 const emojis = ["💻", "🃏", "🎺"];
+const greetings = [
+  { text: "Hi, I'm Jared", lang: "en" },
+  { text: "Γεια, είμαι ο Jared", lang: "el" },
+  { text: "こんにちは、Jaredです", lang: "ja" },
+  { text: "你好，我是Jared", lang: "zh" },
+];
 
 export const Hero = ({
   input,
@@ -21,14 +27,16 @@ export const Hero = ({
   onSubmit,
   inputRef,
 }: HeroProps) => {
-  const [currentEmojiIndex, setCurrentEmojiIndex] = useState(0);
+  const [currentGreetingIndex, setCurrentGreetingIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentEmojiIndex((prev) => (prev + 1) % emojis.length);
-    }, 4000);
+    const greetingInterval = setInterval(() => {
+      setCurrentGreetingIndex((prev) => (prev + 1) % greetings.length);
+    }, 5000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(greetingInterval);
+    };
   }, []);
 
   return (
@@ -40,14 +48,20 @@ export const Hero = ({
     >
       <div className="space-y-4">
         <div className="flex items-center gap-4">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500"
-          >
-            Hi, I'm Jared
-          </motion.h1>
+          <div className="relative h-12 w-full">
+            <AnimatePresence mode="wait">
+              <motion.h1
+                key={currentGreetingIndex}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 absolute"
+              >
+                {greetings[currentGreetingIndex].text}
+              </motion.h1>
+            </AnimatePresence>
+          </div>
         </div>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
