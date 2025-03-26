@@ -41,11 +41,9 @@ export const ChatInput = ({
           onChange={(e) => setInput(e.target.value)}
           onFocus={() => setIsInputFocused(true)}
           onBlur={() => {
-            setTimeout(() => {
-              if (input === "") {
-                setIsInputFocused(false);
-              }
-            }, 100);
+            if (input === "") {
+              setIsInputFocused(false);
+            }
           }}
           placeholder="Ask me anything..."
           className="w-full"

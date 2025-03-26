@@ -16,14 +16,6 @@ export default function Chat({ className = "" }: ChatProps) {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { messages, sendMessage } = useChat();
 
-  // Add effect to blur input when empty
-  useEffect(() => {
-    if (input === "") {
-      setIsInputFocused(false);
-      inputRef.current?.blur();
-    }
-  }, [input]);
-
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -33,6 +25,14 @@ export default function Chat({ className = "" }: ChatProps) {
 
   useEffect(() => {
     scrollToBottom();
+  }, [messages]);
+
+  // Focus input after messages are updated
+  useEffect(() => {
+    if (messages.length > 0) {
+      inputRef.current?.focus();
+      setIsInputFocused(true);
+    }
   }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {

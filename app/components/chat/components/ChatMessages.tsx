@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Message } from "../types";
-import ReactMarkdown from "react-markdown";
 import React from "react";
 
 interface ChatMessagesProps {
@@ -42,49 +41,8 @@ export const ChatMessages = ({ messages, containerRef }: ChatMessagesProps) => {
                   : "bg-gray-100 dark:bg-gray-800"
               }`}
             >
-              <div className="text-sm prose dark:prose-invert max-w-none leading-relaxed">
-                <ReactMarkdown
-                  components={{
-                    a: ({ href, children }) => (
-                      <a
-                        href={href}
-                        className="text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {children}
-                      </a>
-                    ),
-                    p: ({ children }) => {
-                      // If the only child is a LinkPreview, return it directly
-                      if (
-                        React.Children.count(children) === 1 &&
-                        React.isValidElement(children)
-                      ) {
-                        return children;
-                      }
-                      return <p>{children}</p>;
-                    },
-                    // Handle block elements
-                    div: ({ children }) => <div>{children}</div>,
-                    // Prevent nesting of block elements in paragraphs
-                    blockquote: ({ children }) => (
-                      <blockquote>{children}</blockquote>
-                    ),
-                    pre: ({ children }) => <pre>{children}</pre>,
-                    ul: ({ children }) => <ul>{children}</ul>,
-                    ol: ({ children }) => <ol>{children}</ol>,
-                    li: ({ children }) => <li>{children}</li>,
-                    table: ({ children }) => <table>{children}</table>,
-                    thead: ({ children }) => <thead>{children}</thead>,
-                    tbody: ({ children }) => <tbody>{children}</tbody>,
-                    tr: ({ children }) => <tr>{children}</tr>,
-                    th: ({ children }) => <th>{children}</th>,
-                    td: ({ children }) => <td>{children}</td>,
-                  }}
-                >
-                  {message.content}
-                </ReactMarkdown>
+              <div className="text-sm leading-relaxed whitespace-pre-wrap">
+                {message.content}
               </div>
             </motion.div>
           </motion.div>
