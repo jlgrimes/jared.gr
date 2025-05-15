@@ -2,16 +2,19 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { useTranslation } from '../i18n/useTranslation';
 
-const greetings = [
-  { text: "Hi, I'm Jared", lang: 'en' },
-  { text: 'Γεια, είμαι ο Jared', lang: 'el' },
-  { text: 'こんにちは、Jaredです', lang: 'ja' },
-  { text: '你好，我是Jared', lang: 'zh' },
-];
-
+// Use translations instead of hardcoded greetings
 export const Hero = () => {
+  const { t } = useTranslation();
   const [currentGreetingIndex, setCurrentGreetingIndex] = useState(0);
+
+  const greetings = [
+    { text: t('hero.greeting'), lang: 'en' },
+    { text: t('hero.greeting_el'), lang: 'el' },
+    { text: t('hero.greeting_ja'), lang: 'ja' },
+    { text: t('hero.greeting_zh'), lang: 'zh' },
+  ];
 
   useEffect(() => {
     const greetingInterval = setInterval(() => {
@@ -53,11 +56,7 @@ export const Hero = () => {
           transition={{ delay: 0.3 }}
           className='text-gray-600 dark:text-gray-300 text-lg'
         >
-          {`I'm a front-end engineer at Microsoft. I work on UI/UX for Copilot
-          Actions, focusing on creating thoughtful, intuitive experiences for
-          the new AI scape. Collaborating closely with design, I aim to optimize
-          the delivery of high-performance applications that don't sacrifice
-          user experience.`}
+          {t('hero.bio')}
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -71,7 +70,7 @@ export const Hero = () => {
             rel='noopener noreferrer'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
-            GitHub
+            {t('hero.github')}
           </a>
           <a
             href='https://linkedin.com/in/jaredgrimes'
@@ -79,7 +78,7 @@ export const Hero = () => {
             rel='noopener noreferrer'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
-            LinkedIn
+            {t('hero.linkedin')}
           </a>
           <a
             href='https://twitter.com/jgrimesey'
@@ -87,7 +86,7 @@ export const Hero = () => {
             rel='noopener noreferrer'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
-            Twitter
+            {t('hero.twitter')}
           </a>
         </motion.div>
       </div>
