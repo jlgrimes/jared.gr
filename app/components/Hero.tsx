@@ -65,7 +65,7 @@ export const Hero = () => {
           className='flex gap-4'
         >
           <a
-            href='https://github.com/jaredgrimes'
+            href='https://github.com/jlgrimes'
             target='_blank'
             rel='noopener noreferrer'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
@@ -73,7 +73,7 @@ export const Hero = () => {
             {t('hero.github')}
           </a>
           <a
-            href='https://linkedin.com/in/jaredgrimes'
+            href='https://linkedin.com/in/jaredlgrimes'
             target='_blank'
             rel='noopener noreferrer'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
