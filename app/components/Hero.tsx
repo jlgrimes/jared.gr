@@ -31,7 +31,7 @@ export const Hero = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className='flex flex-col items-start justify-center gap-8 px-4 pt-24'
+      className='flex flex-col items-start justify-center gap-8 pt-24'
     >
       <div className='space-y-4'>
         <div className='flex items-center gap-4'>

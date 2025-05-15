@@ -24,7 +24,7 @@ export const Projects = () => {
       title: t('projects.pokestats.title'),
       description: t('projects.pokestats.description'),
       content: t('projects.pokestats.content'),
-      image: 'pokestats.png',
+      image: 'pokestats-live.png',
     },
     {
       title: t('projects.streamTranscripts.title'),

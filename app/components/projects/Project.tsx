@@ -21,7 +21,7 @@ export const Project = ({
   image,
 }: ProjectProps) => {
   return (
-    <Card className='overflow-hidden shadow-md h-full flex flex-col pt-0'>
+    <Card className='overflow-hidden shadow-md flex flex-col pt-0 h-full'>
       <div className='h-40 relative -mt-px -ml-px -mr-px'>
         <Image
           src={`/assets/${image}`}
