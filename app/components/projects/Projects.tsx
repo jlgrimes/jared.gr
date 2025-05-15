@@ -1,13 +1,14 @@
 'use client';
 
 import { Project } from './Project';
+import { motion } from 'framer-motion';
 
 const projects = [
   {
     title: 'Copilot Actions',
     year: '2024',
     description:
-      'Developed the majority of the front-end UI for Copilot Actions and owned stylistic implementation app-wide - rapidly incorporating design feedback. -	Collaborated with localization teams, design, and product to support 20+ languages for the linguistically complex, mad-lib-style AI input for the Copilot Actions Create flow.',
+      'Developed the majority of the front-end UI for Copilot Actions and owned stylistic implementation app-wide - rapidly incorporating design feedback. Collaborated with localization teams, design, and product to support 20+ languages for the linguistically complex, mad-lib-style AI input for the Copilot Actions Create flow.',
     image: 'actions-web.webp',
   },
   {
@@ -36,10 +37,30 @@ const projects = [
 
 export const Projects = () => {
   return (
-    <div className='flex flex-col gap-4'>
-      {projects.map(project => (
-        <Project key={project.title} {...project} />
-      ))}
-    </div>
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+      className='px-4 py-12'
+    >
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+        {projects.map((project, index) => (
+          <motion.div
+            key={project.title}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 + index * 0.1 }}
+            className='h-full'
+          >
+            <Project
+              title={project.title}
+              year={project.year}
+              description={project.description}
+              image={project.image}
+            />
+          </motion.div>
+        ))}
+      </div>
+    </motion.section>
   );
 };
