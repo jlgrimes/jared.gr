@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -8,14 +9,19 @@ import {
 
 interface ProjectProps {
   title: string;
-  year: string;
   description: string;
+  content: string;
   image: string;
 }
 
-export const Project = ({ title, year, description, image }: ProjectProps) => {
+export const Project = ({
+  title,
+  description,
+  content,
+  image,
+}: ProjectProps) => {
   return (
-    <Card className='overflow-hidden border-0 shadow-md h-full flex flex-col pt-0'>
+    <Card className='overflow-hidden shadow-md h-full flex flex-col pt-0'>
       <div className='h-48 relative -mt-px -ml-px -mr-px'>
         <Image
           src={`/assets/${image}`}
@@ -28,6 +34,7 @@ export const Project = ({ title, year, description, image }: ProjectProps) => {
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
+      <CardContent>{content}</CardContent>
     </Card>
   );
 };
