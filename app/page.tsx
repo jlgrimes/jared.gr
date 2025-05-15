@@ -7,11 +7,13 @@ export default function Home() {
     <I18nProvider>
       <div className='bg-white dark:bg-gray-900 min-h-screen'>
         {/* <LanguageSelector /> */}
-        <div className='container mx-auto px-4 py-8'>
+        <div className='container mx-auto md:px-4 md:py-12'>
           <div className='max-w-2xl mx-auto w-full'>
             <Hero />
           </div>
-          <Projects />
+          <div className='w-2xl px-4 mx-auto lg:w-full'>
+            <Projects />
+          </div>
         </div>
       </div>
     </I18nProvider>
