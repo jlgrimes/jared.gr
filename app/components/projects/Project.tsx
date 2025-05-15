@@ -22,12 +22,12 @@ export const Project = ({
 }: ProjectProps) => {
   return (
     <Card className='overflow-hidden shadow-md h-full flex flex-col pt-0'>
-      <div className='h-48 relative -mt-px -ml-px -mr-px'>
+      <div className='h-40 relative -mt-px -ml-px -mr-px'>
         <Image
           src={`/assets/${image}`}
           alt={title}
           fill
-          className='object-cover rounded-t-xl'
+          className='object-cover rounded-t-xl pb-2'
         />
       </div>
       <CardHeader>
