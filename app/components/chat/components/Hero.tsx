@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { ChatInput } from "./ChatInput";
-import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChatInput } from './ChatInput';
+import { useState, useEffect } from 'react';
 
 interface HeroProps {
   input: string;
@@ -12,10 +12,10 @@ interface HeroProps {
 }
 
 const greetings = [
-  { text: "Hi, I'm Jared", lang: "en" },
-  { text: "Γεια, είμαι ο Jared", lang: "el" },
-  { text: "こんにちは、Jaredです", lang: "ja" },
-  { text: "你好，我是Jared", lang: "zh" },
+  { text: "Hi, I'm Jared", lang: 'en' },
+  { text: 'Γεια, είμαι ο Jared', lang: 'el' },
+  { text: 'こんにちは、Jaredです', lang: 'ja' },
+  { text: '你好，我是Jared', lang: 'zh' },
 ];
 
 export const Hero = ({
@@ -30,7 +30,7 @@ export const Hero = ({
 
   useEffect(() => {
     const greetingInterval = setInterval(() => {
-      setCurrentGreetingIndex((prev) => (prev + 1) % greetings.length);
+      setCurrentGreetingIndex(prev => (prev + 1) % greetings.length);
     }, 6000);
 
     return () => {
@@ -43,19 +43,19 @@ export const Hero = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="flex flex-col items-start justify-center min-h-[60vh] gap-8 px-4"
+      className='flex flex-col items-start justify-center min-h-[60vh] gap-8 px-4'
     >
-      <div className="space-y-4">
-        <div className="flex items-center gap-4">
-          <div className="relative h-12 w-full">
-            <AnimatePresence mode="wait">
+      <div className='space-y-4'>
+        <div className='flex items-center gap-4'>
+          <div className='relative h-12 w-full'>
+            <AnimatePresence mode='wait'>
               <motion.h1
                 key={currentGreetingIndex}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 absolute"
+                className='text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 absolute'
               >
                 {greetings[currentGreetingIndex].text}
               </motion.h1>
@@ -66,7 +66,7 @@ export const Hero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="text-gray-600 dark:text-gray-300 text-lg"
+          className='text-gray-600 dark:text-gray-300 text-lg'
         >
           {`I'm a front-end engineer at Microsoft. I work on UI/UX for Copilot
           Actions, focusing on creating thoughtful, intuitive experiences for
@@ -78,39 +78,39 @@ export const Hero = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="flex gap-4"
+          className='flex gap-4'
         >
           <a
-            href="https://github.com/jaredgrimes"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+            href='https://github.com/jaredgrimes'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
             GitHub
           </a>
           <a
-            href="https://linkedin.com/in/jaredgrimes"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+            href='https://linkedin.com/in/jaredgrimes'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
             LinkedIn
           </a>
           <a
-            href="https://twitter.com/jgrimesey"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+            href='https://twitter.com/jgrimesey'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
             Twitter
           </a>
         </motion.div>
       </div>
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="w-full max-w-2xl"
+        className='w-full max-w-2xl'
       >
         <ChatInput
           input={input}
@@ -120,7 +120,7 @@ export const Hero = ({
           onSubmit={onSubmit}
           inputRef={inputRef}
         />
-      </motion.div>
+      </motion.div> */}
     </motion.div>
   );
 };
