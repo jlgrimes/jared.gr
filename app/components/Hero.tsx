@@ -1,15 +1,7 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChatInput } from './ChatInput';
-import { useState, useEffect } from 'react';
+'use client';
 
-interface HeroProps {
-  input: string;
-  setInput: (value: string) => void;
-  isInputFocused: boolean;
-  setIsInputFocused: (value: boolean) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  inputRef: React.RefObject<HTMLInputElement | null>;
-}
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 const greetings = [
   { text: "Hi, I'm Jared", lang: 'en' },
@@ -18,14 +10,7 @@ const greetings = [
   { text: '你好，我是Jared', lang: 'zh' },
 ];
 
-export const Hero = ({
-  input,
-  setInput,
-  isInputFocused,
-  setIsInputFocused,
-  onSubmit,
-  inputRef,
-}: HeroProps) => {
+export const Hero = () => {
   const [currentGreetingIndex, setCurrentGreetingIndex] = useState(0);
 
   useEffect(() => {
