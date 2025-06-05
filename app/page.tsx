@@ -9,11 +9,9 @@ export default function Home() {
       <div className='bg-white dark:bg-gray-900 min-h-screen'>
         {/* <LanguageSelector /> */}
         <div className='container mx-auto px-8 lg:py-12'>
-          <div className='max-w-2xl mx-auto w-full'>
+          <div className='max-w-4xl mx-auto w-full'>
             <Hero />
             <Testimonials />
-          </div>
-          <div className='max-w-2xl mx-auto lg:max-w-full'>
             <Projects />
           </div>
         </div>
