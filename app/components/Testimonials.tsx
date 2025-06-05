@@ -27,10 +27,12 @@ export function Testimonials() {
     'testimonial4',
   ];
   const [api, setApi] = useState<CarouselApi>();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(1);
 
   useEffect(() => {
     if (!api) return;
+
+    api.scrollTo(1);
 
     const interval = setInterval(() => {
       api.scrollNext();
@@ -56,10 +58,11 @@ export function Testimonials() {
       <div className='relative'>
         <Carousel
           opts={{
-            align: 'start',
+            align: 'center',
             loop: true,
             skipSnaps: false,
             dragFree: false,
+            startIndex: 1,
           }}
           setApi={setApi}
           className='w-full'
