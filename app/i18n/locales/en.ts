@@ -52,6 +52,31 @@ const en = {
     },
   },
 
+  // Testimonials section
+  testimonials: {
+    title: 'Testimonials',
+    entries: {
+      testimonial1: {
+        role: 'Senior Designer',
+        company: 'Microsoft',
+        content:
+          "Jared's love for UI craftsmanship, paired with his curiosity and enthusiasm, is infectious. His energy elevates team culture and makes collaboration better.",
+      },
+      testimonial2: {
+        role: 'Senior Engineer',
+        company: 'Amazon',
+        content:
+          "Jared's implementation of front-end best practices significantly improved our development workflow. His contributions to code reusability and maintainability were outstanding.",
+      },
+      testimonial3: {
+        role: 'Senior UX Designer',
+        company: 'Amazon',
+        content:
+          "Jared's ability to understand complex systems fast and contribute immediately made a huge impact. In just one sprint, he helped unblock the team and improve how we worked.",
+      },
+    },
+  },
+
   // Layout and common
   common: {
     metadata: {
