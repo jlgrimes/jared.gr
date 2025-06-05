@@ -74,6 +74,12 @@ const en = {
         content:
           "Jared's ability to understand complex systems fast and contribute immediately made a huge impact. In just one sprint, he helped unblock the team and improve how we worked.",
       },
+      testimonial4: {
+        role: 'Product Manager',
+        company: 'Recidiviz (from MI Symptoms)',
+        content:
+          'Jared brought unmatched enthusiasm and energy to every demo. He handled constant pivots, tight deadlines, and still led a large dev team through a state-wide initiative — all while balancing a separate workload. His ability to grow fast, adapt quickly, and motivate teams was exceptional.',
+      },
     },
   },
 

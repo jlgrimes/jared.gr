@@ -11,7 +11,9 @@ export default function Home() {
         <div className='container mx-auto px-8 lg:py-12'>
           <div className='max-w-4xl mx-auto w-full'>
             <Hero />
-            <Testimonials />
+          </div>
+          <Testimonials />
+          <div className='max-w-4xl mx-auto w-full'>
             <Projects />
           </div>
         </div>
