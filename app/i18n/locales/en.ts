@@ -54,7 +54,7 @@ const en = {
 
   // Testimonials section
   testimonials: {
-    title: 'Testimonials',
+    title: 'What Others Say',
     entries: {
       testimonial1: {
         role: 'Senior Designer',
