@@ -13,11 +13,9 @@ export function Testimonials() {
 
   return (
     <section className='py-12'>
-      {/* <div className='max-w-4xl mx-auto w-full'>
-        <h2 className='text-2xl font-bold mb-6 text-gray-900 dark:text-white container mx-auto'>
-          {t('testimonials.title')}
-        </h2>
-      </div> */}
+      {/* <h2 className='text-lg sm:text-xl font-semibold text-gray-800 tracking-tight mb-6'>
+        What Others Say
+      </h2> */}
       <div className='grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12'>
         {testimonials.map((testimonial, index) => (
           <div key={index} className='flex flex-col justify-between'>

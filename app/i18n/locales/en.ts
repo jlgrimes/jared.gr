@@ -63,8 +63,8 @@ const en = {
           "Jared's love for UI craftsmanship, paired with his curiosity and enthusiasm, is infectious. His energy elevates team culture and makes collaboration better.",
       },
       testimonial2: {
-        role: 'Senior Engineer',
-        company: 'Amazon',
+        role: 'Senior SoftwareEngineer',
+        company: 'Microsoft',
         content:
           "Jared's implementation of front-end best practices significantly improved our development workflow. His contributions to code reusability and maintainability were outstanding.",
       },
