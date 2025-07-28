@@ -1,30 +1,10 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { useTranslation } from '../i18n/useTranslation';
 
-// Use translations instead of hardcoded greetings
 export const Hero = () => {
   const { t } = useTranslation();
-  const [currentGreetingIndex, setCurrentGreetingIndex] = useState(0);
-
-  const greetings = [
-    { text: t('hero.greeting'), lang: 'en' },
-    { text: t('hero.greeting_el'), lang: 'el' },
-    { text: t('hero.greeting_ja'), lang: 'ja' },
-    { text: t('hero.greeting_zh'), lang: 'zh' },
-  ];
-
-  useEffect(() => {
-    const greetingInterval = setInterval(() => {
-      setCurrentGreetingIndex(prev => (prev + 1) % greetings.length);
-    }, 6000);
-
-    return () => {
-      clearInterval(greetingInterval);
-    };
-  }, []);
 
   return (
     <motion.div
@@ -35,20 +15,9 @@ export const Hero = () => {
     >
       <div className='space-y-4'>
         <div className='flex items-center gap-4'>
-          <div className='relative h-12 w-full'>
-            <AnimatePresence mode='wait'>
-              <motion.h1
-                key={currentGreetingIndex}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className='text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 absolute'
-              >
-                {greetings[currentGreetingIndex].text}
-              </motion.h1>
-            </AnimatePresence>
-          </div>
+          <h1 className='text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500'>
+            {t('hero.greeting')}
+          </h1>
         </div>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
