@@ -34,25 +34,19 @@ export const Hero = () => {
           className='flex gap-4'
         >
           <a
-            href='https://github.com/jlgrimes'
-            target='_blank'
-            rel='noopener noreferrer'
+            href='/github'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
             {t('hero.github')}
           </a>
           <a
-            href='https://linkedin.com/in/jaredlgrimes'
-            target='_blank'
-            rel='noopener noreferrer'
+            href='/linkedin'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
             {t('hero.linkedin')}
           </a>
           <a
-            href='https://twitter.com/jgrimesey'
-            target='_blank'
-            rel='noopener noreferrer'
+            href='/x'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
             {t('hero.twitter')}
