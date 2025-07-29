@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useTranslation } from '../i18n/useTranslation';
 
 export const Hero = () => {
@@ -33,24 +34,24 @@ export const Hero = () => {
           transition={{ delay: 0.4 }}
           className='flex gap-4'
         >
-          <a
+          <Link
             href='/github'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
             {t('hero.github')}
-          </a>
-          <a
+          </Link>
+          <Link
             href='/linkedin'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
             {t('hero.linkedin')}
-          </a>
-          <a
+          </Link>
+          <Link
             href='/x'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
             {t('hero.twitter')}
-          </a>
+          </Link>
         </motion.div>
       </div>
       {/* <motion.div
