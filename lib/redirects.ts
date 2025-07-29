@@ -56,6 +56,14 @@ export const redirectGroups: RedirectGroup[] = [
     paths: ['/limitless'],
     destination: 'https://limitlesstcg.com/players/450',
   },
+  {
+    name: 'Spotify',
+    description: 'Music and playlists',
+    icon: '🎵',
+    paths: ['/spotify'],
+    destination:
+      'https://open.spotify.com/user/jaredlancegrimes?si=4f8c48e194d84c78',
+  },
 ];
 
 // Generate individual redirects for Next.js config
