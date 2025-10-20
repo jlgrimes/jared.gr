@@ -1,16 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useTranslation } from '../i18n/useTranslation';
+import { siteData } from '../../lib/data';
 
 export function Testimonials() {
-  const { t } = useTranslation();
-  const testimonials = [
-    'testimonial1',
-    'testimonial2',
-    'testimonial3',
-    'testimonial4',
-  ];
+  const testimonials = siteData.testimonials;
 
   return (
     <section className='py-12'>
@@ -29,17 +23,17 @@ export function Testimonials() {
             className='flex flex-col justify-between'
           >
             <p className='text-base text-gray-700 dark:text-gray-300 italic'>
-              {t(`testimonials.entries.${testimonial}.content`)}
+              {testimonial.content}
             </p>
             <div className='flex items-center gap-2 mt-4'>
               <span className='text-sm font-medium text-gray-900 dark:text-white'>
-                {t(`testimonials.entries.${testimonial}.role`)}
+                {testimonial.role}
               </span>
               <span className='text-sm text-gray-500 dark:text-gray-400'>
                 •
               </span>
               <span className='text-sm text-gray-500 dark:text-gray-400'>
-                {t(`testimonials.entries.${testimonial}.company`)}
+                {testimonial.company}
               </span>
             </div>
           </motion.div>

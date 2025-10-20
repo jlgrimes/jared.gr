@@ -2,49 +2,10 @@
 
 import { Project } from './Project';
 import { motion } from 'framer-motion';
-import { useTranslation } from '../../i18n/useTranslation';
+import { siteData } from '../../../lib/data';
 
 export const Projects = () => {
-  const { t } = useTranslation();
-
-  const projects = [
-    {
-      title: t('projects.copilotActions.title'),
-      description: t('projects.copilotActions.description'),
-      content: t('projects.copilotActions.content'),
-      image: 'actions-web.webp',
-    },
-    {
-      title: t('projects.streamCopilot.title'),
-      description: t('projects.streamCopilot.description'),
-      content: t('projects.streamCopilot.content'),
-      image: 'stream-copilot.png',
-    },
-    {
-      title: t('projects.pokestats.title'),
-      description: t('projects.pokestats.description'),
-      content: t('projects.pokestats.content'),
-      image: 'pokestats-live.png',
-    },
-    {
-      title: t('projects.streamTranscripts.title'),
-      description: t('projects.streamTranscripts.description'),
-      content: t('projects.streamTranscripts.content'),
-      image: 'transcripts.webp',
-    },
-    {
-      title: t('projects.miSymptoms.title'),
-      description: t('projects.miSymptoms.description'),
-      content: t('projects.miSymptoms.content'),
-      image: 'mi-symptoms.jpg',
-    },
-    {
-      title: t('projects.amazonBI.title'),
-      description: t('projects.amazonBI.description'),
-      content: t('projects.amazonBI.content'),
-      image: 'amazon.webp',
-    },
-  ];
+  const projects = siteData.projects;
 
   return (
     <motion.section

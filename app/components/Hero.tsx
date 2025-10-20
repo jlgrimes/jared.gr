@@ -2,11 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useTranslation } from '../i18n/useTranslation';
+import { siteData } from '../../lib/data';
 
 export const Hero = () => {
-  const { t } = useTranslation();
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -17,7 +15,7 @@ export const Hero = () => {
       <div className='space-y-4'>
         <div className='flex items-center gap-4'>
           <h1 className='text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500'>
-            {t('hero.greeting')}
+            {siteData.hero.greeting}
           </h1>
         </div>
         <motion.p
@@ -26,7 +24,7 @@ export const Hero = () => {
           transition={{ delay: 0.3 }}
           className='text-gray-600 dark:text-gray-300 text-lg'
         >
-          {t('hero.bio')}
+          {siteData.hero.bio}
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -38,19 +36,19 @@ export const Hero = () => {
             href='/github'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
-            {t('hero.github')}
+            {siteData.hero.github}
           </Link>
           <Link
             href='/linkedin'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
-            {t('hero.linkedin')}
+            {siteData.hero.linkedin}
           </Link>
           <Link
             href='/x'
             className='text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors'
           >
-            {t('hero.twitter')}
+            {siteData.hero.twitter}
           </Link>
         </motion.div>
       </div>
