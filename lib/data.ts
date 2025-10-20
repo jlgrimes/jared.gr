@@ -13,6 +13,13 @@ export const siteData = {
   // Projects data
   projects: [
     {
+      title: 'Copilot Scheduled Prompts',
+      description: 'Microsoft Office AI - 2025',
+      content:
+        'Owned the development of the Scheduled Prompts feature in M365 Copilot, allowing users to schedule prompts to be executed at a specific time. Collaborated primarily with product to ensure high shipment quality of the feature.',
+      image: 'scheduled-prompts.png',
+    },
+    {
       title: 'Copilot Actions',
       description: 'Microsoft Office AI - 2024',
       content:
@@ -27,7 +34,7 @@ export const siteData = {
       image: 'stream-copilot.png',
     },
     {
-      title: 'pokestats.live',
+      title: 'Pokestats Live',
       description: 'Freelance - 2023',
       content:
         'Sole developer for pokestats.live, a community-powered live tournament analytics tool for competitors of the Pokémon Trading Card Game, accruing 3M+ total impressions and 10K+ weekly active users',
@@ -37,7 +44,7 @@ export const siteData = {
       title: 'Stream Transcripts',
       description: 'Microsoft Office Media Group - 2022',
       content:
-        'Front-end developer for Stream Transcripts, a tool to help users transcribe and search through their Stream videos. Owned rollout of Transcript Edit Batching and various optimizations for accessibility.',
+        "Front-end developer for Microsoft Stream's transcripts feature, a tool to help users transcribe and search through their Stream videos. Owned rollout of Transcript Edit Batching and various optimizations for accessibility.",
       image: 'transcripts.webp',
     },
     {
