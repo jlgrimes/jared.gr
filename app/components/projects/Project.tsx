@@ -11,10 +11,11 @@ const parseDescription = (description: string) => {
   return { year, company };
 };
 
+// iOS-like spring: smooth and responsive, no bounce
 const transition = {
-  type: 'tween',
-  ease: 'easeOut',
-  duration: 0.2,
+  type: 'spring',
+  duration: 0.4,
+  bounce: 0,
 } as const;
 
 interface ProjectProps {
@@ -121,7 +122,7 @@ export const ExpandedProject = ({
       initial={{ backgroundColor: 'rgba(0,0,0,0)' }}
       animate={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       exit={{ backgroundColor: 'rgba(0,0,0,0)' }}
-      transition={{ duration: 0.15 }}
+      transition={{ duration: 0.3 }}
       onClick={onClose}
     >
       <motion.div
@@ -161,10 +162,10 @@ export const ExpandedProject = ({
 
           {/* Description and button fade in separately */}
           <motion.p
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ delay: 0.1, duration: 0.15 }}
+            transition={{ delay: 0.15, duration: 0.25 }}
             className='mt-4 text-sm leading-relaxed'
           >
             {content}
@@ -173,7 +174,7 @@ export const ExpandedProject = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ delay: 0.15, duration: 0.1 }}
+            transition={{ delay: 0.2, duration: 0.2 }}
             onClick={onClose}
             className='mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors'
           >
