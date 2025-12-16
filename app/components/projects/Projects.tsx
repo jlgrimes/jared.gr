@@ -66,6 +66,8 @@ export const Projects = () => {
             year={expandedProject.year}
             content={expandedProject.content}
             image={expandedProject.image}
+            url={expandedProject.url}
+            infoUrl={expandedProject.infoUrl}
             onClose={() => setExpandedProject(null)}
           />
         )}

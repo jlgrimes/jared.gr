@@ -19,6 +19,8 @@ export const siteData = {
       content:
         'Created qrtz, a new semantic back-end language for LLMs to communicate intent through tool calls. Enables cleaner, more structured AI-to-system interactions.',
       image: 'qrtz.png',
+      url: 'neuron.qrtz.ai',
+      infoUrl: '',
     },
     {
       title: 'Copilot Scheduled Prompts',
@@ -27,6 +29,9 @@ export const siteData = {
       content:
         'Owned the development of the Scheduled Prompts feature in M365 Copilot, allowing users to schedule prompts to be executed at a specific time. Collaborated primarily with product to ensure high shipment quality of the feature.',
       image: 'scheduled-prompts.png',
+      url: '',
+      infoUrl:
+        'https://support.microsoft.com/en-us/topic/schedule-copilot-prompts-29dfd5fb-211a-4515-88a6-730b8074e489#:~:text=You%20can%20schedule%20Copilot%20prompts%20to%20run,To%20open%20Copilot%20and%20submit%20a%20prompt',
     },
     {
       title: 'Copilot Actions',
@@ -35,6 +40,9 @@ export const siteData = {
       content:
         'Developed the majority of the front-end UI for Copilot Actions and owned stylistic implementation app-wide - rapidly incorporating design feedback. Collaborated with localization teams, design, and product to support 20+ languages for the linguistically complex, mad-lib-style AI input for the Copilot Actions Create flow.',
       image: 'actions-web.webp',
+      url: '',
+      infoUrl:
+        'https://www.microsoft.com/en-us/microsoft-365/blog/2024/11/19/introducing-copilot-actions-new-agents-and-tools-to-empower-it-teams/',
     },
     {
       title: 'Training Court',
@@ -43,6 +51,8 @@ export const siteData = {
       content:
         'Built Training Court, an app to track your Pokémon TCG tournaments and practice games. Helps players log matches, analyze performance, and improve their competitive gameplay.',
       image: 'training-court.png',
+      url: 'trainingcourt.app',
+      infoUrl: '',
     },
     {
       title: 'Stream Copilot',
@@ -51,6 +61,9 @@ export const siteData = {
       content:
         'Led front-end development and integration of O365 Copilot into Microsoft Stream, giving users the ability to interact with videos with natural language. Implemented lazy loading the front-end, the interactive prompt menu UI, and the end-to-end user feedback collection system.',
       image: 'stream-copilot.png',
+      url: '',
+      infoUrl:
+        'https://techcommunity.microsoft.com/blog/streamblog/introducing-copilot-in-microsoft-stream/3929109',
     },
     {
       title: 'Pokestats Live',
@@ -59,6 +72,8 @@ export const siteData = {
       content:
         'Sole developer for pokestats.live, a community-powered live tournament analytics tool for competitors of the Pokémon Trading Card Game, accruing 3M+ total impressions and 10K+ weekly active users',
       image: 'pokestats-live.png',
+      url: '',
+      infoUrl: '',
     },
     {
       title: 'Stream Transcripts',
@@ -67,6 +82,9 @@ export const siteData = {
       content:
         "Front-end developer for Microsoft Stream's transcripts feature, a tool to help users transcribe and search through their Stream videos. Owned rollout of Transcript Edit Batching and various optimizations for accessibility.",
       image: 'transcripts.webp',
+      url: '',
+      infoUrl:
+        'https://support.microsoft.com/en-us/office/view-edit-and-manage-video-transcripts-and-captions-3cb9acb6-05b2-4f59-a50d-7df61123aa20',
     },
     {
       title: 'MI Symptoms',
@@ -75,6 +93,9 @@ export const siteData = {
       content:
         'Lead developer for MI Symptoms - a free online tool to help organizations screen their members for COVID-19 symptoms, accruing 1M+ survey submissions in the State of Michigan.',
       image: 'mi-symptoms.jpg',
+      url: '',
+      infoUrl:
+        'https://www.michigan.gov/coronavirus/news/2020/05/29/mi-symptoms-web-application-helps-michiganders-track-symptoms-informs-reopening-strategy',
     },
     {
       title: 'Amazon Business Intelligence',
@@ -83,6 +104,8 @@ export const siteData = {
       content:
         'Introduced suite of front-end best practices to engineers, decreasing code review turnaround time by 50%, and increasing front-end code reusability, maintainability, and scalability. Created 2020 VP-level award-winning Turismo new features notification framework to 10,000+ users, increasing new feature discoverability by 93.5%.',
       image: 'amazon.webp',
+      url: '',
+      infoUrl: '',
     },
   ],
 

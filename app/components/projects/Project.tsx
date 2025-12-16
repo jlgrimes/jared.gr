@@ -85,6 +85,8 @@ interface ExpandedProjectProps {
   year: number;
   content: string;
   image: string;
+  url: string;
+  infoUrl: string;
   onClose: () => void;
 }
 
@@ -94,6 +96,8 @@ export const ExpandedProject = ({
   year,
   content,
   image,
+  url,
+  infoUrl,
   onClose,
 }: ExpandedProjectProps) => {
   const layoutId = getLayoutId(title);
@@ -101,7 +105,7 @@ export const ExpandedProject = ({
 
   return (
     <motion.div
-      className='fixed inset-0 z-50 flex items-start justify-center pt-24 px-6'
+      className='fixed inset-0 z-50 flex items-center justify-center px-6'
       initial={{ backgroundColor: 'rgba(0,0,0,0)' }}
       animate={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       exit={{ backgroundColor: 'rgba(0,0,0,0)' }}
@@ -127,7 +131,7 @@ export const ExpandedProject = ({
 
         {/* Content - all fades in together after card animation */}
         <motion.div
-          className='p-6'
+          className='p-8'
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
@@ -136,12 +140,32 @@ export const ExpandedProject = ({
           <h3 className='text-xl font-semibold text-foreground'>{title}</h3>
           <p className='text-sm text-muted-foreground mt-1'>{subtitle}</p>
           <p className='mt-4 text-sm leading-relaxed'>{content}</p>
-          <button
-            onClick={onClose}
-            className='mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors'
-          >
-            Close
-          </button>
+          <div className='flex gap-4 mt-4'>
+            {url.length > 0 && (
+              <a
+                href={url.startsWith('http') ? url : `https://${url}`}
+                target='_blank'
+                rel='noopener noreferrer'
+                onClick={e => e.stopPropagation()}
+                className='text-sm text-blue-600 dark:text-blue-400 hover:underline'
+              >
+                Visit Project →
+              </a>
+            )}
+            {infoUrl.length > 0 && (
+              <a
+                href={
+                  infoUrl.startsWith('http') ? infoUrl : `https://${infoUrl}`
+                }
+                target='_blank'
+                rel='noopener noreferrer'
+                onClick={e => e.stopPropagation()}
+                className='text-sm text-blue-600 dark:text-blue-400 hover:underline'
+              >
+                More Info →
+              </a>
+            )}
+          </div>
         </motion.div>
       </motion.div>
     </motion.div>
