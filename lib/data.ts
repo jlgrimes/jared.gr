@@ -41,6 +41,13 @@ export const siteData = {
       image: 'pokestats-live.png',
     },
     {
+      title: 'Training Court',
+      description: 'Freelance - 2024',
+      content:
+        'Built Training Court, an app to track your Pokémon TCG tournaments and practice games. Helps players log matches, analyze performance, and improve their competitive gameplay.',
+      image: 'training-court.png',
+    },
+    {
       title: 'Stream Transcripts',
       description: 'Microsoft Office Media Group - 2022',
       content:

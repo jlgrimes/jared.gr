@@ -49,7 +49,7 @@ export const Project = ({
       onClick={isExpanded ? undefined : onToggle}
       transition={transition}
       className={cn(
-        'relative break-inside-avoid overflow-hidden',
+        'relative overflow-hidden',
         isExpanded ? 'invisible' : 'cursor-pointer group',
         !isExpanded && hasExpandedCard && 'opacity-40'
       )}
@@ -58,13 +58,14 @@ export const Project = ({
         layoutId={isExpanded ? undefined : `${layoutId}-image`}
         layout={false}
         transition={transition}
+        className='aspect-square md:aspect-auto'
       >
         <Image
           src={`/assets/${image}`}
           alt={title}
           width={800}
           height={600}
-          className='w-full h-auto object-cover'
+          className='w-full h-full md:h-auto object-cover'
         />
       </motion.div>
 

@@ -4,8 +4,15 @@ import { useState } from 'react';
 import { Project, ExpandedProject } from './Project';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { siteData } from '../../../lib/data';
+import Masonry from 'react-masonry-css';
 
 type ProjectType = (typeof siteData.projects)[0];
+
+const breakpointColumns = {
+  default: 3, // 3 columns for large screens
+  1024: 2, // 2 columns for tablet
+  768: 1, // 1 column for mobile
+};
 
 export const Projects = () => {
   const projects = siteData.projects;
@@ -27,7 +34,11 @@ export const Projects = () => {
         transition={{ delay: 1.0 }}
         className='py-12'
       >
-        <div className='columns-1 lg:columns-2 gap-0'>
+        <Masonry
+          breakpointCols={breakpointColumns}
+          className='flex w-auto'
+          columnClassName='bg-clip-padding'
+        >
           {projects.map(project => (
             <Project
               key={project.title}
@@ -40,7 +51,7 @@ export const Projects = () => {
               hasExpandedCard={expandedProject !== null}
             />
           ))}
-        </div>
+        </Masonry>
       </motion.section>
 
       {/* Expanded card overlay */}
