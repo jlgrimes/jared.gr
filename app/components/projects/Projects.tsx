@@ -2,35 +2,25 @@
 
 import { useState } from 'react';
 import { Project, ExpandedProject } from './Project';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { siteData } from '../../../lib/data';
 
-interface ExpandedState {
-  project: (typeof siteData.projects)[0];
-  rect: DOMRect;
-}
+type ProjectType = (typeof siteData.projects)[0];
 
 export const Projects = () => {
   const projects = siteData.projects;
-  const [expanded, setExpanded] = useState<ExpandedState | null>(null);
+  const [expandedProject, setExpandedProject] = useState<ProjectType | null>(
+    null
+  );
 
-  const handleToggle = (
-    project: (typeof siteData.projects)[0],
-    rect: DOMRect | null
-  ) => {
-    if (expanded?.project.title === project.title) {
-      setExpanded(null);
-    } else if (rect) {
-      setExpanded({ project, rect });
-    }
-  };
-
-  const handleClose = () => {
-    setExpanded(null);
+  const handleToggle = (project: ProjectType) => {
+    setExpandedProject(prev =>
+      prev?.title === project.title ? null : project
+    );
   };
 
   return (
-    <>
+    <LayoutGroup>
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -45,9 +35,9 @@ export const Projects = () => {
               description={project.description}
               content={project.content}
               image={project.image}
-              isExpanded={expanded?.project.title === project.title}
-              onToggle={rect => handleToggle(project, rect)}
-              hasExpandedCard={expanded !== null}
+              isExpanded={expandedProject?.title === project.title}
+              onToggle={() => handleToggle(project)}
+              hasExpandedCard={expandedProject !== null}
             />
           ))}
         </div>
@@ -55,18 +45,17 @@ export const Projects = () => {
 
       {/* Expanded card overlay */}
       <AnimatePresence>
-        {expanded && (
+        {expandedProject && (
           <ExpandedProject
-            key={expanded.project.title}
-            title={expanded.project.title}
-            description={expanded.project.description}
-            content={expanded.project.content}
-            image={expanded.project.image}
-            originRect={expanded.rect}
-            onClose={handleClose}
+            key={expandedProject.title}
+            title={expandedProject.title}
+            description={expandedProject.description}
+            content={expandedProject.content}
+            image={expandedProject.image}
+            onClose={() => setExpandedProject(null)}
           />
         )}
       </AnimatePresence>
-    </>
+    </LayoutGroup>
   );
 };
