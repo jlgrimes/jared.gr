@@ -10,9 +10,7 @@ export default function Home() {
           <Hero />
         </div>
         <Testimonials />
-        <div className='max-w-4xl mx-auto w-full'>
-          <Projects />
-        </div>
+        <Projects />
       </div>
     </div>
   );
