@@ -35,8 +35,9 @@ export const Project = ({
   onToggle,
   hasExpandedCard,
 }: ProjectProps) => {
-  const { year } = parseDescription(description);
+  const { year, company } = parseDescription(description);
   const layoutId = getLayoutId(title);
+  const subtitle = `${company} · ${year}`;
 
   // Don't render if expanded - the ExpandedProject takes over with shared layoutId
   if (isExpanded) {
@@ -88,11 +89,11 @@ export const Project = ({
             {title}
           </motion.h3>
           <motion.p
-            layoutId={`${layoutId}-year`}
+            layoutId={`${layoutId}-subtitle`}
             className='text-sm text-white/80 mt-1'
             transition={springTransition}
           >
-            {year}
+            {subtitle}
           </motion.p>
         </div>
       </div>
@@ -118,6 +119,7 @@ export const ExpandedProject = ({
 }: ExpandedProjectProps) => {
   const { year, company } = parseDescription(description);
   const layoutId = getLayoutId(title);
+  const subtitle = `${company} · ${year}`;
 
   return (
     <motion.div
@@ -149,13 +151,8 @@ export const ExpandedProject = ({
         </motion.div>
 
         {/* Content */}
-        <motion.div
-          className='p-6'
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ delay: 0.15, duration: 0.15 }}
-        >
+        <div className='p-6'>
+          {/* Title and subtitle use layoutId - no opacity animation */}
           <motion.h3
             layoutId={`${layoutId}-title`}
             className='text-xl font-semibold text-foreground'
@@ -164,12 +161,14 @@ export const ExpandedProject = ({
             {title}
           </motion.h3>
           <motion.p
-            layoutId={`${layoutId}-year`}
+            layoutId={`${layoutId}-subtitle`}
             className='text-sm text-muted-foreground mt-1'
             transition={springTransition}
           >
-            {company} &middot; {year}
+            {subtitle}
           </motion.p>
+
+          {/* Description and button fade in separately */}
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -189,7 +188,7 @@ export const ExpandedProject = ({
           >
             Close
           </motion.button>
-        </motion.div>
+        </div>
       </motion.div>
     </motion.div>
   );
