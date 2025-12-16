@@ -5,12 +5,6 @@ import { cn } from '@/lib/utils';
 // Shared utilities
 const getLayoutId = (title: string) => `project-${title.replace(/\s+/g, '-')}`;
 
-const parseDescription = (description: string) => {
-  const year = description.match(/\d{4}/)?.[0] ?? '';
-  const company = description.replace(/\s*-\s*\d{4}/, '');
-  return { year, company };
-};
-
 // iOS-like spring: smooth and responsive, no bounce
 const transition = {
   type: 'spring',
@@ -20,7 +14,8 @@ const transition = {
 
 interface ProjectProps {
   title: string;
-  description: string;
+  company: string;
+  year: number;
   content: string;
   image: string;
   isExpanded: boolean;
@@ -30,13 +25,13 @@ interface ProjectProps {
 
 export const Project = ({
   title,
-  description,
+  company,
+  year,
   image,
   isExpanded,
   onToggle,
   hasExpandedCard,
 }: ProjectProps) => {
-  const { year, company } = parseDescription(description);
   const layoutId = getLayoutId(title);
   const subtitle = `${company} · ${year}`;
 
@@ -86,7 +81,8 @@ export const Project = ({
 // Expanded card overlay component
 interface ExpandedProjectProps {
   title: string;
-  description: string;
+  company: string;
+  year: number;
   content: string;
   image: string;
   onClose: () => void;
@@ -94,12 +90,12 @@ interface ExpandedProjectProps {
 
 export const ExpandedProject = ({
   title,
-  description,
+  company,
+  year,
   content,
   image,
   onClose,
 }: ExpandedProjectProps) => {
-  const { year, company } = parseDescription(description);
   const layoutId = getLayoutId(title);
   const subtitle = `${company} · ${year}`;
 

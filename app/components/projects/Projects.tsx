@@ -15,7 +15,8 @@ const breakpointColumns = {
 };
 
 export const Projects = () => {
-  const projects = siteData.projects;
+  // Sort projects by year, newest first
+  const projects = [...siteData.projects].sort((a, b) => b.year - a.year);
   const [expandedProject, setExpandedProject] = useState<ProjectType | null>(
     null
   );
@@ -43,7 +44,8 @@ export const Projects = () => {
             <Project
               key={project.title}
               title={project.title}
-              description={project.description}
+              company={project.company}
+              year={project.year}
               content={project.content}
               image={project.image}
               isExpanded={expandedProject?.title === project.title}
@@ -60,7 +62,8 @@ export const Projects = () => {
           <ExpandedProject
             key={expandedProject.title}
             title={expandedProject.title}
-            description={expandedProject.description}
+            company={expandedProject.company}
+            year={expandedProject.year}
             content={expandedProject.content}
             image={expandedProject.image}
             onClose={() => setExpandedProject(null)}
