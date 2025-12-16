@@ -74,22 +74,8 @@ export const Project = ({
                    transition-all duration-200 flex items-center justify-center'
       >
         <div className='opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-200 text-white text-center px-4'>
-          <motion.h3
-            layoutId={isExpanded ? undefined : `${layoutId}-title`}
-            layout={false}
-            className='text-xl font-semibold'
-            transition={transition}
-          >
-            {title}
-          </motion.h3>
-          <motion.p
-            layoutId={isExpanded ? undefined : `${layoutId}-subtitle`}
-            layout={false}
-            className='text-sm text-white/80 mt-1'
-            transition={transition}
-          >
-            {subtitle}
-          </motion.p>
+          <h3 className='text-xl font-semibold'>{title}</h3>
+          <p className='text-sm text-white/80 mt-1'>{subtitle}</p>
         </div>
       </div>
     </motion.div>
@@ -142,45 +128,24 @@ export const ExpandedProject = ({
           />
         </motion.div>
 
-        {/* Content */}
-        <div className='p-6'>
-          {/* Title and subtitle use layoutId - no opacity animation */}
-          <motion.h3
-            layoutId={`${layoutId}-title`}
-            className='text-xl font-semibold text-foreground'
-            transition={transition}
-          >
-            {title}
-          </motion.h3>
-          <motion.p
-            layoutId={`${layoutId}-subtitle`}
-            className='text-sm text-muted-foreground mt-1'
-            transition={transition}
-          >
-            {subtitle}
-          </motion.p>
-
-          {/* Description and button fade in separately */}
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ delay: 0.15, duration: 0.25 }}
-            className='mt-4 text-sm leading-relaxed'
-          >
-            {content}
-          </motion.p>
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ delay: 0.2, duration: 0.2 }}
+        {/* Content - all fades in together after card animation */}
+        <motion.div
+          className='p-6'
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
+          transition={{ delay: 0.2, duration: 0.25 }}
+        >
+          <h3 className='text-xl font-semibold text-foreground'>{title}</h3>
+          <p className='text-sm text-muted-foreground mt-1'>{subtitle}</p>
+          <p className='mt-4 text-sm leading-relaxed'>{content}</p>
+          <button
             onClick={onClose}
             className='mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors'
           >
             Close
-          </motion.button>
-        </div>
+          </button>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
