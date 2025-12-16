@@ -55,20 +55,15 @@ export const Project = ({
           className='w-full h-auto object-cover'
         />
 
-        {/* Hover Overlay */}
+        {/* Hover Overlay - pure CSS, no Framer Motion */}
         <div
           className='absolute inset-0 bg-black/0 group-hover:bg-black/60 
                      transition-all duration-200 flex items-center justify-center'
         >
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileHover={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.15 }}
-            className='opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-white text-center px-4'
-          >
+          <div className='opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-200 text-white text-center px-4'>
             <h3 className='text-xl font-semibold'>{title}</h3>
             <p className='text-sm text-white/80 mt-1'>{year}</p>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>
@@ -101,6 +96,10 @@ export const ExpandedProject = ({
   const expandedLeft = (window.innerWidth - expandedWidth) / 2;
   const expandedTop = 100;
 
+  // Calculate the aspect ratio to maintain image height during animation
+  const aspectRatio = originRect.height / originRect.width;
+  const expandedImageHeight = expandedWidth * aspectRatio;
+
   return (
     <motion.div
       className='fixed inset-0 z-50'
@@ -111,53 +110,69 @@ export const ExpandedProject = ({
       onClick={onClose}
     >
       <motion.div
-        className='absolute bg-white dark:bg-gray-900 overflow-hidden shadow-2xl cursor-pointer'
+        className='absolute bg-white dark:bg-gray-900 shadow-2xl cursor-pointer overflow-hidden'
+        style={{
+          borderRadius: 0,
+        }}
         initial={{
           top: originRect.top,
           left: originRect.left,
           width: originRect.width,
-          height: originRect.height,
         }}
         animate={{
           top: expandedTop,
           left: expandedLeft,
           width: expandedWidth,
-          height: 'auto',
         }}
         exit={{
           top: originRect.top,
           left: originRect.left,
           width: originRect.width,
-          height: originRect.height,
         }}
         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
         onClick={e => e.stopPropagation()}
       >
-        <Image
-          src={`/assets/${image}`}
-          alt={title}
-          width={800}
-          height={600}
-          className='w-full h-auto object-cover'
-        />
+        {/* Image container with fixed aspect during animation */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ delay: 0.1, duration: 0.15 }}
-          className='p-6'
+          initial={{ height: originRect.height }}
+          animate={{ height: expandedImageHeight }}
+          exit={{ height: originRect.height }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+          className='overflow-hidden'
         >
-          <h3 className='text-xl font-semibold'>{title}</h3>
-          <p className='text-sm text-muted-foreground mt-1'>
-            {company} &middot; {year}
-          </p>
-          <p className='mt-4 text-sm leading-relaxed'>{content}</p>
-          <button
-            onClick={onClose}
-            className='mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors'
-          >
-            Close
-          </button>
+          <Image
+            src={`/assets/${image}`}
+            alt={title}
+            width={800}
+            height={600}
+            className='w-full h-full object-cover'
+          />
+        </motion.div>
+
+        {/* Content - fades in after position animation */}
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{
+            opacity: { delay: 0.15, duration: 0.15 },
+            height: { delay: 0.1, duration: 0.2 },
+          }}
+          className='overflow-hidden'
+        >
+          <div className='p-6'>
+            <h3 className='text-xl font-semibold'>{title}</h3>
+            <p className='text-sm text-muted-foreground mt-1'>
+              {company} &middot; {year}
+            </p>
+            <p className='mt-4 text-sm leading-relaxed'>{content}</p>
+            <button
+              onClick={onClose}
+              className='mt-4 text-sm text-muted-foreground hover:text-foreground transition-colors'
+            >
+              Close
+            </button>
+          </div>
         </motion.div>
       </motion.div>
     </motion.div>
