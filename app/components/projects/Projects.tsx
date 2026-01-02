@@ -1,40 +1,30 @@
 'use client';
 
-import { useState } from 'react';
-import { Project, ExpandedProject } from './Project';
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { Project } from './Project';
 import { siteData } from '../../../lib/data';
 import Masonry from 'react-masonry-css';
-
-type ProjectType = (typeof siteData.projects)[0];
+import { InView } from '@/components/motion-primitives/in-view';
 
 const breakpointColumns = {
-  default: 3, // 3 columns for large screens
-  1024: 2, // 2 columns for tablet
-  768: 1, // 1 column for mobile
+  default: 3,
+  1024: 2,
+  768: 1,
 };
 
 export const Projects = () => {
-  // Sort projects by year, newest first
   const projects = [...siteData.projects].sort((a, b) => b.year - a.year);
-  const [expandedProject, setExpandedProject] = useState<ProjectType | null>(
-    null
-  );
-
-  const handleToggle = (project: ProjectType) => {
-    setExpandedProject(prev =>
-      prev?.title === project.title ? null : project
-    );
-  };
 
   return (
-    <LayoutGroup>
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.0 }}
-        className='py-12'
-      >
+    <InView
+      variants={{
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0 },
+      }}
+      transition={{ duration: 0.4 }}
+      viewOptions={{ margin: '0px 0px -100px 0px' }}
+      once
+    >
+      <section className='py-12'>
         <Masonry
           breakpointCols={breakpointColumns}
           className='flex w-auto'
@@ -48,30 +38,12 @@ export const Projects = () => {
               year={project.year}
               content={project.content}
               image={project.image}
-              isExpanded={expandedProject?.title === project.title}
-              onToggle={() => handleToggle(project)}
-              hasExpandedCard={expandedProject !== null}
+              url={project.url}
+              infoUrl={project.infoUrl}
             />
           ))}
         </Masonry>
-      </motion.section>
-
-      {/* Expanded card overlay */}
-      <AnimatePresence>
-        {expandedProject && (
-          <ExpandedProject
-            key={expandedProject.title}
-            title={expandedProject.title}
-            company={expandedProject.company}
-            year={expandedProject.year}
-            content={expandedProject.content}
-            image={expandedProject.image}
-            url={expandedProject.url}
-            infoUrl={expandedProject.infoUrl}
-            onClose={() => setExpandedProject(null)}
-          />
-        )}
-      </AnimatePresence>
-    </LayoutGroup>
+      </section>
+    </InView>
   );
 };

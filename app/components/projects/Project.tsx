@@ -1,16 +1,16 @@
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+'use client';
 
-// Shared utilities
-const getLayoutId = (title: string) => `project-${title.replace(/\s+/g, '-')}`;
-
-// iOS-like spring: smooth and responsive, no bounce
-const transition = {
-  type: 'spring',
-  duration: 0.4,
-  bounce: 0,
-} as const;
+import {
+  MorphingDialog,
+  MorphingDialogTrigger,
+  MorphingDialogContent,
+  MorphingDialogContainer,
+  MorphingDialogImage,
+  MorphingDialogTitle,
+  MorphingDialogSubtitle,
+  MorphingDialogDescription,
+  MorphingDialogClose,
+} from '@/components/motion-primitives/morphing-dialog';
 
 interface ProjectProps {
   title: string;
@@ -18,79 +18,11 @@ interface ProjectProps {
   year: number;
   content: string;
   image: string;
-  isExpanded: boolean;
-  onToggle: () => void;
-  hasExpandedCard: boolean;
+  url: string;
+  infoUrl: string;
 }
 
 export const Project = ({
-  title,
-  company,
-  year,
-  image,
-  isExpanded,
-  onToggle,
-  hasExpandedCard,
-}: ProjectProps) => {
-  const layoutId = getLayoutId(title);
-  const subtitle = `${company} · ${year}`;
-
-  // Always render the same structure to prevent layout shifts
-  // When expanded, remove layoutIds (ExpandedProject takes over) and hide visually
-  return (
-    <motion.div
-      layoutId={isExpanded ? undefined : `${layoutId}-card`}
-      layout={false}
-      onClick={isExpanded ? undefined : onToggle}
-      transition={transition}
-      className={cn(
-        'relative overflow-hidden',
-        isExpanded ? 'invisible' : 'cursor-pointer group',
-        !isExpanded && hasExpandedCard && 'opacity-40'
-      )}
-    >
-      <motion.div
-        layoutId={isExpanded ? undefined : `${layoutId}-image`}
-        layout={false}
-        transition={transition}
-        className='aspect-square md:aspect-auto'
-      >
-        <Image
-          src={`/assets/${image}`}
-          alt={title}
-          width={800}
-          height={600}
-          className='w-full h-full md:h-auto object-cover'
-        />
-      </motion.div>
-
-      {/* Hover Overlay */}
-      <div
-        className='absolute inset-0 bg-black/0 group-hover:bg-black/60 
-                   transition-all duration-200 flex items-center justify-center'
-      >
-        <div className='opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-200 text-white text-center px-4'>
-          <h3 className='text-xl font-semibold'>{title}</h3>
-          <p className='text-sm text-white/80 mt-1'>{subtitle}</p>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-// Expanded card overlay component
-interface ExpandedProjectProps {
-  title: string;
-  company: string;
-  year: number;
-  content: string;
-  image: string;
-  url: string;
-  infoUrl: string;
-  onClose: () => void;
-}
-
-export const ExpandedProject = ({
   title,
   company,
   year,
@@ -98,76 +30,99 @@ export const ExpandedProject = ({
   image,
   url,
   infoUrl,
-  onClose,
-}: ExpandedProjectProps) => {
-  const layoutId = getLayoutId(title);
+}: ProjectProps) => {
   const subtitle = `${company} · ${year}`;
 
   return (
-    <motion.div
-      className='fixed inset-0 z-50 flex items-center justify-center px-6'
-      initial={{ backgroundColor: 'rgba(0,0,0,0)' }}
-      animate={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-      exit={{ backgroundColor: 'rgba(0,0,0,0)' }}
-      transition={{ duration: 0.3 }}
-      onClick={onClose}
+    <MorphingDialog
+      transition={{
+        type: 'spring',
+        duration: 0.4,
+        bounce: 0,
+      }}
     >
-      <motion.div
-        layoutId={`${layoutId}-card`}
-        className='bg-white dark:bg-gray-900 shadow-2xl cursor-pointer overflow-hidden w-full max-w-xl'
-        transition={transition}
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Image */}
-        <motion.div layoutId={`${layoutId}-image`} transition={transition}>
-          <Image
+      <MorphingDialogTrigger className='overflow-hidden group'>
+        <MorphingDialogImage
+          src={`/assets/${image}`}
+          alt={title}
+          className='w-full h-full md:h-auto object-cover aspect-square md:aspect-auto'
+        />
+        <div
+          className='absolute inset-0 bg-black/0 group-hover:bg-black/60
+                     transition-all duration-200 flex items-center justify-center'
+        >
+          <div className='opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-200 text-white text-center px-4'>
+            <MorphingDialogTitle>
+              <h3 className='text-xl font-semibold'>{title}</h3>
+            </MorphingDialogTitle>
+            <MorphingDialogSubtitle>
+              <p className='text-sm text-white/80 mt-1'>{subtitle}</p>
+            </MorphingDialogSubtitle>
+          </div>
+        </div>
+      </MorphingDialogTrigger>
+
+      <MorphingDialogContainer>
+        <MorphingDialogContent className='bg-white dark:bg-gray-900 shadow-2xl overflow-hidden w-full max-w-xl mx-6'>
+          <MorphingDialogImage
             src={`/assets/${image}`}
             alt={title}
-            width={800}
-            height={600}
             className='w-full h-auto object-cover'
           />
-        </motion.div>
-
-        {/* Content - all fades in together after card animation */}
-        <motion.div
-          className='p-8'
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 12 }}
-          transition={{ delay: 0.2, duration: 0.25 }}
-        >
-          <h3 className='text-xl font-semibold text-foreground'>{title}</h3>
-          <p className='text-sm text-muted-foreground mt-1'>{subtitle}</p>
-          <p className='mt-4 text-sm leading-relaxed'>{content}</p>
-          <div className='flex gap-4 mt-4'>
-            {url.length > 0 && (
-              <a
-                href={url.startsWith('http') ? url : `https://${url}`}
-                target='_blank'
-                rel='noopener noreferrer'
-                onClick={e => e.stopPropagation()}
-                className='text-sm text-blue-600 dark:text-blue-400 hover:underline'
-              >
-                Visit Project →
-              </a>
-            )}
-            {infoUrl.length > 0 && (
-              <a
-                href={
-                  infoUrl.startsWith('http') ? infoUrl : `https://${infoUrl}`
-                }
-                target='_blank'
-                rel='noopener noreferrer'
-                onClick={e => e.stopPropagation()}
-                className='text-sm text-blue-600 dark:text-blue-400 hover:underline'
-              >
-                More Info →
-              </a>
-            )}
+          <div className='p-8'>
+            <MorphingDialogTitle>
+              <h3 className='text-xl font-semibold text-foreground'>{title}</h3>
+            </MorphingDialogTitle>
+            <MorphingDialogSubtitle>
+              <p className='text-sm text-muted-foreground mt-1'>{subtitle}</p>
+            </MorphingDialogSubtitle>
+            <MorphingDialogDescription
+              disableLayoutAnimation
+              variants={{
+                initial: { opacity: 0, y: 12 },
+                animate: { opacity: 1, y: 0 },
+                exit: { opacity: 0, y: 12 },
+              }}
+            >
+              <p className='mt-4 text-sm leading-relaxed'>{content}</p>
+              <div className='flex gap-4 mt-4'>
+                {url.length > 0 && (
+                  <a
+                    href={url.startsWith('http') ? url : `https://${url}`}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    onClick={e => e.stopPropagation()}
+                    className='text-sm text-blue-600 dark:text-blue-400 hover:underline'
+                  >
+                    Visit Project →
+                  </a>
+                )}
+                {infoUrl.length > 0 && (
+                  <a
+                    href={
+                      infoUrl.startsWith('http') ? infoUrl : `https://${infoUrl}`
+                    }
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    onClick={e => e.stopPropagation()}
+                    className='text-sm text-blue-600 dark:text-blue-400 hover:underline'
+                  >
+                    More Info →
+                  </a>
+                )}
+              </div>
+            </MorphingDialogDescription>
           </div>
-        </motion.div>
-      </motion.div>
-    </motion.div>
+          <MorphingDialogClose
+            className='text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+            variants={{
+              initial: { opacity: 0 },
+              animate: { opacity: 1 },
+              exit: { opacity: 0 },
+            }}
+          />
+        </MorphingDialogContent>
+      </MorphingDialogContainer>
+    </MorphingDialog>
   );
 };
