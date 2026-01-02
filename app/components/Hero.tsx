@@ -9,24 +9,11 @@ export const Hero = () => {
     <AnimatedGroup
       className='flex flex-col items-start justify-center gap-8 pt-24'
       preset='blur-slide'
-      variants={{
-        container: {
-          visible: {
-            transition: {
-              staggerChildren: 0.1,
-            },
-          },
-        },
-      }}
     >
-      <div className='space-y-4'>
-        <div className='flex items-center gap-4'>
-          <h1 className='text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500'>
-            {siteData.hero.greeting}
-          </h1>
-        </div>
-      </div>
-      <p className='text-gray-600 dark:text-gray-300 text-lg'>
+      <h1 className='text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500'>
+        {siteData.hero.greeting}
+      </h1>
+      <p className='text-gray-600 dark:text-gray-300 text-lg max-w-2xl'>
         {siteData.hero.bio}
       </p>
       <div className='flex gap-4'>

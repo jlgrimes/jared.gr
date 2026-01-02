@@ -16,7 +16,8 @@ export type InViewProps = {
   };
   transition?: Transition;
   viewOptions?: UseInViewOptions;
-  once?: boolean;
+  as?: React.ElementType;
+  once?: boolean
 };
 
 const defaultVariants = {
@@ -29,7 +30,7 @@ export function InView({
   variants = defaultVariants,
   transition,
   viewOptions,
-  once,
+  once
 }: InViewProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, viewOptions);

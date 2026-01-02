@@ -207,7 +207,7 @@ function MorphingDialogContent({
     <motion.div
       ref={containerRef}
       layoutId={`dialog-${uniqueId}`}
-      className={cn('overflow-y-auto scrollbar-hide max-h-[90vh]', className)}
+      className={cn('overflow-hidden', className)}
       style={style}
       role='dialog'
       aria-modal='true'
