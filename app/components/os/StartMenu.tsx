@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
+import { Search16Regular, Settings16Regular, Power20Regular, Person24Regular } from '@fluentui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Power, Settings, User } from 'lucide-react';
 import { useDesktop } from '../../context/DesktopContext';
 import { desktopApps } from './apps';
 
@@ -59,13 +59,13 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
           {/* Search Bar */}
           <div className='p-6 pb-2'>
             <div className='relative flex items-center bg-white dark:bg-black/20 rounded-full border-b-2 border-b-blue-500 shadow-inner overflow-hidden h-10'>
-              <div className='pl-4 pr-3'>
-                <Search className='w-4 h-4 text-gray-500 dark:text-gray-400' />
+              <div className='pl-4 pr-3 flex items-center pt-1'>
+                <Search16Regular className='text-gray-500 dark:text-gray-400' />
               </div>
               <input
                 type='text'
                 placeholder='Type here to search'
-                className='w-full h-full bg-transparent outline-none text-sm text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400'
+                className='w-full h-full bg-transparent outline-none text-sm text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 font-sans'
               />
             </div>
           </div>
@@ -129,16 +129,16 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
           <div className='h-16 bg-black/5 dark:bg-black/20 border-t border-black/5 dark:border-white/5 flex items-center justify-between px-6 mt-auto shrink-0'>
              <div className='flex items-center gap-3 hover:bg-white/40 dark:hover:bg-white/10 p-2 rounded cursor-pointer transition-colors'>
                 <div className='w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white overflow-hidden shadow-sm'>
-                   <User className='w-5 h-5' />
+                   <Person24Regular />
                 </div>
-                <span className='text-sm text-gray-800 dark:text-gray-200 font-medium'>Jared Grimes</span>
+                <span className='text-sm text-gray-800 dark:text-gray-200 font-medium font-sans'>Jared Grimes</span>
              </div>
              <div className='flex items-center gap-1'>
-                 <button className='p-2 rounded hover:bg-white/40 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors'>
-                    <Settings className='w-4 h-4' />
+                 <button className='w-10 h-10 flex items-center justify-center rounded hover:bg-white/40 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors'>
+                    <Settings16Regular />
                  </button>
-                 <button className='p-2 rounded hover:bg-white/40 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors'>
-                    <Power className='w-4 h-4' />
+                 <button className='w-10 h-10 flex items-center justify-center rounded hover:bg-white/40 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors'>
+                    <Power20Regular />
                  </button>
              </div>
           </div>

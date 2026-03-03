@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useDragControls } from 'framer-motion';
 import { useDesktop } from '../../context/DesktopContext';
-import { Minus, Square, X } from 'lucide-react';
+import { Subtract16Regular, Maximize16Regular, SquareMultiple16Regular, Dismiss16Regular } from '@fluentui/react-icons';
 
 interface WindowProps {
   id: string;
@@ -108,25 +108,25 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
             title="Minimize"
             onPointerDown={(e) => e.stopPropagation()}
             onClick={() => minimizeWindow(id)}
-            className='w-[46px] h-full flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-colors'
+            className='w-[46px] h-[32px] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-colors'
           >
-            <Minus className='w-4 h-4' />
+            <Subtract16Regular />
           </button>
           <button
             title={isMaximized ? "Restore" : "Maximize"}
             onPointerDown={(e) => e.stopPropagation()}
             onClick={() => isMaximized ? restoreWindow(id) : maximizeWindow(id)}
-            className='w-[46px] h-full flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-colors'
+            className='w-[46px] h-[32px] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-colors'
           >
-            <Square className='w-3.5 h-3.5' />
+            {isMaximized ? <SquareMultiple16Regular /> : <Maximize16Regular />}
           </button>
           <button
             title="Close"
             onPointerDown={(e) => e.stopPropagation()}
             onClick={() => closeWindow(id)}
-            className='w-[46px] h-full flex items-center justify-center hover:bg-red-500 hover:text-white dark:hover:bg-red-500 text-gray-600 dark:text-gray-300 transition-colors'
+            className='w-[46px] h-[32px] flex items-center justify-center hover:bg-red-500 hover:text-white dark:hover:bg-red-500 text-gray-600 dark:text-gray-300 transition-colors'
           >
-            <X className='w-4 h-4' />
+            <Dismiss16Regular />
           </button>
         </div>
       </div>

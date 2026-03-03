@@ -5,11 +5,12 @@ import React, { useState, useEffect } from 'react';
 import { useDesktop } from '../../context/DesktopContext';
 import { StartMenu } from './StartMenu';
 import {
-  Wifi,
-  Volume2,
-  BatteryMedium,
-  ChevronUp,
-} from 'lucide-react';
+  Wifi4Regular,
+  Speaker2Regular,
+  Battery4Regular,
+  ChevronUpRegular,
+  Search24Regular,
+} from '@fluentui/react-icons';
 
 export const Taskbar = () => {
   const { windows, focusWindow, minimizeWindow, restoreWindow } = useDesktop();
@@ -37,7 +38,7 @@ export const Taskbar = () => {
   return (
     <>
     <StartMenu isOpen={isStartMenuOpen} onClose={() => setIsStartMenuOpen(false)} />
-    <div className='fixed bottom-0 left-0 right-0 h-12 bg-[#e3e3e3]/80 dark:bg-[#1a1a1a]/80 backdrop-blur-xl border-t border-white/20 flex items-center justify-between px-2 z-[9999]'>
+    <div className='fixed bottom-0 left-0 right-0 h-12 bg-[#f3f3f3]/80 dark:bg-[#202020]/90 backdrop-blur-2xl border-t border-white/20 dark:border-white/5 flex items-center justify-between px-2 z-[9999] shadow-[0_-2px_10px_rgba(0,0,0,0.1)]'>
       
       {/* Invisible spacer for flex balance */}
       <div className='flex-1 flex items-center justify-start hidden md:flex'>
@@ -61,10 +62,8 @@ export const Taskbar = () => {
 
         {/* Search */}
         <div className='hidden sm:flex relative items-center ml-2 mr-4'>
-           <div className='w-40 h-8 bg-white/50 dark:bg-white/10 rounded-full border border-black/10 dark:border-white/10 flex items-center px-3 hover:bg-white/80 dark:hover:bg-white/20 transition-colors cursor-text'>
-              <svg className="w-4 h-4 text-gray-600 dark:text-gray-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+           <div className='w-40 h-8 bg-white/70 dark:bg-white/10 rounded-full border border-black/10 dark:border-white/10 flex items-center px-3 hover:bg-white dark:hover:bg-white/20 transition-colors shadow-sm cursor-text'>
+              <Search24Regular className="w-4 h-4 text-gray-600 dark:text-gray-300 mr-2" />
               <span className='text-xs text-gray-500'>Search</span>
            </div>
         </div>
@@ -96,14 +95,14 @@ export const Taskbar = () => {
 
       {/* Right System Tray */}
       <div className='flex-1 flex items-center justify-end h-full gap-1 pr-2'>
-        <button className='w-6 h-full flex items-center justify-center hover:bg-white/30 dark:hover:bg-white/10 rounded my-1 text-gray-800 dark:text-gray-200'>
-          <ChevronUp className='w-4 h-4' />
+        <button className='w-6 h-full flex items-center justify-center hover:bg-white/50 dark:hover:bg-white/10 rounded my-1 text-gray-800 dark:text-gray-200'>
+          <ChevronUpRegular className='w-4 h-4' />
         </button>
         
-        <div className='flex items-center h-full hover:bg-white/30 dark:hover:bg-white/10 rounded my-1 px-2 gap-2 cursor-pointer text-gray-800 dark:text-gray-200'>
-          <Wifi className='w-4 h-4' />
-          <Volume2 className='w-4 h-4' />
-          <BatteryMedium className='w-4 h-4 rotate-90' />
+        <div className='flex items-center h-full hover:bg-white/50 dark:hover:bg-white/10 rounded my-1 px-2 gap-2 cursor-pointer text-gray-800 dark:text-gray-200'>
+          <Wifi4Regular className='w-4 h-4' />
+          <Speaker2Regular className='w-4 h-4' />
+          <Battery4Regular className='w-4 h-4' />
         </div>
 
         <div className='flex flex-col items-end justify-center h-full hover:bg-white/30 dark:hover:bg-white/10 rounded my-1 px-2 cursor-pointer text-xs text-gray-800 dark:text-gray-200 leading-tight'>

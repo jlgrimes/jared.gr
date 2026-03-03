@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fluentui/react-icons": "^2.0.320",
+    "@fluentui/svg-icons": "^1.1.320",
     "@google/generative-ai": "^0.23.0",
     "@octokit/rest": "^21.1.1",
     "@radix-ui/react-hover-card": "^1.1.6",
