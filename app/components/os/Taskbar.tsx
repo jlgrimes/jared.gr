@@ -99,10 +99,7 @@ export const Taskbar = () => {
         <div 
           className='flex flex-col items-end justify-center h-full hover:bg-white/30 dark:hover:bg-white/10 rounded my-1 px-2 cursor-pointer text-xs text-gray-800 dark:text-gray-200 leading-tight'
           // Windows 11 clock uses OpenType style set 1 for straight-base numbers
-          style={{ 
-            fontFamily: '"Inter", sans-serif',
-            fontFeatureSettings: '"cv01"' 
-          }}
+          style={{ letterSpacing: '-0.01em' }}
         >
           <span>
             {time ? time.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(':', '\u2236') : '...'}
