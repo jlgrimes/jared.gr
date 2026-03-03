@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import { useDesktop } from '../../context/DesktopContext';
+import { AnimatePresence, motion } from 'framer-motion';
 import { StartMenu } from './StartMenu';
 import {
   Wifi4Regular,
@@ -44,12 +45,12 @@ export const Taskbar = () => {
       </div>
 
       {/* Center Apps */}
-      <div className='flex-1 flex items-center justify-center gap-1.5'>
+      <div className='flex-1 flex items-center justify-center'>
         {/* Windows Start Button */}
-        <button 
+        <button
           id="start-button"
           onClick={() => setIsStartMenuOpen(!isStartMenuOpen)}
-          className={`w-10 h-10 flex items-center justify-center rounded transition-colors group relative
+          className={`w-10 h-10 mx-[3px] flex items-center justify-center rounded transition-colors group relative
             ${isStartMenuOpen ? 'bg-white/60 dark:bg-white/20' : 'hover:bg-white/40 dark:hover:bg-white/10'}
           `}
         >
@@ -67,10 +68,20 @@ export const Taskbar = () => {
         </div>
 
         {/* Open Windows List */}
-        {/* Open Windows List */}
-        {windows.map((w) => (
-          <TaskbarIcon key={w.id} window={w} handleAppClick={handleAppClick} />
-        ))}
+        <AnimatePresence>
+          {windows.filter((w) => !w.isClosing).map((w) => (
+            <motion.div
+              key={w.id}
+              initial={{ width: 0, marginLeft: 0, marginRight: 0 }}
+              animate={{ width: 40, marginLeft: 3, marginRight: 3 }}
+              exit={{ width: 0, marginLeft: 0, marginRight: 0, transition: { delay: 0.15, type: 'spring', stiffness: 400, damping: 30 } }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              style={{ overflow: 'hidden', flexShrink: 0 }}
+            >
+              <TaskbarIcon window={w} handleAppClick={handleAppClick} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
       {/* Right System Tray */}
@@ -111,18 +122,26 @@ const TaskbarIcon = ({ window: w, handleAppClick }: { window: any, handleAppClic
   const { registerIconRect } = useDesktop();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
+  // Re-register icon rect whenever layout settles (handles shifting positions)
+  const updateRect = () => {
     if (buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      registerIconRect(w.id, rect);
+      registerIconRect(w.id, buttonRef.current.getBoundingClientRect());
     }
-  }, [w.id, registerIconRect]);
+  };
+
+  useEffect(() => {
+    updateRect();
+  }, [w.id]);
 
   return (
-    <button
+    <motion.button
       ref={buttonRef}
+      initial={{ opacity: 0, y: 20, scale: 0.8 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 20, scale: 0.8 }}
+      transition={{ type: 'spring', stiffness: 500, damping: 28, mass: 0.8 }}
       onClick={() => handleAppClick(w.id, w.state)}
-      className={`w-10 h-10 flex items-center justify-center rounded transition-all relative group
+      className={`w-10 h-10 flex flex-shrink-0 items-center justify-center rounded transition-[background-color] relative group
         ${w.state === 'minimized' ? 'hover:bg-white/30 dark:hover:bg-white/10' : 'bg-white/50 dark:bg-white/20 hover:bg-white/60 dark:hover:bg-white/30'}
       `}
     >
@@ -138,6 +157,6 @@ const TaskbarIcon = ({ window: w, handleAppClick }: { window: any, handleAppClic
       <div className='absolute bottom-12 left-1/2 -translate-x-1/2 px-2 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 z-[10000]'>
           {w.title}
       </div>
-    </button>
+    </motion.button>
   );
 };
