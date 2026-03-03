@@ -1,14 +1,17 @@
 import React from 'react';
-import { Home, PanelTop, Chrome } from 'lucide-react';
 import { Hero } from '../Hero';
 import { Projects } from '../projects/Projects';
 import { Testimonials } from '../Testimonials';
 
+const AppIcon = ({ src }: { src: string }) => (
+  <img src={src} alt="" className="w-full h-full" draggable={false} />
+);
+
 export const desktopApps = [
   {
     id: 'about',
-    name: 'About Me.txt',
-    icon: <PanelTop className='w-full h-full text-blue-500' />,
+    name: 'About Me',
+    icon: <AppIcon src="/assets/icons/briefcase2.ico" />,
     content: (
       <div className='p-8 bg-white dark:bg-[#202020] min-h-full font-mono'>
         <Hero />
@@ -17,8 +20,8 @@ export const desktopApps = [
   },
   {
     id: 'projects',
-    name: 'Projects',
-    icon: <Chrome className='w-full h-full text-indigo-500' />,
+    name: 'Project Explorer',
+    icon: <AppIcon src="/assets/icons/explorer.ico" />,
     content: (
       <div className='p-4 bg-[#f3f3f3] dark:bg-[#202020] min-h-full'>
         <Projects />
@@ -27,8 +30,8 @@ export const desktopApps = [
   },
   {
     id: 'testimonials',
-    name: 'Testimonials',
-    icon: <Home className='w-full h-full text-green-500' />,
+    name: 'Feedback',
+    icon: <AppIcon src="/assets/icons/feedback.ico" />,
     content: (
       <div className='p-4 bg-white dark:bg-[#111] min-h-full'>
         <Testimonials />
