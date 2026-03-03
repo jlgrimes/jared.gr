@@ -85,9 +85,13 @@ export const Taskbar = () => {
           <Battery4Regular className='w-4 h-4' />
         </div>
 
-        <div className='flex flex-col items-end justify-center h-full hover:bg-white/30 dark:hover:bg-white/10 rounded my-1 px-2 cursor-pointer text-xs text-gray-800 dark:text-gray-200 leading-tight'>
+        <div 
+          className='flex flex-col items-end justify-center h-full hover:bg-white/30 dark:hover:bg-white/10 rounded my-1 px-2 cursor-pointer text-xs text-gray-800 dark:text-gray-200 leading-tight'
+          // Windows 11 clock uses OpenType style set 1 for straight-base numbers
+          style={{ fontFeatureSettings: '"ss01"' }}
+        >
           <span>
-            {time ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '...'}
+            {time ? time.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(':', '\u2236') : '...'}
           </span>
           <span>
             {time ? time.toLocaleDateString([], { month: 'numeric', day: 'numeric', year: 'numeric' }) : '...'}
