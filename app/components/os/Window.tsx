@@ -53,7 +53,7 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       dragListener={false}
       dragMomentum={false}
       dragConstraints={{ top: 0, left: -defaultWidth + 50, right: typeof window !== 'undefined' ? window.innerWidth - 50 : 1000, bottom: typeof window !== 'undefined' ? window.innerHeight - 100 : 800 }}
-      initial={{ opacity: 0, scale: 0.95, y: 20 }}
+      initial={{ opacity: 0, scale: 0.85, y: typeof window !== 'undefined' ? window.innerHeight / 2 : 500 }}
       animate={{ 
           opacity: 1, 
           scale: 1, 
@@ -71,7 +71,7 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
               borderRadius: 8
           })
       }}
-      exit={{ opacity: 0, scale: 0.95, y: 20 }}
+      exit={{ opacity: 0, scale: 0.85, y: typeof window !== 'undefined' ? window.innerHeight / 2 : 500 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.8 }}
       style={{ 
         zIndex,

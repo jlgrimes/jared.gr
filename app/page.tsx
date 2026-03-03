@@ -5,6 +5,7 @@ import { Taskbar } from './components/os/Taskbar';
 import { Window } from './components/os/Window';
 import { DesktopIcon } from './components/os/DesktopIcon';
 import { desktopApps } from './components/os/apps';
+import { AnimatePresence } from 'framer-motion';
 
 export default function Desktop() {
   const { windows } = useDesktop();
@@ -33,9 +34,11 @@ export default function Desktop() {
       </div>
 
       {/* Render Open Windows */}
-      {windows.map((w) => (
-        <Window key={w.id} id={w.id} />
-      ))}
+      <AnimatePresence>
+        {windows.map((w) => (
+          <Window key={w.id} id={w.id} />
+        ))}
+      </AnimatePresence>
 
       {/* Taskbar */}
       <Taskbar />

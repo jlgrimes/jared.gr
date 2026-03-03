@@ -110,7 +110,7 @@ export const Taskbar = () => {
             {time ? time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '...'}
           </span>
           <span>
-            {time ? time.toLocaleDateString([], { month: '2-digit', day: '2-digit', year: 'numeric' }) : '...'}
+            {time ? time.toLocaleDateString([], { month: 'numeric', day: 'numeric', year: 'numeric' }) : '...'}
           </span>
         </div>
       </div>
