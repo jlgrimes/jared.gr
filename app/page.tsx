@@ -21,7 +21,7 @@ export default function Desktop() {
       onClick={() => setSelectedIconId(null)}
     >
       {/* Desktop Background / Area */}
-      <div className='absolute inset-0 z-0 bg-[url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop")] bg-cover bg-center opacity-40 dark:opacity-20 mix-blend-overlay pointer-events-none' />
+      <div className='absolute inset-0 z-0 bg-[url("/assets/wallpaper.jpg")] bg-cover bg-center pointer-events-none' />
 
       {/* Desktop Icons Container */}
       <div className='absolute top-0 left-0 bottom-12 p-2 flex flex-col flex-wrap content-start gap-1 z-10'>
