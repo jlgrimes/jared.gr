@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   Search16Regular,
   Power20Regular,
-  Person24Regular,
 } from '@fluentui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDesktop } from '../../context/DesktopContext';
-import { desktopApps } from './apps';
+import { desktopApps, externalApps } from './apps';
+import { siteData } from '../../../lib/data';
 
 interface StartMenuProps {
   isOpen: boolean;
@@ -17,7 +17,15 @@ interface StartMenuProps {
 
 export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
   const menuRef = useRef<HTMLDivElement>(null);
+  const profileCardRef = useRef<HTMLDivElement>(null);
   const { openWindow } = useDesktop();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setIsProfileOpen(false);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,6 +47,23 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    const handleClickOutsideProfile = (event: MouseEvent) => {
+      if (
+        profileCardRef.current &&
+        !profileCardRef.current.contains(event.target as Node) &&
+        !(event.target as HTMLElement).closest('[data-profile-trigger]')
+      ) {
+        setIsProfileOpen(false);
+      }
+    };
+
+    if (isProfileOpen) {
+      document.addEventListener('mousedown', handleClickOutsideProfile);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutsideProfile);
+  }, [isProfileOpen]);
+
   const handleAppClick = (app: any) => {
     openWindow({
       id: app.id,
@@ -48,6 +73,13 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
     });
     onClose();
   };
+
+  const handleExternalClick = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+    onClose();
+  };
+
+  const allPinnedApps = [...desktopApps, ...externalApps];
 
   return (
     <AnimatePresence>
@@ -91,13 +123,17 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
             </div>
 
             <div className='grid grid-cols-6 gap-x-2 gap-y-6'>
-              {desktopApps.map(app => (
+              {allPinnedApps.map(app => (
                 <div
                   key={app.id}
                   className='flex flex-col items-center justify-start gap-2 p-2 rounded hover:bg-white/50 dark:hover:bg-white/10 cursor-pointer transition-colors group'
-                  onClick={() => handleAppClick(app)}
+                  onClick={() =>
+                    'url' in app
+                      ? handleExternalClick(app.url)
+                      : handleAppClick(app)
+                  }
                 >
-                  <div className='w-8 h-8 flex items-center justify-center transition-transform group-hover:scale-105'>
+                  <div className='w-8 h-8 flex items-center justify-center transition-transform '>
                     {app.icon}
                   </div>
                   <span className='text-xs text-center text-gray-800 dark:text-gray-200 line-clamp-2 leading-tight px-1'>
@@ -143,8 +179,59 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Bottom Profile/Power Bar */}
-          <div className='h-16 bg-black/5 dark:bg-black/20 border-t border-black/5 dark:border-white/5 flex items-center justify-between px-6 mt-auto shrink-0'>
-            <div className='flex items-center gap-3 hover:bg-white/40 dark:hover:bg-white/10 p-2 rounded cursor-pointer transition-colors'>
+          <div className='relative h-16 bg-black/5 dark:bg-black/20 border-t border-black/5 dark:border-white/5 flex items-center justify-between px-6 mt-auto shrink-0'>
+            {/* Profile Popup Card */}
+            <AnimatePresence>
+              {isProfileOpen && (
+                <motion.div
+                  ref={profileCardRef}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 400,
+                    damping: 30,
+                    mass: 0.8,
+                  }}
+                  className='absolute bottom-full left-4 mb-2 w-[340px] bg-white/95 dark:bg-[#2d2d2d]/95 backdrop-blur-xl rounded-lg shadow-xl border border-black/10 dark:border-white/10 overflow-hidden'
+                >
+                  <div className='p-5'>
+                    <div className='flex items-center gap-4 mb-4'>
+                      <div className='w-16 h-16 rounded-full overflow-hidden shadow-md shrink-0'>
+                        <img
+                          src='/assets/propic.jpg'
+                          alt=''
+                          className='w-full h-full object-cover'
+                          draggable={false}
+                        />
+                      </div>
+                      <div>
+                        <h3 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                          Jared Grimes
+                        </h3>
+                        <p className='text-xs text-gray-500 dark:text-gray-400'>
+                          Front-end Engineer at Microsoft
+                        </p>
+                      </div>
+                    </div>
+                    <p className='text-xs text-gray-600 dark:text-gray-300 leading-relaxed'>
+                      {siteData.hero.bio}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div
+              data-profile-trigger
+              className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ${
+                isProfileOpen
+                  ? 'bg-white/60 dark:bg-white/15'
+                  : 'hover:bg-white/40 dark:hover:bg-white/10'
+              }`}
+              onClick={() => setIsProfileOpen(prev => !prev)}
+            >
               <div className='w-8 h-8 rounded-full overflow-hidden shadow-sm shrink-0'>
                 <img
                   src='/assets/propic.jpg'
