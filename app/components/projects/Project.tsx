@@ -1,128 +1,111 @@
-'use client';
+import Image from 'next/image';
+import { siteData } from '../../../lib/data';
 
-import {
-  MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContent,
-  MorphingDialogContainer,
-  MorphingDialogImage,
-  MorphingDialogTitle,
-  MorphingDialogSubtitle,
-  MorphingDialogDescription,
-  MorphingDialogClose,
-} from '@/components/motion-primitives/morphing-dialog';
+type ProjectType = (typeof siteData.projects)[0];
 
-interface ProjectProps {
-  title: string;
-  company: string;
-  year: number;
-  content: string;
-  image: string;
-  url: string;
-  infoUrl: string;
+interface FileItemProps {
+  project: ProjectType;
+  isSelected: boolean;
+  onClick: () => void;
+  onDoubleClick: () => void;
 }
 
-export const Project = ({
-  title,
-  company,
-  year,
-  content,
-  image,
-  url,
-  infoUrl,
-}: ProjectProps) => {
-  const subtitle = `${company} · ${year}`;
+export const FileItem = ({
+  project,
+  isSelected,
+  onClick,
+  onDoubleClick,
+}: FileItemProps) => {
+  return (
+    <div
+      onClick={onClick}
+      onDoubleClick={onDoubleClick}
+      className={`flex flex-col items-center p-2 rounded cursor-pointer transition-colors ${
+        isSelected
+          ? 'bg-[#cce4f7] dark:bg-[#0078d4]/20 outline outline-1 outline-[#99d1ff] dark:outline-[#0078d4]/40'
+          : 'hover:bg-gray-200/60 dark:hover:bg-white/5'
+      }`}
+    >
+      <div className='w-full aspect-square rounded overflow-hidden bg-gray-200 dark:bg-gray-700'>
+        <Image
+          src={`/assets/${project.image}`}
+          alt={project.title}
+          width={200}
+          height={200}
+          className='w-full h-full object-cover'
+        />
+      </div>
+      <span className='mt-1.5 text-[11px] text-center leading-tight text-gray-700 dark:text-gray-300 line-clamp-2 w-full'>
+        {project.title}
+      </span>
+    </div>
+  );
+};
+
+interface PreviewPaneProps {
+  project: ProjectType;
+}
+
+export const PreviewPane = ({ project }: PreviewPaneProps) => {
+  const companyMap: Record<string, string> = {
+    'Microsoft Office AI': 'Microsoft',
+    'Microsoft Office Media Group': 'Microsoft',
+  };
+  const displayCompany = companyMap[project.company] ?? project.company;
 
   return (
-    <MorphingDialog
-      transition={{
-        type: 'spring',
-        duration: 0.4,
-        bounce: 0,
-      }}
-    >
-      <MorphingDialogTrigger className='overflow-hidden group'>
-        <MorphingDialogImage
-          src={`/assets/${image}`}
-          alt={title}
-          className='w-full h-full md:h-auto object-cover aspect-square md:aspect-auto'
+    <div className='p-4 text-xs'>
+      <div className='w-full aspect-video rounded overflow-hidden bg-gray-200 dark:bg-gray-700 mb-3'>
+        <Image
+          src={`/assets/${project.image}`}
+          alt={project.title}
+          width={400}
+          height={300}
+          className='w-full h-full object-cover'
         />
-        <div
-          className='absolute inset-0 bg-black/0 group-hover:bg-black/60
-                     transition-all duration-200 flex items-center justify-center'
-        >
-          <div className='opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-200 text-white text-center px-4'>
-            <MorphingDialogTitle>
-              <h3 className='text-xl font-semibold'>{title}</h3>
-            </MorphingDialogTitle>
-            <MorphingDialogSubtitle>
-              <p className='text-sm text-white/80 mt-1'>{subtitle}</p>
-            </MorphingDialogSubtitle>
-          </div>
-        </div>
-      </MorphingDialogTrigger>
+      </div>
 
-      <MorphingDialogContainer>
-        <MorphingDialogContent className='bg-white dark:bg-gray-900 shadow-2xl overflow-hidden w-full max-w-xl mx-6'>
-          <MorphingDialogImage
-            src={`/assets/${image}`}
-            alt={title}
-            className='w-full h-auto object-cover'
-          />
-          <div className='p-8'>
-            <MorphingDialogTitle>
-              <h3 className='text-xl font-semibold text-foreground'>{title}</h3>
-            </MorphingDialogTitle>
-            <MorphingDialogSubtitle>
-              <p className='text-sm text-muted-foreground mt-1'>{subtitle}</p>
-            </MorphingDialogSubtitle>
-            <MorphingDialogDescription
-              disableLayoutAnimation
-              variants={{
-                initial: { opacity: 0, y: 12 },
-                animate: { opacity: 1, y: 0 },
-                exit: { opacity: 0, y: 12 },
-              }}
-            >
-              <p className='mt-4 text-sm leading-relaxed'>{content}</p>
-              <div className='flex gap-4 mt-4'>
-                {url.length > 0 && (
-                  <a
-                    href={url.startsWith('http') ? url : `https://${url}`}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={e => e.stopPropagation()}
-                    className='text-sm text-blue-600 dark:text-blue-400 hover:underline'
-                  >
-                    Visit Project →
-                  </a>
-                )}
-                {infoUrl.length > 0 && (
-                  <a
-                    href={
-                      infoUrl.startsWith('http') ? infoUrl : `https://${infoUrl}`
-                    }
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={e => e.stopPropagation()}
-                    className='text-sm text-blue-600 dark:text-blue-400 hover:underline'
-                  >
-                    More Info →
-                  </a>
-                )}
-              </div>
-            </MorphingDialogDescription>
-          </div>
-          <MorphingDialogClose
-            className='text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-            variants={{
-              initial: { opacity: 0 },
-              animate: { opacity: 1 },
-              exit: { opacity: 0 },
-            }}
-          />
-        </MorphingDialogContent>
-      </MorphingDialogContainer>
-    </MorphingDialog>
+      <h3 className='font-semibold text-sm text-gray-900 dark:text-gray-100'>
+        {project.title}
+      </h3>
+      <p className='text-gray-500 dark:text-gray-400 mt-0.5'>
+        {displayCompany} &middot; {project.year}
+      </p>
+
+      <p className='mt-3 text-gray-600 dark:text-gray-300 leading-relaxed'>
+        {project.content}
+      </p>
+
+      <div className='flex flex-col gap-1.5 mt-3'>
+        {project.url && (
+          <a
+            href={
+              project.url.startsWith('http')
+                ? project.url
+                : `https://${project.url}`
+            }
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-[#0078d4] hover:underline'
+          >
+            Visit Project &rarr;
+          </a>
+        )}
+        {project.infoUrl && (
+          <a
+            href={
+              project.infoUrl.startsWith('http')
+                ? project.infoUrl
+                : `https://${project.infoUrl}`
+            }
+            target='_blank'
+            rel='noopener noreferrer'
+            className='text-[#0078d4] hover:underline'
+          >
+            More Info &rarr;
+          </a>
+        )}
+      </div>
+    </div>
   );
 };
