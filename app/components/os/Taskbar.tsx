@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { useDesktop } from '../../context/DesktopContext';
 import { StartMenu } from './StartMenu';
@@ -67,27 +67,9 @@ export const Taskbar = () => {
         </div>
 
         {/* Open Windows List */}
+        {/* Open Windows List */}
         {windows.map((w) => (
-          <button
-            key={w.id}
-            onClick={() => handleAppClick(w.id, w.state)}
-            className={`w-10 h-10 flex items-center justify-center rounded transition-all relative group
-              ${w.state === 'minimized' ? 'hover:bg-white/30 dark:hover:bg-white/10' : 'bg-white/50 dark:bg-white/20 hover:bg-white/60 dark:hover:bg-white/30'}
-            `}
-          >
-            <div className='w-6 h-6 flex items-center justify-center'>
-               {w.icon}
-            </div>
-            {/* Active Indicator */}
-            <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-1 rounded-t-full transition-all
-              ${w.state === 'minimized' ? 'w-1 bg-gray-400' : 'w-4 bg-[#0078d4]'}
-            `} />
-            
-            {/* Tooltip */}
-            <div className='absolute bottom-12 left-1/2 -translate-x-1/2 px-2 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 z-[10000]'>
-                {w.title}
-            </div>
-          </button>
+          <TaskbarIcon key={w.id} window={w} handleAppClick={handleAppClick} />
         ))}
       </div>
 
@@ -114,5 +96,41 @@ export const Taskbar = () => {
       </div>
     </div>
     </>
+  );
+};
+
+// Extracted component to safely measure DOM rect after mount
+const TaskbarIcon = ({ window: w, handleAppClick }: { window: any, handleAppClick: any }) => {
+  const { registerIconRect } = useDesktop();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      registerIconRect(w.id, rect);
+    }
+  }, [w.id, registerIconRect]);
+
+  return (
+    <button
+      ref={buttonRef}
+      onClick={() => handleAppClick(w.id, w.state)}
+      className={`w-10 h-10 flex items-center justify-center rounded transition-all relative group
+        ${w.state === 'minimized' ? 'hover:bg-white/30 dark:hover:bg-white/10' : 'bg-white/50 dark:bg-white/20 hover:bg-white/60 dark:hover:bg-white/30'}
+      `}
+    >
+      <div className='w-6 h-6 flex items-center justify-center'>
+         {w.icon}
+      </div>
+      {/* Active Indicator */}
+      <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-1 rounded-t-full transition-all
+        ${w.state === 'minimized' ? 'w-1 bg-gray-400' : 'w-4 bg-[#0078d4]'}
+      `} />
+      
+      {/* Tooltip */}
+      <div className='absolute bottom-12 left-1/2 -translate-x-1/2 px-2 py-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap text-xs text-gray-800 dark:text-gray-200 z-[10000]'>
+          {w.title}
+      </div>
+    </button>
   );
 };

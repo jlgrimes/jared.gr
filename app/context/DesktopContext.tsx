@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useRef, ReactNode } from 'react';
 
 export type WindowState = 'normal' | 'maximized' | 'minimized';
 
@@ -22,6 +22,8 @@ interface DesktopContextType {
   restoreWindow: (id: string) => void;
   focusWindow: (id: string) => void;
   focusedWindowId: string | null;
+  getIconRect: (id: string) => DOMRect | null;
+  registerIconRect: (id: string, rect: DOMRect) => void;
 }
 
 const DesktopContext = createContext<DesktopContextType | undefined>(undefined);
@@ -30,6 +32,17 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
   const [windows, setWindows] = useState<WindowData[]>([]);
   const [highestZIndex, setHighestZIndex] = useState(10);
   const [focusedWindowId, setFocusedWindowId] = useState<string | null>(null);
+  
+  // Track where each app's taskbar icon is located on screen
+  const iconRectsRef = useRef<Record<string, DOMRect>>({});
+
+  const registerIconRect = (id: string, rect: DOMRect) => {
+    iconRectsRef.current[id] = rect;
+  };
+
+  const getIconRect = (id: string) => {
+    return iconRectsRef.current[id] || null;
+  };
 
   const openWindow = (windowInfo: Omit<WindowData, 'state' | 'zIndex'>) => {
     setWindows((prev) => {
@@ -97,7 +110,9 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
         maximizeWindow,
         restoreWindow,
         focusWindow,
-        focusedWindowId
+        focusedWindowId,
+        getIconRect,
+        registerIconRect
       }}
     >
       {children}

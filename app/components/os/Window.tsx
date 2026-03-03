@@ -10,7 +10,7 @@ interface WindowProps {
 }
 
 export const Window: React.FC<WindowProps> = ({ id }) => {
-  const { windows, closeWindow, minimizeWindow, maximizeWindow, restoreWindow, focusWindow } = useDesktop();
+  const { windows, closeWindow, minimizeWindow, maximizeWindow, restoreWindow, focusWindow, getIconRect } = useDesktop();
   const windowData = windows.find((w) => w.id === id);
   const dragControls = useDragControls();
   const constraintsRef = useRef<HTMLDivElement>(null);
@@ -43,7 +43,10 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
     dragControls.start(e);
   };
 
-
+  // Calculate zoom coordinates based on the Taskbar icon
+  const targetRect = getIconRect(id);
+  const targetX = targetRect && typeof window !== 'undefined' ? targetRect.x + (targetRect.width / 2) - (defaultWidth / 2) : typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0;
+  const targetY = targetRect ? targetRect.y + (targetRect.height / 2) : typeof window !== 'undefined' ? window.innerHeight : 500;
 
   return (
     <motion.div
@@ -53,10 +56,10 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       dragListener={false}
       dragMomentum={false}
       dragConstraints={{ top: 0, left: -defaultWidth + 50, right: typeof window !== 'undefined' ? window.innerWidth - 50 : 1000, bottom: typeof window !== 'undefined' ? window.innerHeight - 100 : 800 }}
-      initial={{ opacity: 0, scale: 0, x: typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0, y: typeof window !== 'undefined' ? window.innerHeight : 500 }}
+      initial={{ opacity: 0, scale: 0, x: targetX, y: targetY }}
       animate={
         isMinimized
-          ? { opacity: 0, scale: 0, x: typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0, y: typeof window !== 'undefined' ? window.innerHeight : 500, pointerEvents: 'none' as const }
+          ? { opacity: 0, scale: 0, x: targetX, y: targetY, pointerEvents: 'none' as const }
           : { 
               opacity: 1, 
               scale: 1, 
@@ -76,7 +79,7 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
               })
             }
       }
-      exit={{ opacity: 0, scale: 0, x: typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0, y: typeof window !== 'undefined' ? window.innerHeight : 500 }}
+      exit={{ opacity: 0, scale: 0, x: targetX, y: targetY }}
       transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.8 }}
       style={{ 
         zIndex,
