@@ -1,6 +1,7 @@
 import React from 'react';
 import { Projects } from '../projects/Projects';
 import { Testimonials } from '../Testimonials';
+import { Terminal } from './Terminal';
 
 const AppIcon = ({ src }: { src: string }) => (
   <img src={src} alt="" className="w-full h-full" draggable={false} />
@@ -30,6 +31,20 @@ export const desktopApps = [
     content: (
       <div className='p-4 bg-white dark:bg-[#111] min-h-full'>
         <Testimonials />
+      </div>
+    ),
+  },
+];
+
+export const allApps = [
+  ...desktopApps,
+  {
+    id: 'terminal',
+    name: 'Terminal',
+    icon: <AppIcon src="/assets/icons/terminal.ico" />,
+    content: (
+      <div className='h-full'>
+        <Terminal />
       </div>
     ),
   },

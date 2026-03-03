@@ -1,13 +1,10 @@
 'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
-import {
-  Search16Regular,
-  Power20Regular,
-} from '@fluentui/react-icons';
+import { Search16Regular, Power20Regular } from '@fluentui/react-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDesktop } from '../../context/DesktopContext';
-import { desktopApps, externalApps } from './apps';
+import { desktopApps, allApps, externalApps } from './apps';
 import { siteData } from '../../../lib/data';
 
 interface StartMenuProps {
@@ -20,10 +17,12 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
   const profileCardRef = useRef<HTMLDivElement>(null);
   const { openWindow } = useDesktop();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [showAllApps, setShowAllApps] = useState(false);
 
   useEffect(() => {
     if (!isOpen) {
       setIsProfileOpen(false);
+      setShowAllApps(false);
     }
   }, [isOpen]);
 
@@ -61,7 +60,8 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
     if (isProfileOpen) {
       document.addEventListener('mousedown', handleClickOutsideProfile);
     }
-    return () => document.removeEventListener('mousedown', handleClickOutsideProfile);
+    return () =>
+      document.removeEventListener('mousedown', handleClickOutsideProfile);
   }, [isProfileOpen]);
 
   const handleAppClick = (app: any) => {
@@ -79,7 +79,10 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  const allPinnedApps = [...desktopApps, ...externalApps];
+  const pinnedApps = [...desktopApps, ...externalApps];
+  const allAppsList = [...allApps, ...externalApps].sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 
   return (
     <AnimatePresence>
@@ -111,71 +114,125 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Pinned Section */}
-          <div className='flex-1 px-8 py-4 overflow-y-auto'>
-            <div className='flex justify-between items-center mb-4'>
-              <h3 className='text-sm font-semibold text-gray-800 dark:text-white'>
-                Pinned
-              </h3>
-              <button className='text-xs text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white bg-white/50 dark:bg-white/10 px-2 py-1 rounded shadow-sm hover:shadow transition-all'>
-                All apps &gt;
-              </button>
-            </div>
-
-            <div className='grid grid-cols-6 gap-x-2 gap-y-6'>
-              {allPinnedApps.map(app => (
-                <div
-                  key={app.id}
-                  className='flex flex-col items-center justify-start gap-2 p-2 rounded hover:bg-white/50 dark:hover:bg-white/10 cursor-pointer transition-colors group'
-                  onClick={() =>
-                    'url' in app
-                      ? handleExternalClick(app.url)
-                      : handleAppClick(app)
-                  }
+          <div className='flex-1 relative overflow-hidden'>
+            <AnimatePresence initial={false} mode='popLayout'>
+              {showAllApps ? (
+                <motion.div
+                  key='all-apps'
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '100%' }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 35, mass: 0.8 }}
+                  className='absolute inset-0 px-8 py-4 overflow-y-auto'
                 >
-                  <div className='w-8 h-8 flex items-center justify-center transition-transform '>
-                    {app.icon}
+                  <div className='flex justify-between items-center mb-4'>
+                    <h3 className='text-sm font-semibold text-gray-800 dark:text-white'>
+                      All
+                    </h3>
+                    <button
+                      onClick={() => setShowAllApps(false)}
+                      className='text-xs text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white bg-white/50 dark:bg-white/10 px-2 py-1 rounded shadow-sm hover:shadow transition-all'
+                    >
+                      &lt; Back
+                    </button>
                   </div>
-                  <span className='text-xs text-center text-gray-800 dark:text-gray-200 line-clamp-2 leading-tight px-1'>
-                    {app.name}
-                  </span>
-                </div>
-              ))}
-            </div>
 
-            {/* Recommended Section */}
-            <div className='mt-8'>
-              <div className='flex justify-between items-center mb-4'>
-                <h3 className='text-sm font-semibold text-gray-800 dark:text-white'>
-                  Recommended
-                </h3>
-                <button className='text-xs text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white bg-white/50 dark:bg-white/10 px-2 py-1 rounded shadow-sm hover:shadow transition-all'>
-                  More &gt;
-                </button>
-              </div>
+                  <div className='flex flex-col'>
+                    {allAppsList.map(app => (
+                      <div
+                        key={app.id}
+                        className='flex items-center gap-3 px-2 py-2.5 rounded hover:bg-white/50 dark:hover:bg-white/10 cursor-pointer transition-colors'
+                        onClick={() =>
+                          'url' in app
+                            ? handleExternalClick((app as any).url)
+                            : handleAppClick(app)
+                        }
+                      >
+                        <div className='w-7 h-7 flex items-center justify-center shrink-0'>
+                          {app.icon}
+                        </div>
+                        <span className='text-xs text-gray-800 dark:text-gray-200'>
+                          {app.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key='pinned'
+                  initial={{ x: '-100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '-100%' }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 35, mass: 0.8 }}
+                  className='absolute inset-0 px-8 py-4 overflow-y-auto'
+                >
+                  <div className='flex justify-between items-center mb-4'>
+                    <h3 className='text-sm font-semibold text-gray-800 dark:text-white'>
+                      Pinned
+                    </h3>
+                    <button
+                      onClick={() => setShowAllApps(true)}
+                      className='text-xs text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white bg-white/50 dark:bg-white/10 px-2 py-1 rounded shadow-sm hover:shadow transition-all'
+                    >
+                      All &gt;
+                    </button>
+                  </div>
 
-              <div className='grid grid-cols-2 gap-4'>
-                {desktopApps.slice(0, 2).map(app => (
-                  <div
-                    key={`rec-${app.id}`}
-                    className='flex items-center gap-4 p-2 rounded hover:bg-white/50 dark:hover:bg-white/10 cursor-pointer transition-colors'
-                    onClick={() => handleAppClick(app)}
-                  >
-                    <div className='w-8 h-8 flex items-center justify-center'>
-                      {app.icon}
+                  <div className='grid grid-cols-6 gap-x-2 gap-y-6'>
+                    {pinnedApps.map(app => (
+                      <div
+                        key={app.id}
+                        className='flex flex-col items-center justify-start gap-2 p-2 rounded hover:bg-white/50 dark:hover:bg-white/10 cursor-pointer transition-colors'
+                        onClick={() =>
+                          'url' in app
+                            ? handleExternalClick(app.url)
+                            : handleAppClick(app)
+                        }
+                      >
+                        <div className='w-8 h-8 flex items-center justify-center'>
+                          {app.icon}
+                        </div>
+                        <span className='text-xs text-center text-gray-800 dark:text-gray-200 line-clamp-2 leading-tight px-1'>
+                          {app.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Recommended Section */}
+                  <div className='mt-8'>
+                    <div className='flex justify-between items-center mb-4'>
+                      <h3 className='text-sm font-semibold text-gray-800 dark:text-white'>
+                        Recommended
+                      </h3>
                     </div>
-                    <div className='flex flex-col'>
-                      <span className='text-xs font-medium text-gray-800 dark:text-gray-200'>
-                        {app.name}
-                      </span>
-                      <span className='text-[10px] text-gray-500 dark:text-gray-400'>
-                        Recently added
-                      </span>
+
+                    <div className='grid grid-cols-2 gap-4'>
+                      {desktopApps.slice(0, 2).map(app => (
+                        <div
+                          key={`rec-${app.id}`}
+                          className='flex items-center gap-4 p-2 rounded hover:bg-white/50 dark:hover:bg-white/10 cursor-pointer transition-colors'
+                          onClick={() => handleAppClick(app)}
+                        >
+                          <div className='w-8 h-8 flex items-center justify-center'>
+                            {app.icon}
+                          </div>
+                          <div className='flex flex-col'>
+                            <span className='text-xs font-medium text-gray-800 dark:text-gray-200'>
+                              {app.name}
+                            </span>
+                            <span className='text-[10px] text-gray-500 dark:text-gray-400'>
+                              Recently added
+                            </span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Bottom Profile/Power Bar */}
