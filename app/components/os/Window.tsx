@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useDragControls } from 'framer-motion';
+import { motion, useDragControls, useIsPresent } from 'framer-motion';
 import { useDesktop } from '../../context/DesktopContext';
 import { Subtract16Regular, Maximize16Regular, SquareMultiple16Regular, Dismiss16Regular } from '@fluentui/react-icons';
 
@@ -10,7 +10,7 @@ interface WindowProps {
 }
 
 export const Window: React.FC<WindowProps> = ({ id }) => {
-  const { windows, closeWindow, minimizeWindow, maximizeWindow, restoreWindow, focusWindow, getIconRect } = useDesktop();
+  const { windows, closeWindow, removeWindow, minimizeWindow, maximizeWindow, restoreWindow, focusWindow, getIconRect } = useDesktop();
   const windowData = windows.find((w) => w.id === id);
   const dragControls = useDragControls();
   const constraintsRef = useRef<HTMLDivElement>(null);
@@ -38,11 +38,16 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       y: typeof window !== 'undefined' ? (window.innerHeight / 2) - 300 : 100
   });
 
-  if (!windowData) return null;
+  const isPresent = useIsPresent();
 
-  const { title, icon, content, state, zIndex } = windowData;
+  // If the window is closed in state but still animating out, we need to safely fall back to the last known data
+  // Using an empty fallback object prevents crashes during the exit animation timeframe
+  const { title = '', icon = null, content = null, state = 'normal', zIndex = 0, isClosing = false } = windowData || {};
   const isMaximized = state === 'maximized';
   const isMinimized = state === 'minimized';
+
+  // If it's fully gone and finished animating, we can finally unmount
+  if (!windowData && !isPresent) return null;
 
   const handlePointerDown = (e: React.PointerEvent) => {
     focusWindow(id);
@@ -70,7 +75,9 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       }}
       initial={{ opacity: 0, scale: 0, x: targetX, y: targetY }}
       animate={
-        isMinimized
+        isClosing 
+          ? 'closed'
+          : isMinimized
           ? { opacity: 0, scale: 0, x: targetX, y: targetY, pointerEvents: 'none' as const }
           : { 
               opacity: 1, 
@@ -91,7 +98,24 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
               })
             }
       }
-      exit={{ opacity: 0, scale: 0, x: targetX, y: targetY }}
+      variants={{
+        closed: { 
+            opacity: 0, 
+            scale: 0.95, // Hardware accelerated visual shrink
+            x: isMaximized ? 0 : dragPos.x,
+            y: isMaximized ? 0 : dragPos.y,
+            // Lock dimensions to their current state to prevent content reflow during animation
+            height: isMaximized ? 'calc(100vh - 3rem)' : 600,
+            width: isMaximized ? '100vw' : defaultWidth,
+            pointerEvents: 'none' as const
+        }
+      }}
+      exit="closed"
+      onAnimationComplete={(definition) => {
+        if (definition === 'closed' && isClosing) {
+            removeWindow(id);
+        }
+      }}
       transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.8 }}
       style={{ 
         zIndex,

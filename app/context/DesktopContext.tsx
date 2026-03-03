@@ -11,12 +11,14 @@ export interface WindowData {
   content: ReactNode;
   state: WindowState;
   zIndex: number;
+  isClosing?: boolean;
 }
 
 interface DesktopContextType {
   windows: WindowData[];
-  openWindow: (window: Omit<WindowData, 'state' | 'zIndex'>) => void;
+  openWindow: (window: Omit<WindowData, 'state' | 'zIndex' | 'isClosing'>) => void;
   closeWindow: (id: string) => void;
+  removeWindow: (id: string) => void;
   minimizeWindow: (id: string) => void;
   maximizeWindow: (id: string) => void;
   restoreWindow: (id: string) => void;
@@ -44,7 +46,7 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
     return iconRectsRef.current[id] || null;
   };
 
-  const openWindow = (windowInfo: Omit<WindowData, 'state' | 'zIndex'>) => {
+  const openWindow = (windowInfo: Omit<WindowData, 'state' | 'zIndex' | 'isClosing'>) => {
     setWindows((prev) => {
       const existing = prev.find((w) => w.id === windowInfo.id);
       if (existing) {
@@ -58,15 +60,21 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
       setFocusedWindowId(windowInfo.id);
       return [
         ...prev,
-        { ...windowInfo, state: 'normal', zIndex: highestZIndex + 1 },
+        { ...windowInfo, state: 'normal', zIndex: highestZIndex + 1, isClosing: false },
       ];
     });
     setHighestZIndex((prev) => prev + 1);
   };
 
   const closeWindow = (id: string) => {
-    setWindows((prev) => prev.filter((w) => w.id !== id));
+    setWindows((prev) =>
+      prev.map((w) => (w.id === id ? { ...w, isClosing: true } : w))
+    );
     if (focusedWindowId === id) setFocusedWindowId(null);
+  };
+
+  const removeWindow = (id: string) => {
+    setWindows((prev) => prev.filter((w) => w.id !== id));
   };
 
   const minimizeWindow = (id: string) => {
@@ -106,6 +114,7 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
         windows,
         openWindow,
         closeWindow,
+        removeWindow,
         minimizeWindow,
         maximizeWindow,
         restoreWindow,
