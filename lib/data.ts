@@ -41,8 +41,7 @@ export const siteData = {
       title: 'Copilot Actions',
       company: 'Microsoft Office AI',
       year: 2024,
-      endYear: 2025,
-      stack: 'React, TypeScript, Fluent UI',
+      stack: 'React, Typescript, Design',
       team: 'Office AI',
       content:
         'Developed the majority of the front-end UI for Copilot Actions and owned stylistic implementation app-wide - rapidly incorporating design feedback. Collaborated with localization teams, design, and product to support 20+ languages for the linguistically complex, mad-lib-style AI input for the Copilot Actions Create flow.',
@@ -67,7 +66,7 @@ export const siteData = {
       title: 'Stream Copilot',
       company: 'Microsoft Office Media Group',
       year: 2023,
-      stack: 'React, TypeScript, Fluent UI',
+      stack: 'React, Typescript, Feedback',
       team: 'Office Media Group',
       content:
         'Led front-end development and integration of O365 Copilot into Microsoft Stream, giving users the ability to interact with videos with natural language. Implemented lazy loading the front-end, the interactive prompt menu UI, and the end-to-end user feedback collection system.',
@@ -81,7 +80,7 @@ export const siteData = {
       company: 'Freelance',
       year: 2022,
       endYear: 2023,
-      stack: 'Next.js, TypeScript, Firebase',
+      stack: 'Next.js, TypeScript, Supabase',
       team: '',
       content:
         'Sole developer for pokestats.live, a community-powered live tournament analytics tool for competitors of the Pokémon Trading Card Game, accruing 3M+ total impressions and 10K+ weekly active users',
@@ -92,8 +91,9 @@ export const siteData = {
     {
       title: 'Stream Transcripts',
       company: 'Microsoft Office Media Group',
-      year: 2022,
-      stack: 'React, TypeScript, Fluent UI',
+      year: 2021,
+      endYear: 2022,
+      stack: 'React, Typescript',
       team: 'Office Media Group',
       content:
         "Front-end developer for Microsoft Stream's transcripts feature, a tool to help users transcribe and search through their Stream videos. Owned rollout of Transcript Edit Batching and various optimizations for accessibility.",
@@ -118,8 +118,8 @@ export const siteData = {
     {
       title: 'Amazon Business Intelligence',
       company: 'Amazon',
-      year: 2019,
-      endYear: 2020,
+      year: 2020,
+      endYear: 2021,
       stack: 'React, JavaScript, AWS',
       team: 'Business Intelligence',
       content:
