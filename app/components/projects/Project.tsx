@@ -64,13 +64,17 @@ export const FileRow = ({
       }`}
     >
       <div className='flex items-center gap-1.5 w-[200px] shrink-0 px-3 py-1'>
-        <Image
-          src={`/assets/${project.image}`}
-          alt=''
-          width={20}
-          height={20}
-          className='w-5 h-5 rounded-sm object-cover shrink-0'
-        />
+        {project.image ? (
+          <Image
+            src={`/assets/${project.image}`}
+            alt=''
+            width={20}
+            height={20}
+            className='w-5 h-5 rounded-sm object-cover shrink-0'
+          />
+        ) : (
+          <img src='/assets/icons/program.ico' alt='' className='w-5 h-5 shrink-0' draggable={false} />
+        )}
         <span className='truncate text-gray-800 dark:text-gray-200'>
           {project.title}
         </span>
@@ -97,15 +101,21 @@ export const PreviewPane = ({ project }: PreviewPaneProps) => {
 
   return (
     <div className='p-4 text-xs'>
-      <div className='w-full aspect-video rounded overflow-hidden bg-gray-200 dark:bg-gray-700 mb-3'>
-        <Image
-          src={`/assets/${project.image}`}
-          alt={project.title}
-          width={400}
-          height={300}
-          className='w-full h-full object-cover'
-        />
-      </div>
+      {project.image ? (
+        <div className='w-full aspect-video rounded overflow-hidden bg-gray-200 dark:bg-gray-700 mb-3'>
+          <Image
+            src={`/assets/${project.image}`}
+            alt={project.title}
+            width={400}
+            height={300}
+            className='w-full h-full object-cover'
+          />
+        </div>
+      ) : (
+        <div className='w-full aspect-video rounded bg-gray-200 dark:bg-gray-700 mb-3 flex items-center justify-center'>
+          <img src='/assets/icons/program.ico' alt='' className='w-12 h-12' draggable={false} />
+        </div>
+      )}
 
       <h3 className='font-semibold text-sm text-gray-900 dark:text-gray-100'>
         {project.title}

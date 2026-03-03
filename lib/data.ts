@@ -25,6 +25,18 @@ export const siteData = {
       infoUrl: '',
     },
     {
+      title: 'AI Inbox',
+      company: 'Microsoft Office AI',
+      year: 2025,
+      stack: 'React, TypeScript, Fluent UI',
+      team: 'Office AI',
+      content:
+        'Built the "All Conversations" page in M365 Copilot, serving as the central hub for users to view and manage their Copilot interactions. Integrated with Scheduled Prompts to surface automated prompt results alongside regular conversations.',
+      image: '',
+      url: '',
+      infoUrl: '',
+    },
+    {
       title: 'Copilot Scheduled Prompts',
       company: 'Microsoft Office AI',
       year: 2025,
