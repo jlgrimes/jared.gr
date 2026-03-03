@@ -166,12 +166,12 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
         zIndex,
         position: 'absolute',
       }}
-      className={`flex flex-col bg-white dark:bg-gray-900 shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800`}
+      className={`flex flex-col bg-white dark:bg-gray-900 shadow-2xl overflow-hidden`}
       onPointerDown={() => focusWindow(id)}
     >
       {/* Title Bar */}
       <div
-        className={`h-10 flex items-center justify-between px-3 select-none touch-none ${
+        className={`h-7 flex items-center justify-between px-3 select-none touch-none ${
           // Active window styling vs inactive
           zIndex >= Math.max(...windows.map(w => w.zIndex))
             ? 'bg-gray-100/80 dark:bg-gray-800/80'
@@ -192,30 +192,27 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
         </div>
 
         {/* Window Controls */}
-        <div className='flex h-full -mr-3 items-center shrink-0'>
+        <div className='flex h-full -mr-3 items-stretch shrink-0'>
           <button
-            title='Minimize'
             onPointerDown={e => e.stopPropagation()}
             onClick={() => minimizeWindow(id)}
-            className='w-[46px] h-[32px] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-colors'
+            className='w-[46px] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-colors'
           >
             <Subtract16Regular />
           </button>
           <button
-            title={isMaximized ? 'Restore' : 'Maximize'}
             onPointerDown={e => e.stopPropagation()}
             onClick={() =>
               isMaximized ? restoreWindow(id) : maximizeWindow(id)
             }
-            className='w-[46px] h-[32px] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-colors'
+            className='w-[46px] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition-colors'
           >
             {isMaximized ? <SquareMultiple16Regular /> : <Maximize16Regular />}
           </button>
           <button
-            title='Close'
             onPointerDown={e => e.stopPropagation()}
             onClick={() => closeWindow(id)}
-            className='w-[46px] h-[32px] flex items-center justify-center hover:bg-red-500 hover:text-white dark:hover:bg-red-500 text-gray-600 dark:text-gray-300 transition-colors'
+            className='w-[46px] flex items-center justify-center hover:bg-red-600 hover:text-white dark:hover:bg-red-600 text-gray-600 dark:text-gray-300 transition-colors rounded-tr-[8px]'
           >
             <Dismiss16Regular />
           </button>

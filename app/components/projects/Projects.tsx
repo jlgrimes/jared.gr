@@ -192,18 +192,8 @@ export const Projects = () => {
               <div
                 key={folder}
                 onClick={() => selectView(folder)}
-                className={`${sidebarItem(activeView === folder)} pl-7 cursor-pointer`}
+                className={`${sidebarItem(activeView === folder)} pl-9 cursor-pointer`}
               >
-                <span
-                  onClick={e => { e.stopPropagation(); toggleFolder(folder); }}
-                  className='shrink-0 p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10'
-                >
-                  {expandedFolders.has(folder) ? (
-                    <ChevronDown size={10} className='text-gray-500' />
-                  ) : (
-                    <ChevronRight size={10} className='text-gray-500' />
-                  )}
-                </span>
                 <img src='/assets/icons/folder.ico' alt='' className='w-4 h-4 shrink-0' draggable={false} />
                 <span className='truncate text-gray-800 dark:text-gray-200'>{folder}</span>
               </div>
