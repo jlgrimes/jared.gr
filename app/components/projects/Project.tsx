@@ -11,14 +11,21 @@ const companyMap: Record<string, string> = {
 interface FolderRowProps {
   name: string;
   dateRange: string;
+  isSelected: boolean;
+  onClick: () => void;
   onDoubleClick: () => void;
 }
 
-export const FolderRow = ({ name, dateRange, onDoubleClick }: FolderRowProps) => {
+export const FolderRow = ({ name, dateRange, isSelected, onClick, onDoubleClick }: FolderRowProps) => {
   return (
     <div
+      onClick={onClick}
       onDoubleClick={onDoubleClick}
-      className='flex items-center text-xs border-b border-gray-100 dark:border-gray-800 hover:bg-[#e5f3ff] dark:hover:bg-[#0078d4]/10'
+      className={`flex items-center text-xs ${
+        isSelected
+          ? 'bg-[#cce4f7] dark:bg-[#0078d4]/20'
+          : 'hover:bg-[#e5f3ff] dark:hover:bg-[#0078d4]/10'
+      }`}
     >
       <div className='flex items-center gap-1.5 w-[200px] shrink-0 px-3 py-1'>
         <img
@@ -31,11 +38,11 @@ export const FolderRow = ({ name, dateRange, onDoubleClick }: FolderRowProps) =>
           {name}
         </span>
       </div>
-      <div className='w-[100px] shrink-0 px-3 py-1 text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-gray-800'>
+      <div className='w-[100px] shrink-0 px-3 py-1 text-gray-500 dark:text-gray-400'>
         {dateRange}
       </div>
-      <div className='w-[140px] shrink-0 px-3 py-1 text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-gray-800' />
-      <div className='flex-1 min-w-[160px] px-3 py-1 text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-gray-800' />
+      <div className='w-[140px] shrink-0 px-3 py-1 text-gray-500 dark:text-gray-400' />
+      <div className='flex-1 min-w-[160px] px-3 py-1 text-gray-500 dark:text-gray-400' />
     </div>
   );
 };
@@ -57,7 +64,7 @@ export const FileRow = ({
     <div
       onClick={onClick}
       onDoubleClick={onDoubleClick}
-      className={`flex items-center text-xs border-b border-gray-100 dark:border-gray-800 ${
+      className={`flex items-center text-xs ${
         isSelected
           ? 'bg-[#cce4f7] dark:bg-[#0078d4]/20'
           : 'hover:bg-[#e5f3ff] dark:hover:bg-[#0078d4]/10'
@@ -79,13 +86,13 @@ export const FileRow = ({
           {project.title}
         </span>
       </div>
-      <div className='w-[100px] shrink-0 px-3 py-1 text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-gray-800'>
+      <div className='w-[100px] shrink-0 px-3 py-1 text-gray-500 dark:text-gray-400'>
         {project.endYear ? `${project.year}–${project.endYear}` : project.year}
       </div>
-      <div className='w-[140px] shrink-0 px-3 py-1 truncate text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-gray-800'>
+      <div className='w-[140px] shrink-0 px-3 py-1 truncate text-gray-500 dark:text-gray-400'>
         {project.team || '—'}
       </div>
-      <div className='flex-1 min-w-[160px] px-3 py-1 truncate text-gray-500 dark:text-gray-400 border-l border-gray-100 dark:border-gray-800'>
+      <div className='flex-1 min-w-[160px] px-3 py-1 truncate text-gray-500 dark:text-gray-400'>
         {project.stack}
       </div>
     </div>

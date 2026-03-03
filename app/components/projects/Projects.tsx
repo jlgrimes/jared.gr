@@ -3,7 +3,19 @@
 import { useState, useMemo } from 'react';
 import { siteData } from '../../../lib/data';
 import { FileRow, FolderRow, PreviewPane } from './Project';
-import { ChevronDown, ChevronRight, ArrowLeft, ArrowRight, ArrowUp, Search } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronRight,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  Search,
+} from 'lucide-react';
+import {
+  ChevronUp12Regular,
+  ChevronDown12Regular,
+  ChevronRight12Regular,
+} from '@fluentui/react-icons';
 
 type ProjectType = (typeof siteData.projects)[0];
 
@@ -15,7 +27,10 @@ const folderCompanies: Record<string, string> = {
 };
 
 // Companies whose projects are loose (no folder)
-const looseCompanies = new Set(['Freelance', 'University of Michigan + Michigan Government']);
+const looseCompanies = new Set([
+  'Freelance',
+  'University of Michigan + Michigan Government',
+]);
 
 // Folders where the latest date should show as "Present" (still active)
 const folderPresent = new Set(['Microsoft']);
@@ -51,9 +66,12 @@ export const Projects = () => {
 
   const [activeView, setActiveView] = useState<string>('Projects');
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
-    () => new Set(['Projects'])
+    () => new Set(['Projects']),
   );
-  const [selectedProject, setSelectedProject] = useState<ProjectType | null>(null);
+  const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
+    null,
+  );
+  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>('year');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
 
@@ -68,10 +86,17 @@ export const Projects = () => {
   const selectView = (view: string) => {
     setActiveView(view);
     setSelectedProject(null);
+    setSelectedFolder(null);
   };
 
   const selectProject = (project: ProjectType) => {
     setSelectedProject(project);
+    setSelectedFolder(null);
+  };
+
+  const selectFolder = (folder: string) => {
+    setSelectedFolder(folder);
+    setSelectedProject(null);
   };
 
   const navigateToFolder = (folder: string) => {
@@ -96,10 +121,13 @@ export const Projects = () => {
     }
   };
 
-  const breadcrumb =
+  const breadcrumbParts =
     activeView === 'Projects'
-      ? 'Projects'
-      : `Projects > ${activeView}`;
+      ? [{ label: 'Projects', view: 'Projects' }]
+      : [
+          { label: 'Projects', view: 'Projects' },
+          { label: activeView, view: activeView },
+        ];
 
   const visibleProjects = useMemo(() => {
     let items: ProjectType[];
@@ -132,11 +160,12 @@ export const Projects = () => {
   // Show subfolder rows in file list when at root
   const showFolderRows = activeView === 'Projects';
 
-  const totalItems = visibleProjects.length + (showFolderRows ? folderNames.length : 0);
+  const totalItems =
+    visibleProjects.length + (showFolderRows ? folderNames.length : 0);
 
   const SortIndicator = ({ column }: { column: SortKey }) => {
     if (sortKey !== column) return null;
-    return <span className='ml-1 text-[10px]'>{sortDir === 'asc' ? '▲' : '▼'}</span>;
+    return sortDir === 'asc' ? <ChevronUp12Regular /> : <ChevronDown12Regular />;
   };
 
   return (
@@ -155,7 +184,17 @@ export const Projects = () => {
           </button>
         </div>
         <div className='flex-1 flex items-center px-2.5 py-1 bg-white dark:bg-[#383838] rounded-sm border border-gray-300 dark:border-gray-600 text-xs text-gray-700 dark:text-gray-300 truncate'>
-          {breadcrumb}
+          {breadcrumbParts.map((part, i) => (
+            <span key={part.view} className='flex items-center'>
+              {i > 0 && <ChevronRight12Regular className='mx-1 text-gray-400' />}
+              <button
+                onClick={() => selectView(part.view)}
+                className='hover:bg-gray-200/60 dark:hover:bg-white/10 px-2 py-0.5 rounded-sm'
+              >
+                {part.label}
+              </button>
+            </span>
+          ))}
         </div>
         <div className='hidden sm:flex items-center px-2 py-1 bg-white dark:bg-[#383838] rounded-sm border border-gray-300 dark:border-gray-600 w-44'>
           <Search size={12} className='text-gray-400 mr-1.5' />
@@ -166,14 +205,17 @@ export const Projects = () => {
       {/* Main Content */}
       <div className='flex flex-1 min-h-0'>
         {/* Sidebar — folders only */}
-        <div className='hidden md:flex flex-col w-[200px] border-r border-gray-200 dark:border-gray-700 bg-[#f9f9f9] dark:bg-[#252525] overflow-y-auto py-1'>
+        <div className='hidden md:flex flex-col w-[160px] border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] overflow-y-auto py-1'>
           {/* Root: Projects */}
           <div
             onClick={() => selectView('Projects')}
             className={`${sidebarItem(activeView === 'Projects')} px-2 cursor-pointer`}
           >
             <span
-              onClick={e => { e.stopPropagation(); toggleFolder('Projects'); }}
+              onClick={e => {
+                e.stopPropagation();
+                toggleFolder('Projects');
+              }}
               className='shrink-0 p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10'
             >
               {expandedFolders.has('Projects') ? (
@@ -182,8 +224,15 @@ export const Projects = () => {
                 <ChevronRight size={12} className='text-gray-500' />
               )}
             </span>
-            <img src='/assets/icons/folder.ico' alt='' className='w-4 h-4 shrink-0' draggable={false} />
-            <span className='truncate font-medium text-gray-800 dark:text-gray-200'>Projects</span>
+            <img
+              src='/assets/icons/folder.ico'
+              alt=''
+              className='w-4 h-4 shrink-0'
+              draggable={false}
+            />
+            <span className='truncate font-medium text-gray-800 dark:text-gray-200'>
+              Projects
+            </span>
           </div>
 
           {/* Subfolders */}
@@ -194,8 +243,15 @@ export const Projects = () => {
                 onClick={() => selectView(folder)}
                 className={`${sidebarItem(activeView === folder)} pl-9 cursor-pointer`}
               >
-                <img src='/assets/icons/folder.ico' alt='' className='w-4 h-4 shrink-0' draggable={false} />
-                <span className='truncate text-gray-800 dark:text-gray-200'>{folder}</span>
+                <img
+                  src='/assets/icons/folder.ico'
+                  alt=''
+                  className='w-4 h-4 shrink-0'
+                  draggable={false}
+                />
+                <span className='truncate text-gray-800 dark:text-gray-200'>
+                  {folder}
+                </span>
               </div>
             ))}
         </div>
@@ -204,35 +260,39 @@ export const Projects = () => {
         <div className='flex-1 overflow-x-auto min-w-0'>
           <div className='min-w-[560px] flex flex-col h-full'>
             {/* Column Headers */}
-            <div className='flex items-center border-b border-gray-200 dark:border-gray-700 bg-[#f9f9f9] dark:bg-[#2d2d2d] text-[11px] text-gray-500 dark:text-gray-400 font-medium'>
+            <div className='flex items-center border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] text-[11px] text-gray-500 dark:text-gray-400 font-medium'>
               <button
                 onClick={() => handleSort('title')}
-                className='flex items-center w-[200px] shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5'
+                className='flex items-center justify-between w-[200px] shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5'
               >
-                Name<SortIndicator column='title' />
+                Name
+                <SortIndicator column='title' />
               </button>
               <button
                 onClick={() => handleSort('year')}
-                className='flex items-center w-[100px] shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
+                className='flex items-center justify-between w-[100px] shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
               >
-                Date<SortIndicator column='year' />
+                Date
+                <SortIndicator column='year' />
               </button>
               <button
                 onClick={() => handleSort('team')}
-                className='flex items-center w-[140px] shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
+                className='flex items-center justify-between w-[140px] shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
               >
-                Team<SortIndicator column='team' />
+                Team
+                <SortIndicator column='team' />
               </button>
               <button
                 onClick={() => handleSort('stack')}
-                className='flex items-center flex-1 min-w-[160px] px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
+                className='flex items-center justify-between flex-1 min-w-[160px] px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
               >
-                Stack<SortIndicator column='stack' />
+                Stack
+                <SortIndicator column='stack' />
               </button>
             </div>
 
             {/* Rows */}
-            <div className='flex-1 overflow-y-auto'>
+            <div className='flex-1 overflow-y-auto bg-white dark:bg-[#1e1e1e]'>
               {/* Folder rows when at root */}
               {showFolderRows &&
                 folderNames.map(folder => {
@@ -242,12 +302,16 @@ export const Projects = () => {
                   const isPresent = folderPresent.has(folder);
                   const dateRange = isPresent
                     ? `${minY}–Present`
-                    : minY === maxY ? `${minY}` : `${minY}–${maxY}`;
+                    : minY === maxY
+                      ? `${minY}`
+                      : `${minY}–${maxY}`;
                   return (
                     <FolderRow
                       key={folder}
                       name={folder}
                       dateRange={dateRange}
+                      isSelected={selectedFolder === folder}
+                      onClick={() => selectFolder(folder)}
                       onDoubleClick={() => navigateToFolder(folder)}
                     />
                   );
@@ -267,7 +331,7 @@ export const Projects = () => {
 
         {/* Preview Pane */}
         {selectedProject && (
-          <div className='hidden lg:block w-[280px] border-l border-gray-200 dark:border-gray-700 overflow-y-auto'>
+          <div className='hidden lg:block w-[280px] border-l border-gray-200 dark:border-gray-700 overflow-y-auto bg-white dark:bg-[#1e1e1e]'>
             <PreviewPane project={selectedProject} />
           </div>
         )}
