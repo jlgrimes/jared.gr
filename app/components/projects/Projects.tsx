@@ -78,7 +78,7 @@ export const Projects = () => {
   const toggleFolder = (folder: string) => {
     setExpandedFolders(prev => {
       const next = new Set(prev);
-      next.has(folder) ? next.delete(folder) : next.add(folder);
+      if (next.has(folder)) next.delete(folder); else next.add(folder);
       return next;
     });
   };
@@ -205,7 +205,7 @@ export const Projects = () => {
       {/* Main Content */}
       <div className='flex flex-1 min-h-0'>
         {/* Sidebar — folders only */}
-        <div className='hidden md:flex flex-col w-[160px] border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] overflow-y-auto py-1'>
+        <div className='hidden md:flex flex-col w-40 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] overflow-y-auto py-1'>
           {/* Root: Projects */}
           <div
             onClick={() => selectView('Projects')}
@@ -258,33 +258,33 @@ export const Projects = () => {
 
         {/* File List (Details View) */}
         <div className='flex-1 overflow-x-auto min-w-0'>
-          <div className='min-w-[560px] flex flex-col h-full'>
+          <div className='min-w-140 flex flex-col h-full'>
             {/* Column Headers */}
             <div className='flex items-center border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1e1e1e] text-[11px] text-gray-500 dark:text-gray-400 font-medium'>
               <button
                 onClick={() => handleSort('title')}
-                className='flex items-center justify-between w-[200px] shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5'
+                className='flex items-center justify-between w-50 shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5'
               >
                 Name
                 <SortIndicator column='title' />
               </button>
               <button
                 onClick={() => handleSort('year')}
-                className='flex items-center justify-between w-[100px] shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
+                className='flex items-center justify-between w-25 shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
               >
                 Date
                 <SortIndicator column='year' />
               </button>
               <button
                 onClick={() => handleSort('team')}
-                className='flex items-center justify-between w-[140px] shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
+                className='flex items-center justify-between w-35 shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
               >
                 Team
                 <SortIndicator column='team' />
               </button>
               <button
                 onClick={() => handleSort('stack')}
-                className='flex items-center justify-between flex-1 min-w-[160px] px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
+                className='flex items-center justify-between flex-1 min-w-40 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
               >
                 Stack
                 <SortIndicator column='stack' />
@@ -331,7 +331,7 @@ export const Projects = () => {
 
         {/* Preview Pane */}
         {selectedProject && (
-          <div className='hidden lg:block w-[280px] border-l border-gray-200 dark:border-gray-700 overflow-y-auto bg-white dark:bg-[#1e1e1e]'>
+          <div className='w-70 shrink-0 border-l border-gray-200 dark:border-gray-700 overflow-y-auto bg-white dark:bg-[#1e1e1e]'>
             <PreviewPane project={selectedProject} />
           </div>
         )}
