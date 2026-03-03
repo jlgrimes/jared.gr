@@ -13,6 +13,30 @@ export const siteData = {
   // Projects data
   projects: [
     {
+      title: 'Conch',
+      company: 'Freelance',
+      year: 2026,
+      stack: 'Rust, OpenClaw',
+      team: '',
+      content:
+        'Built Conch, a biologically-inspired memory engine for AI agents. Replaces flat markdown files with intelligent, self-managing storage featuring semantic search, memory decay, automatic deduplication, and graph-based context recall — all local with no API keys required.',
+      image: 'conch.png',
+      url: 'conch.so',
+      infoUrl: 'https://github.com/jlgrimes/conch',
+    },
+    {
+      title: 'Gen',
+      company: 'Freelance',
+      year: 2026,
+      stack: 'Rust, React, Typescript',
+      team: '',
+      content:
+        'Built Gen, a simplified music notation system that works like Markdown for sheet music. Write notes as letters, add rhythm markers and chords with intuitive syntax, and export to guitar tablature — all in the browser.',
+      image: 'gen.png',
+      url: 'gen.band',
+      infoUrl: 'https://docs.gen.band',
+    },
+    {
       title: 'qrtz ai',
       company: 'Freelance',
       year: 2025,
@@ -69,7 +93,7 @@ export const siteData = {
       stack: 'Next.js, TypeScript, Supabase',
       team: '',
       content:
-        'Built Training Court, an app to track your Pokémon TCG tournaments and practice games. Helps players log matches, analyze performance, and improve their competitive gameplay.',
+        'Built Training Court, an app to track your Pokémon TCG tournaments and practice games, accruing 45K+ monthly active users and millions of games logged. Helps players log matches, analyze performance, and improve their competitive gameplay.',
       image: 'training-court.png',
       url: 'trainingcourt.app',
       infoUrl: '',

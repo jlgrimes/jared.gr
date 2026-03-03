@@ -276,18 +276,18 @@ export const Projects = () => {
                 <SortIndicator column='year' />
               </button>
               <button
-                onClick={() => handleSort('team')}
-                className='flex items-center justify-between w-35 shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
-              >
-                Team
-                <SortIndicator column='team' />
-              </button>
-              <button
                 onClick={() => handleSort('stack')}
                 className='flex items-center justify-between flex-1 min-w-40 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
               >
                 Stack
                 <SortIndicator column='stack' />
+              </button>
+              <button
+                onClick={() => handleSort('team')}
+                className='flex items-center justify-between w-35 shrink-0 px-3 py-1.5 text-left hover:bg-gray-200/50 dark:hover:bg-white/5 border-l border-gray-200 dark:border-gray-700'
+              >
+                Team
+                <SortIndicator column='team' />
               </button>
             </div>
 

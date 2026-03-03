@@ -41,8 +41,8 @@ export const FolderRow = ({ name, dateRange, isSelected, onClick, onDoubleClick 
       <div className='w-25 shrink-0 px-3 py-1 text-gray-500 dark:text-gray-400'>
         {dateRange}
       </div>
-      <div className='w-35 shrink-0 px-3 py-1 text-gray-500 dark:text-gray-400' />
       <div className='flex-1 min-w-40 px-3 py-1 text-gray-500 dark:text-gray-400' />
+      <div className='w-35 shrink-0 px-3 py-1 text-gray-500 dark:text-gray-400' />
     </div>
   );
 };
@@ -89,11 +89,11 @@ export const FileRow = ({
       <div className='w-25 shrink-0 px-3 py-1 text-gray-500 dark:text-gray-400'>
         {project.endYear ? `${project.year}–${project.endYear}` : project.year}
       </div>
-      <div className='w-35 shrink-0 px-3 py-1 truncate text-gray-500 dark:text-gray-400'>
-        {project.team || '—'}
-      </div>
       <div className='flex-1 min-w-40 px-3 py-1 truncate text-gray-500 dark:text-gray-400'>
         {project.stack}
+      </div>
+      <div className='w-35 shrink-0 px-3 py-1 truncate text-gray-500 dark:text-gray-400'>
+        {project.team || '—'}
       </div>
     </div>
   );
