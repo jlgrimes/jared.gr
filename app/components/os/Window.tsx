@@ -32,6 +32,12 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Track the exact dragged position to safely animate back to it after maximizing
+  const [dragPos, setDragPos] = useState({
+      x: typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0,
+      y: typeof window !== 'undefined' ? (window.innerHeight / 2) - 300 : 100
+  });
+
   if (!windowData) return null;
 
   const { title, icon, content, state, zIndex } = windowData;
@@ -47,12 +53,6 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
   const targetRect = getIconRect(id);
   const targetX = targetRect && typeof window !== 'undefined' ? targetRect.x + (targetRect.width / 2) - (defaultWidth / 2) : typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0;
   const targetY = targetRect ? targetRect.y + (targetRect.height / 2) : typeof window !== 'undefined' ? window.innerHeight : 500;
-
-  // Track the exact dragged position to safely animate back to it after maximizing
-  const [dragPos, setDragPos] = useState({
-      x: typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0,
-      y: typeof window !== 'undefined' ? (window.innerHeight / 2) - 300 : 100
-  });
 
   return (
     <motion.div
