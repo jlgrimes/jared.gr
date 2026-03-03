@@ -17,6 +17,7 @@ export const siteData = {
       company: 'Freelance',
       year: 2025,
       stack: 'TypeScript, Node.js',
+      team: '',
       content:
         'Created qrtz, a new semantic back-end language for LLMs to communicate intent through tool calls. Enables cleaner, more structured AI-to-system interactions.',
       image: 'qrtz.png',
@@ -28,6 +29,7 @@ export const siteData = {
       company: 'Microsoft Office AI',
       year: 2025,
       stack: 'React, TypeScript, Fluent UI',
+      team: 'Office AI',
       content:
         'Owned the development of the Scheduled Prompts feature in M365 Copilot, allowing users to schedule prompts to be executed at a specific time. Collaborated primarily with product to ensure high shipment quality of the feature.',
       image: 'scheduled-prompts.png',
@@ -39,7 +41,9 @@ export const siteData = {
       title: 'Copilot Actions',
       company: 'Microsoft Office AI',
       year: 2024,
+      endYear: 2025,
       stack: 'React, TypeScript, Fluent UI',
+      team: 'Office AI',
       content:
         'Developed the majority of the front-end UI for Copilot Actions and owned stylistic implementation app-wide - rapidly incorporating design feedback. Collaborated with localization teams, design, and product to support 20+ languages for the linguistically complex, mad-lib-style AI input for the Copilot Actions Create flow.',
       image: 'actions-web.webp',
@@ -52,6 +56,7 @@ export const siteData = {
       company: 'Freelance',
       year: 2024,
       stack: 'Next.js, TypeScript, Supabase',
+      team: '',
       content:
         'Built Training Court, an app to track your Pokémon TCG tournaments and practice games. Helps players log matches, analyze performance, and improve their competitive gameplay.',
       image: 'training-court.png',
@@ -63,6 +68,7 @@ export const siteData = {
       company: 'Microsoft Office Media Group',
       year: 2023,
       stack: 'React, TypeScript, Fluent UI',
+      team: 'Office Media Group',
       content:
         'Led front-end development and integration of O365 Copilot into Microsoft Stream, giving users the ability to interact with videos with natural language. Implemented lazy loading the front-end, the interactive prompt menu UI, and the end-to-end user feedback collection system.',
       image: 'stream-copilot.png',
@@ -73,8 +79,10 @@ export const siteData = {
     {
       title: 'Pokestats Live',
       company: 'Freelance',
-      year: 2023,
+      year: 2022,
+      endYear: 2023,
       stack: 'Next.js, TypeScript, Firebase',
+      team: '',
       content:
         'Sole developer for pokestats.live, a community-powered live tournament analytics tool for competitors of the Pokémon Trading Card Game, accruing 3M+ total impressions and 10K+ weekly active users',
       image: 'pokestats-live.png',
@@ -86,6 +94,7 @@ export const siteData = {
       company: 'Microsoft Office Media Group',
       year: 2022,
       stack: 'React, TypeScript, Fluent UI',
+      team: 'Office Media Group',
       content:
         "Front-end developer for Microsoft Stream's transcripts feature, a tool to help users transcribe and search through their Stream videos. Owned rollout of Transcript Edit Batching and various optimizations for accessibility.",
       image: 'transcripts.webp',
@@ -98,6 +107,7 @@ export const siteData = {
       company: 'University of Michigan + Michigan Government',
       year: 2020,
       stack: 'React, JavaScript, Firebase',
+      team: '',
       content:
         'Lead developer for MI Symptoms - a free online tool to help organizations screen their members for COVID-19 symptoms, accruing 1M+ survey submissions in the State of Michigan.',
       image: 'mi-symptoms.jpg',
@@ -109,9 +119,23 @@ export const siteData = {
       title: 'Amazon Business Intelligence',
       company: 'Amazon',
       year: 2019,
+      endYear: 2020,
       stack: 'React, JavaScript, AWS',
+      team: 'Business Intelligence',
       content:
         'Introduced suite of front-end best practices to engineers, decreasing code review turnaround time by 50%, and increasing front-end code reusability, maintainability, and scalability. Created 2020 VP-level award-winning Turismo new features notification framework to 10,000+ users, increasing new feature discoverability by 93.5%.',
+      image: 'amazon.webp',
+      url: '',
+      infoUrl: '',
+    },
+    {
+      title: 'Gran Turismo',
+      company: 'Amazon',
+      year: 2020,
+      stack: 'React, Storybook',
+      team: 'Business Intelligence',
+      content:
+        'Created the Gran Turismo design library, serving as the shared component system across the entire Business Intelligence apps suite for 10,000+ users.',
       image: 'amazon.webp',
       url: '',
       infoUrl: '',

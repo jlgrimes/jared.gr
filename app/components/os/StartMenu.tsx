@@ -3,7 +3,6 @@
 import React, { useRef, useEffect } from 'react';
 import {
   Search16Regular,
-  Settings16Regular,
   Power20Regular,
   Person24Regular,
 } from '@fluentui/react-icons';
@@ -154,9 +153,6 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
               </span>
             </div>
             <div className='flex items-center gap-1'>
-              <button className='w-10 h-10 flex items-center justify-center rounded hover:bg-white/40 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors'>
-                <Settings16Regular />
-              </button>
               <button className='w-10 h-10 flex items-center justify-center rounded hover:bg-white/40 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 transition-colors'>
                 <Power20Regular />
               </button>
