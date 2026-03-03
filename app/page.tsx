@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useDesktop } from './context/DesktopContext';
 import { Taskbar } from './components/os/Taskbar';
 import { Window } from './components/os/Window';
@@ -9,6 +10,7 @@ import { AnimatePresence } from 'framer-motion';
 
 export default function Desktop() {
   const { windows } = useDesktop();
+  const [selectedIconId, setSelectedIconId] = useState<string | null>(null);
 
   return (
     <div className='relative w-screen h-screen overflow-hidden bg-cover bg-center select-none'
@@ -16,6 +18,7 @@ export default function Desktop() {
         // A generic Windows 11 style blue bloom gradient
         backgroundImage: 'linear-gradient(to bottom right, #f8f9fa, #e6f2ff)',
       }}
+      onClick={() => setSelectedIconId(null)}
     >
       {/* Desktop Background / Area */}
       <div className='absolute inset-0 z-0 bg-[url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop")] bg-cover bg-center opacity-40 dark:opacity-20 mix-blend-overlay pointer-events-none' />
@@ -29,6 +32,8 @@ export default function Desktop() {
             name={app.name}
             icon={app.icon}
             content={app.content}
+            isSelected={selectedIconId === app.id}
+            onSelect={setSelectedIconId}
           />
         ))}
       </div>
