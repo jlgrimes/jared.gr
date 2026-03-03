@@ -4,10 +4,7 @@ import { useDesktop } from './context/DesktopContext';
 import { Taskbar } from './components/os/Taskbar';
 import { Window } from './components/os/Window';
 import { DesktopIcon } from './components/os/DesktopIcon';
-import { Home, FolderOpen, PanelTop, Chrome } from 'lucide-react';
-import { Hero } from './components/Hero';
-import { Projects } from './components/projects/Projects';
-import { Testimonials } from './components/Testimonials';
+import { desktopApps } from './components/os/apps';
 
 export default function Desktop() {
   const { windows } = useDesktop();
@@ -24,36 +21,15 @@ export default function Desktop() {
 
       {/* Desktop Icons Container */}
       <div className='absolute top-0 left-0 bottom-12 p-2 flex flex-col flex-wrap content-start gap-1 z-10'>
-        <DesktopIcon
-          id='about'
-          name='About Me.txt'
-          icon={<PanelTop className='w-8 h-8 text-blue-500' />}
-          content={
-            <div className='p-8 bg-white dark:bg-[#202020] min-h-full font-mono'>
-               <Hero />
-            </div>
-          }
-        />
-        <DesktopIcon
-          id='projects'
-          name='Projects'
-          icon={<Chrome className='w-8 h-8 text-indigo-500' />}
-          content={
-            <div className='p-4 bg-[#f3f3f3] dark:bg-[#202020] min-h-full'>
-               <Projects />
-            </div>
-          }
-        />
-        <DesktopIcon
-          id='testimonials'
-          name='Testimonials'
-          icon={<Home className='w-8 h-8 text-green-500' />}
-          content={
-            <div className='p-4 bg-white dark:bg-[#111] min-h-full'>
-               <Testimonials />
-            </div>
-          }
-        />
+        {desktopApps.map((app) => (
+          <DesktopIcon
+            key={app.id}
+            id={app.id}
+            name={app.name}
+            icon={app.icon}
+            content={app.content}
+          />
+        ))}
       </div>
 
       {/* Render Open Windows */}

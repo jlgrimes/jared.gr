@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
 import { useDesktop } from '../../context/DesktopContext';
+import { StartMenu } from './StartMenu';
 import {
   Wifi,
   Volume2,
@@ -12,6 +14,7 @@ import {
 export const Taskbar = () => {
   const { windows, focusWindow, minimizeWindow, restoreWindow } = useDesktop();
   const [time, setTime] = useState<Date | null>(null);
+  const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
 
   useEffect(() => {
     setTime(new Date());
@@ -32,6 +35,8 @@ export const Taskbar = () => {
   };
 
   return (
+    <>
+    <StartMenu isOpen={isStartMenuOpen} onClose={() => setIsStartMenuOpen(false)} />
     <div className='fixed bottom-0 left-0 right-0 h-12 bg-[#e3e3e3]/80 dark:bg-[#1a1a1a]/80 backdrop-blur-xl border-t border-white/20 flex items-center justify-between px-2 z-[9999]'>
       
       {/* Invisible spacer for flex balance */}
@@ -41,8 +46,14 @@ export const Taskbar = () => {
 
       {/* Center Apps */}
       <div className='flex-1 flex items-center justify-center gap-1.5'>
-        {/* Windows Start Button (Mock) */}
-        <button className='w-10 h-10 flex items-center justify-center rounded hover:bg-white/40 dark:hover:bg-white/10 transition-colors group relative'>
+        {/* Windows Start Button */}
+        <button 
+          id="start-button"
+          onClick={() => setIsStartMenuOpen(!isStartMenuOpen)}
+          className={`w-10 h-10 flex items-center justify-center rounded transition-colors group relative
+            ${isStartMenuOpen ? 'bg-white/60 dark:bg-white/20' : 'hover:bg-white/40 dark:hover:bg-white/10'}
+          `}
+        >
           <svg viewBox="0 0 100 100" className="w-6 h-6 text-[#0078d4]">
             <path fill="currentColor" d="M4 4h44v44H4zM52 4h44v44H52zM4 52h44v44H4zM52 52h44v44H52z" />
           </svg>
@@ -105,5 +116,6 @@ export const Taskbar = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
