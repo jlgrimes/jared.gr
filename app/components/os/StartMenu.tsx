@@ -20,9 +20,11 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
   const [showAllApps, setShowAllApps] = useState(false);
 
   useEffect(() => {
+    if (isOpen) {
+      setShowAllApps(false);
+    }
     if (!isOpen) {
       setIsProfileOpen(false);
-      setShowAllApps(false);
     }
   }, [isOpen]);
 
