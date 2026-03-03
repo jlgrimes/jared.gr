@@ -6,11 +6,11 @@ import { useDesktop } from '../../context/DesktopContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import { StartMenu } from './StartMenu';
 import {
-  Wifi4Regular,
   Speaker2Regular,
   Battery4Regular,
   ChevronUpRegular,
-  Search24Regular,
+  Wifi120Regular,
+  Battery10Regular,
 } from '@fluentui/react-icons';
 
 export const Taskbar = () => {
@@ -108,22 +108,17 @@ export const Taskbar = () => {
         </div>
 
         {/* Right System Tray */}
-        <div className='flex-1 flex items-center justify-end h-full gap-1 pr-2'>
+        <div className='flex-1 flex items-center justify-end h-full pr-2'>
           <button className='w-6 h-full flex items-center justify-center hover:bg-white/50 dark:hover:bg-white/10 rounded my-1 text-gray-800 dark:text-gray-200'>
             <ChevronUpRegular className='w-4 h-4' />
           </button>
 
           <div className='flex items-center h-full hover:bg-white/50 dark:hover:bg-white/10 rounded my-1 px-2 gap-2 cursor-pointer text-gray-800 dark:text-gray-200'>
-            <Wifi4Regular className='w-4 h-4' />
+            <Wifi120Regular className='w-4 h-4' />
             <Speaker2Regular className='w-4 h-4' />
-            <Battery4Regular className='w-4 h-4' />
           </div>
 
-          <div
-            className='flex flex-col items-end justify-center h-full hover:bg-white/30 dark:hover:bg-white/10 rounded my-1 px-2 cursor-pointer text-xs text-gray-800 dark:text-gray-200 leading-tight'
-            // Windows 11 clock uses OpenType style set 1 for straight-base numbers
-            style={{ letterSpacing: '-0.01em' }}
-          >
+          <div className='flex flex-col items-end justify-center h-full hover:bg-white/30 dark:hover:bg-white/10 rounded my-1 px-2 cursor-pointer text-[0.72em] text-gray-800 dark:text-gray-200 leading-snug'>
             <span>
               {time
                 ? time
