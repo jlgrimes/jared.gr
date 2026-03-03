@@ -19,8 +19,8 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({ id, name, icon, conten
     <div
       className={`flex flex-col items-center justify-start w-20 h-24 px-1 py-2 pt-3 m-2 gap-1 rounded overflow-visible group
         ${isSelected
-          ? 'bg-blue-500/20 ring-1 ring-blue-400/40'
-          : 'hover:bg-black/10 dark:hover:bg-white/10'}
+          ? 'bg-white/20 hover:bg-white/15'
+          : 'hover:bg-white/15 dark:hover:bg-white/15'}
       `}
       onClick={(e) => {
         e.stopPropagation();
