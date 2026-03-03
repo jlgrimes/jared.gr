@@ -15,7 +15,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({ id, name, icon, conten
 
   return (
     <div
-      className='flex flex-col items-center justify-center w-20 h-24 p-2 m-2 gap-1 rounded hover:bg-white/20 dark:hover:bg-white/10 cursor-pointer transition-colors group'
+      className='flex flex-col items-center justify-center w-20 h-24 p-2 m-2 gap-1 rounded hover:bg-white/20 dark:hover:bg-white/10 transition-colors group'
       onDoubleClick={() => openWindow({ id, title: name, icon, content })}
       onTouchEnd={(e) => {
           e.preventDefault();

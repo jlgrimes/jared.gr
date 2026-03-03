@@ -52,6 +52,7 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       dragControls={dragControls}
       dragListener={false}
       dragMomentum={false}
+      dragConstraints={{ top: 0, left: -defaultWidth + 50, right: typeof window !== 'undefined' ? window.innerWidth - 50 : 1000, bottom: typeof window !== 'undefined' ? window.innerHeight - 100 : 800 }}
       initial={{ opacity: 0, scale: 0.95, y: 20 }}
       animate={{ 
           opacity: 1, 
@@ -83,7 +84,7 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
     >
       {/* Title Bar */}
       <div
-        className={`h-10 flex items-center justify-between px-3 select-none touch-none ${!isMaximized ? 'cursor-move' : ''} ${
+        className={`h-10 flex items-center justify-between px-3 select-none touch-none ${
             // Active window styling vs inactive
             zIndex >= Math.max(...windows.map(w => w.zIndex)) 
                 ? 'bg-gray-100/80 dark:bg-gray-800/80' 

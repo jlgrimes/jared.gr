@@ -41,6 +41,7 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
             : w
         );
       }
+      // If it doesn't exist, it was closed. Add it fresh.
       return [
         ...prev,
         { ...windowInfo, state: 'normal', zIndex: highestZIndex + 1 },
