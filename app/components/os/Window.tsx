@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
-import { motion, useDragControls, useIsPresent } from 'framer-motion';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { motion, useIsPresent } from 'framer-motion';
 import { useDesktop } from '../../context/DesktopContext';
 import {
   Subtract16Regular,
@@ -26,7 +26,6 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
     getIconRect,
   } = useDesktop();
   const windowData = windows.find(w => w.id === id);
-  const dragControls = useDragControls();
   const windowRef = useRef<HTMLDivElement>(null);
 
   // Responsive default width handling based on screen size
@@ -35,7 +34,7 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1024) {
-        setDefaultWidth(Math.min(window.innerWidth - 32, 800)); // Mobile padding
+        setDefaultWidth(Math.min(window.innerWidth - 32, 800));
       } else {
         setDefaultWidth(800);
       }
@@ -45,7 +44,7 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Track the exact dragged position to safely animate back to it after maximizing
+  // Track the exact dragged position
   const [dragPos, setDragPos] = useState({
     x:
       typeof window !== 'undefined'
@@ -54,10 +53,13 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
     y: typeof window !== 'undefined' ? window.innerHeight / 2 - 300 : 100,
   });
 
+  const [isDragging, setIsDragging] = useState(false);
+  const grabOffset = useRef({ x: 0, y: 0 });
+  const dragPosRef = useRef(dragPos);
+  dragPosRef.current = dragPos;
+
   const isPresent = useIsPresent();
 
-  // If the window is closed in state but still animating out, we need to safely fall back to the last known data
-  // Using an empty fallback object prevents crashes during the exit animation timeframe
   const {
     title = '',
     icon = null,
@@ -68,13 +70,61 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
   } = windowData || {};
   const isMaximized = state === 'maximized';
   const isMinimized = state === 'minimized';
+  const isMaximizedRef = useRef(isMaximized);
+  isMaximizedRef.current = isMaximized;
 
-  // If it's fully gone and finished animating, we can finally unmount
+  // Manual drag via pointer events
+  const handlePointerMove = useCallback((e: PointerEvent) => {
+    const x = Math.max(
+      -700,
+      Math.min(
+        e.clientX - grabOffset.current.x,
+        window.innerWidth - 50
+      )
+    );
+    const y = Math.max(
+      0,
+      Math.min(
+        e.clientY - grabOffset.current.y,
+        window.innerHeight - 100
+      )
+    );
+    setDragPos({ x, y });
+  }, []);
+
+  const handlePointerUp = useCallback(() => {
+    setIsDragging(false);
+    window.removeEventListener('pointermove', handlePointerMove);
+    window.removeEventListener('pointerup', handlePointerUp);
+  }, [handlePointerMove]);
+
+  // Cleanup listeners on unmount
+  useEffect(() => {
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+    };
+  }, [handlePointerMove, handlePointerUp]);
+
   if (!windowData && !isPresent) return null;
 
-  const handlePointerDown = (e: React.PointerEvent) => {
+  const handleTitleBarPointerDown = (e: React.PointerEvent) => {
     focusWindow(id);
-    dragControls.start(e);
+
+    if (isMaximized) {
+      const pointerX = e.clientX;
+      const fraction = pointerX / window.innerWidth;
+      const newX = pointerX - defaultWidth * fraction;
+      grabOffset.current = { x: pointerX - newX, y: e.clientY };
+      setDragPos({ x: newX, y: 0 });
+      restoreWindow(id);
+    } else {
+      grabOffset.current = { x: e.clientX - dragPosRef.current.x, y: e.clientY - dragPosRef.current.y };
+    }
+
+    setIsDragging(true);
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
   };
 
   // Calculate zoom coordinates based on the Taskbar icon
@@ -94,22 +144,6 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
   return (
     <motion.div
       ref={windowRef}
-      drag={!isMaximized}
-      dragControls={dragControls}
-      dragListener={false}
-      dragMomentum={false}
-      dragConstraints={{
-        top: 0,
-        left: -defaultWidth + 50,
-        right: typeof window !== 'undefined' ? window.innerWidth - 50 : 1000,
-        bottom: typeof window !== 'undefined' ? window.innerHeight - 100 : 800,
-      }}
-      onDragEnd={(e, info) => {
-        setDragPos(prev => ({
-          x: prev.x + info.offset.x,
-          y: prev.y + info.offset.y,
-        }));
-      }}
       initial={{ opacity: 0, scale: 0, x: targetX, y: targetY }}
       animate={
         isClosing
@@ -146,10 +180,9 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       variants={{
         closed: {
           opacity: 0,
-          scale: 0.95, // Hardware accelerated visual shrink
+          scale: 0.95,
           x: isMaximized ? 0 : dragPos.x,
           y: isMaximized ? 0 : dragPos.y,
-          // Lock dimensions to their current state to prevent content reflow during animation
           height: isMaximized ? 'calc(100vh - 3rem)' : 600,
           width: isMaximized ? '100vw' : defaultWidth,
           pointerEvents: 'none' as const,
@@ -161,7 +194,7 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
           removeWindow(id);
         }
       }}
-      transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.8 }}
+      transition={isDragging ? { duration: 0 } : { type: 'spring', stiffness: 300, damping: 30, mass: 0.8 }}
       style={{
         zIndex,
         position: 'absolute',
@@ -172,12 +205,11 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       {/* Title Bar */}
       <div
         className={`h-7 flex items-center justify-between px-3 select-none touch-none ${
-          // Active window styling vs inactive
           zIndex >= Math.max(...windows.map(w => w.zIndex))
             ? 'bg-gray-100/80 dark:bg-gray-800/80'
             : 'bg-white/50 dark:bg-gray-900/50'
         }`}
-        onPointerDown={handlePointerDown}
+        onPointerDown={handleTitleBarPointerDown}
         onDoubleClick={() =>
           isMaximized ? restoreWindow(id) : maximizeWindow(id)
         }
