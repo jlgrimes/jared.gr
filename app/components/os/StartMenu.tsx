@@ -145,10 +145,15 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
           {/* Bottom Profile/Power Bar */}
           <div className='h-16 bg-black/5 dark:bg-black/20 border-t border-black/5 dark:border-white/5 flex items-center justify-between px-6 mt-auto shrink-0'>
             <div className='flex items-center gap-3 hover:bg-white/40 dark:hover:bg-white/10 p-2 rounded cursor-pointer transition-colors'>
-              <div className='w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white overflow-hidden shadow-sm'>
-                <Person24Regular />
+              <div className='w-8 h-8 rounded-full overflow-hidden shadow-sm shrink-0'>
+                <img
+                  src='/assets/propic.jpg'
+                  alt=''
+                  className='w-full h-full object-cover'
+                  draggable={false}
+                />
               </div>
-              <span className='text-sm text-gray-800 dark:text-gray-200 font-medium font-sans'>
+              <span className='text-xs text-gray-800 dark:text-gray-200 font-medium font-sans'>
                 Jared Grimes
               </span>
             </div>
