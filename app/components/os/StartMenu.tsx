@@ -25,6 +25,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
     }
     if (!isOpen) {
       setIsProfileOpen(false);
+      setShowAllApps(false);
     }
   }, [isOpen]);
 
