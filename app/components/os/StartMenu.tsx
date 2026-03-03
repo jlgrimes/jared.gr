@@ -45,11 +45,16 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
       {isOpen && (
         <motion.div
           ref={menuRef}
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          transition={{ duration: 0.15, ease: 'easeOut' }}
-          className='fixed bottom-14 left-1/2 -translate-x-1/2 w-[600px] h-[640px] bg-[#f2f2f2]/90 dark:bg-[#202020]/90 backdrop-blur-2xl rounded-xl shadow-2xl border border-white/20 dark:border-white/10 flex flex-col overflow-hidden z-[9998]'
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 30 }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 30,
+            mass: 0.8,
+          }}
+          className='fixed bottom-14 left-1/2 -translate-x-1/2 w-[600px] h-[640px] bg-[#f2f2f2]/90 dark:bg-[#202020]/90 backdrop-blur-2xl rounded-xl shadow-2xl border border-white/20 dark:border-white/10 flex flex-col overflow-hidden z-[9998] transform-gpu'
         >
           {/* Search Bar */}
           <div className='p-6 pb-2'>
