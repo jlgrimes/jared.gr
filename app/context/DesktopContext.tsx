@@ -21,6 +21,7 @@ interface DesktopContextType {
   maximizeWindow: (id: string) => void;
   restoreWindow: (id: string) => void;
   focusWindow: (id: string) => void;
+  focusedWindowId: string | null;
 }
 
 const DesktopContext = createContext<DesktopContextType | undefined>(undefined);
@@ -28,20 +29,20 @@ const DesktopContext = createContext<DesktopContextType | undefined>(undefined);
 export const DesktopProvider = ({ children }: { children: ReactNode }) => {
   const [windows, setWindows] = useState<WindowData[]>([]);
   const [highestZIndex, setHighestZIndex] = useState(10);
+  const [focusedWindowId, setFocusedWindowId] = useState<string | null>(null);
 
   const openWindow = (windowInfo: Omit<WindowData, 'state' | 'zIndex'>) => {
     setWindows((prev) => {
-      // Check if already open
       const existing = prev.find((w) => w.id === windowInfo.id);
       if (existing) {
-        // Focus and restore it
+        setFocusedWindowId(windowInfo.id);
         return prev.map((w) =>
           w.id === existing.id
             ? { ...w, state: w.state === 'minimized' ? 'normal' : w.state, zIndex: highestZIndex + 1 }
             : w
         );
       }
-      // If it doesn't exist, it was closed. Add it fresh.
+      setFocusedWindowId(windowInfo.id);
       return [
         ...prev,
         { ...windowInfo, state: 'normal', zIndex: highestZIndex + 1 },
@@ -52,12 +53,14 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
 
   const closeWindow = (id: string) => {
     setWindows((prev) => prev.filter((w) => w.id !== id));
+    if (focusedWindowId === id) setFocusedWindowId(null);
   };
 
   const minimizeWindow = (id: string) => {
     setWindows((prev) =>
       prev.map((w) => (w.id === id ? { ...w, state: 'minimized' } : w))
     );
+    if (focusedWindowId === id) setFocusedWindowId(null);
   };
 
   const maximizeWindow = (id: string) => {
@@ -65,6 +68,7 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
       prev.map((w) => (w.id === id ? { ...w, state: 'maximized', zIndex: highestZIndex + 1 } : w))
     );
     setHighestZIndex((prev) => prev + 1);
+    setFocusedWindowId(id);
   };
 
   const restoreWindow = (id: string) => {
@@ -72,6 +76,7 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
       prev.map((w) => (w.id === id ? { ...w, state: 'normal', zIndex: highestZIndex + 1 } : w))
     );
     setHighestZIndex((prev) => prev + 1);
+    setFocusedWindowId(id);
   };
 
   const focusWindow = (id: string) => {
@@ -79,6 +84,7 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
       prev.map((w) => (w.id === id ? { ...w, zIndex: highestZIndex + 1 } : w))
     );
     setHighestZIndex((prev) => prev + 1);
+    setFocusedWindowId(id);
   };
 
   return (
@@ -91,6 +97,7 @@ export const DesktopProvider = ({ children }: { children: ReactNode }) => {
         maximizeWindow,
         restoreWindow,
         focusWindow,
+        focusedWindowId
       }}
     >
       {children}

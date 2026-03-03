@@ -13,7 +13,7 @@ import {
 } from '@fluentui/react-icons';
 
 export const Taskbar = () => {
-  const { windows, focusWindow, minimizeWindow, restoreWindow } = useDesktop();
+  const { windows, focusWindow, minimizeWindow, restoreWindow, focusedWindowId } = useDesktop();
   const [time, setTime] = useState<Date | null>(null);
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
 
@@ -26,11 +26,9 @@ export const Taskbar = () => {
   const handleAppClick = (id: string, state: string) => {
     if (state === 'minimized') {
       restoreWindow(id);
+    } else if (focusedWindowId === id) {
+      minimizeWindow(id);
     } else {
-      // If it's the focused window, minimize it. Otherwise, focus it.
-      // We can approximate focus by z-index or simply toggle for now.
-      // A full implementation would track actual active window ID.
-      // For simplicity, let's just restore/focus it.
       focusWindow(id);
     }
   };

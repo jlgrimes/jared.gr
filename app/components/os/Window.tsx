@@ -43,7 +43,7 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
     dragControls.start(e);
   };
 
-  if (isMinimized) return null;
+
 
   return (
     <motion.div
@@ -53,25 +53,30 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       dragListener={false}
       dragMomentum={false}
       dragConstraints={{ top: 0, left: -defaultWidth + 50, right: typeof window !== 'undefined' ? window.innerWidth - 50 : 1000, bottom: typeof window !== 'undefined' ? window.innerHeight - 100 : 800 }}
-      initial={{ opacity: 0, scale: 0.85, y: typeof window !== 'undefined' ? window.innerHeight / 2 : 500 }}
-      animate={{ 
-          opacity: 1, 
-          scale: 1, 
-          y: 0,
-            ...(isMaximized ? {
-              top: 0,
-              left: 0,
-              width: '100vw',
-              height: 'calc(100vh - 3rem)',
-              x: 0,
-              borderRadius: 0
-          } : {
-              width: defaultWidth,
-              height: 600,
-              borderRadius: 8
-          })
-      }}
-      exit={{ opacity: 0, scale: 0.85, y: typeof window !== 'undefined' ? window.innerHeight / 2 : 500 }}
+      initial={{ opacity: 0, scale: 0, x: typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0, y: typeof window !== 'undefined' ? window.innerHeight : 500 }}
+      animate={
+        isMinimized
+          ? { opacity: 0, scale: 0, x: typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0, y: typeof window !== 'undefined' ? window.innerHeight : 500, pointerEvents: 'none' as const }
+          : { 
+              opacity: 1, 
+              scale: 1, 
+              y: 0,
+              pointerEvents: 'auto' as const,
+              ...(isMaximized ? {
+                  top: 0,
+                  left: 0,
+                  width: '100vw',
+                  height: 'calc(100vh - 3rem)',
+                  x: 0,
+                  borderRadius: 0
+              } : {
+                  width: defaultWidth,
+                  height: 600,
+                  borderRadius: 8
+              })
+            }
+      }
+      exit={{ opacity: 0, scale: 0, x: typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0, y: typeof window !== 'undefined' ? window.innerHeight : 500 }}
       transition={{ type: 'spring', stiffness: 300, damping: 30, mass: 0.8 }}
       style={{ 
         zIndex,
