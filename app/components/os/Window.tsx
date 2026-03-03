@@ -48,6 +48,12 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
   const targetX = targetRect && typeof window !== 'undefined' ? targetRect.x + (targetRect.width / 2) - (defaultWidth / 2) : typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0;
   const targetY = targetRect ? targetRect.y + (targetRect.height / 2) : typeof window !== 'undefined' ? window.innerHeight : 500;
 
+  // Track the exact dragged position to safely animate back to it after maximizing
+  const [dragPos, setDragPos] = useState({
+      x: typeof window !== 'undefined' ? (window.innerWidth / 2) - (defaultWidth / 2) : 0,
+      y: typeof window !== 'undefined' ? (window.innerHeight / 2) - 300 : 100
+  });
+
   return (
     <motion.div
       ref={windowRef}
@@ -56,6 +62,12 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       dragListener={false}
       dragMomentum={false}
       dragConstraints={{ top: 0, left: -defaultWidth + 50, right: typeof window !== 'undefined' ? window.innerWidth - 50 : 1000, bottom: typeof window !== 'undefined' ? window.innerHeight - 100 : 800 }}
+      onDragEnd={(e, info) => {
+          setDragPos(prev => ({
+              x: prev.x + info.offset.x,
+              y: prev.y + info.offset.y
+          }));
+      }}
       initial={{ opacity: 0, scale: 0, x: targetX, y: targetY }}
       animate={
         isMinimized
@@ -63,16 +75,16 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
           : { 
               opacity: 1, 
               scale: 1, 
-              y: 0,
               pointerEvents: 'auto' as const,
               ...(isMaximized ? {
-                  top: 0,
-                  left: 0,
                   width: '100vw',
                   height: 'calc(100vh - 3rem)',
                   x: 0,
+                  y: 0,
                   borderRadius: 0
               } : {
+                  x: dragPos.x,
+                  y: dragPos.y,
                   width: defaultWidth,
                   height: 600,
                   borderRadius: 8
@@ -84,8 +96,6 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
       style={{ 
         zIndex,
         position: 'absolute',
-        top: !isMaximized ? '10%' : undefined,
-        left: !isMaximized ? '10%' : undefined,
       }}
       className={`flex flex-col bg-white dark:bg-gray-900 shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800`}
       onPointerDown={() => focusWindow(id)}
