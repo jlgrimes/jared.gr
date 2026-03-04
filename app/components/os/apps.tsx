@@ -26,10 +26,10 @@ export const desktopApps = [
   },
   {
     id: 'testimonials',
-    name: 'Feedback',
-    icon: <AppIcon src="/assets/icons/feedback.ico" />,
+    name: 'Teams Feedback',
+    icon: <AppIcon src="/assets/icons/teams.ico" />,
     content: (
-      <div className='p-4 bg-white dark:bg-[#111] min-h-full'>
+      <div className='h-full overflow-hidden bg-white dark:bg-[#201f1f]'>
         <Testimonials />
       </div>
     ),
