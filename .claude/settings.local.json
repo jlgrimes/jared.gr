@@ -5,7 +5,8 @@
       "Bash(npm run build:*)",
       "Bash(npx shadcn@latest add:*)",
       "Bash(npx aceternity-ui@latest add:*)",
-      "Bash(npx aceternity-ui@latest init)"
+      "Bash(npx aceternity-ui@latest init)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }

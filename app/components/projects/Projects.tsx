@@ -4,14 +4,10 @@ import { useState, useMemo } from 'react';
 import { siteData } from '../../../lib/data';
 import { FileRow, FolderRow, PreviewPane } from './Project';
 import {
-  ChevronDown,
-  ChevronRight,
-  ArrowLeft,
-  ArrowRight,
-  ArrowUp,
-  Search,
-} from 'lucide-react';
-import {
+  ArrowLeft20Regular,
+  ArrowRight20Regular,
+  ArrowUp20Regular,
+  Search20Regular,
   ChevronUp12Regular,
   ChevronDown12Regular,
   ChevronRight12Regular,
@@ -65,6 +61,8 @@ export const Projects = () => {
   const folderNames = useMemo(() => Object.keys(folders), [folders]);
 
   const [activeView, setActiveView] = useState<string>('Projects');
+  const [history, setHistory] = useState<string[]>(['Projects']);
+  const [historyIndex, setHistoryIndex] = useState(0);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
     () => new Set(['Projects']),
   );
@@ -83,10 +81,17 @@ export const Projects = () => {
     });
   };
 
-  const selectView = (view: string) => {
+  const navigateTo = (view: string) => {
     setActiveView(view);
     setSelectedProject(null);
     setSelectedFolder(null);
+    setHistory(prev => [...prev.slice(0, historyIndex + 1), view]);
+    setHistoryIndex(prev => prev + 1);
+  };
+
+  const selectView = (view: string) => {
+    if (view === activeView) return;
+    navigateTo(view);
   };
 
   const selectProject = (project: ProjectType) => {
@@ -100,10 +105,37 @@ export const Projects = () => {
   };
 
   const navigateToFolder = (folder: string) => {
-    setActiveView(folder);
-    setSelectedProject(null);
+    navigateTo(folder);
     setExpandedFolders(prev => new Set(prev).add('Projects').add(folder));
   };
+
+  const goBack = () => {
+    if (historyIndex <= 0) return;
+    const newIndex = historyIndex - 1;
+    setHistoryIndex(newIndex);
+    setActiveView(history[newIndex]);
+    setSelectedProject(null);
+    setSelectedFolder(null);
+  };
+
+  const goForward = () => {
+    if (historyIndex >= history.length - 1) return;
+    const newIndex = historyIndex + 1;
+    setHistoryIndex(newIndex);
+    setActiveView(history[newIndex]);
+    setSelectedProject(null);
+    setSelectedFolder(null);
+  };
+
+  const goUp = () => {
+    if (activeView !== 'Projects') {
+      navigateTo('Projects');
+    }
+  };
+
+  const canGoBack = historyIndex > 0;
+  const canGoForward = historyIndex < history.length - 1;
+  const canGoUp = activeView !== 'Projects';
 
   const handleDoubleClick = (project: ProjectType) => {
     const url = project.url || project.infoUrl;
@@ -172,15 +204,27 @@ export const Projects = () => {
     <div className='flex flex-col h-full bg-[#f3f3f3] dark:bg-[#202020] text-sm select-none'>
       {/* Address Bar */}
       <div className='flex items-center gap-1 px-2 py-1.5 border-b border-gray-200 dark:border-gray-700 bg-[#f9f9f9] dark:bg-[#2d2d2d]'>
-        <div className='flex items-center gap-0.5 text-gray-400 dark:text-gray-500'>
-          <button className='p-1 rounded hover:bg-gray-200 dark:hover:bg-white/10'>
-            <ArrowLeft size={14} />
+        <div className='flex items-center gap-2'>
+          <button
+            onClick={goBack}
+            disabled={!canGoBack}
+            className='w-7 h-7 flex items-center justify-center rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 disabled:text-gray-300 dark:disabled:text-gray-600 disabled:pointer-events-none'
+          >
+            <ArrowLeft20Regular className='w-3.5 h-3.5' />
           </button>
-          <button className='p-1 rounded hover:bg-gray-200 dark:hover:bg-white/10'>
-            <ArrowRight size={14} />
+          <button
+            onClick={goForward}
+            disabled={!canGoForward}
+            className='w-7 h-7 flex items-center justify-center rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 disabled:text-gray-300 dark:disabled:text-gray-600 disabled:pointer-events-none'
+          >
+            <ArrowRight20Regular className='w-3.5 h-3.5' />
           </button>
-          <button className='p-1 rounded hover:bg-gray-200 dark:hover:bg-white/10'>
-            <ArrowUp size={14} />
+          <button
+            onClick={goUp}
+            disabled={!canGoUp}
+            className='w-7 h-7 flex items-center justify-center rounded hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 disabled:text-gray-300 dark:disabled:text-gray-600 disabled:pointer-events-none'
+          >
+            <ArrowUp20Regular className='w-3.5 h-3.5' />
           </button>
         </div>
         <div className='flex-1 flex items-center px-2.5 py-1 bg-white dark:bg-[#383838] rounded-sm border border-gray-300 dark:border-gray-600 text-xs text-gray-700 dark:text-gray-300 truncate'>
@@ -197,7 +241,7 @@ export const Projects = () => {
           ))}
         </div>
         <div className='hidden sm:flex items-center px-2 py-1 bg-white dark:bg-[#383838] rounded-sm border border-gray-300 dark:border-gray-600 w-44'>
-          <Search size={12} className='text-gray-400 mr-1.5' />
+          <Search20Regular className='w-3 h-3 text-gray-400 mr-1.5' />
           <span className='text-xs text-gray-400'>Search Projects</span>
         </div>
       </div>
@@ -219,9 +263,9 @@ export const Projects = () => {
               className='shrink-0 p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10'
             >
               {expandedFolders.has('Projects') ? (
-                <ChevronDown size={12} className='text-gray-500' />
+                <ChevronDown12Regular className='text-gray-500' />
               ) : (
-                <ChevronRight size={12} className='text-gray-500' />
+                <ChevronRight12Regular className='text-gray-500' />
               )}
             </span>
             <img
