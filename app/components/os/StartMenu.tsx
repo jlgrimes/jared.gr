@@ -126,7 +126,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
                   animate={{ x: 0 }}
                   exit={{ x: '100%' }}
                   transition={{ type: 'spring', stiffness: 400, damping: 35, mass: 0.8 }}
-                  className='absolute inset-0 px-4 sm:px-8 py-4 overflow-y-auto'
+                  className='absolute inset-0 px-8 sm:px-14 py-4 overflow-y-auto'
                 >
                   <div className='flex justify-between items-center mb-4'>
                     <h3 className='text-sm font-semibold text-gray-800 dark:text-white'>
@@ -141,24 +141,38 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
                   </div>
 
                   <div className='flex flex-col'>
-                    {allAppsList.map(app => (
-                      <div
-                        key={app.id}
-                        className='flex items-center gap-3 px-2 py-2.5 rounded hover:bg-white/50 dark:hover:bg-white/10 cursor-pointer transition-colors'
-                        onClick={() =>
-                          'url' in app
-                            ? handleExternalClick((app as any).url)
-                            : handleAppClick(app)
-                        }
-                      >
-                        <div className='w-7 h-7 flex items-center justify-center shrink-0'>
-                          {app.icon}
-                        </div>
-                        <span className='text-xs text-gray-800 dark:text-gray-200'>
-                          {app.name}
-                        </span>
-                      </div>
-                    ))}
+                    {(() => {
+                      let lastLetter = '';
+                      return allAppsList.map(app => {
+                        const letter = app.name[0].toUpperCase();
+                        const showHeader = letter !== lastLetter;
+                        lastLetter = letter;
+                        return (
+                          <div key={app.id}>
+                            {showHeader && (
+                              <div className='text-sm font-semibold text-gray-500 dark:text-gray-400 px-2 pt-5 pb-2'>
+                                {letter}
+                              </div>
+                            )}
+                            <div
+                              className='flex items-center gap-3 px-2 py-2.5 rounded hover:bg-white/50 dark:hover:bg-white/10 cursor-pointer transition-colors'
+                              onClick={() =>
+                                'url' in app
+                                  ? handleExternalClick((app as any).url)
+                                  : handleAppClick(app)
+                              }
+                            >
+                              <div className='w-7 h-7 flex items-center justify-center shrink-0'>
+                                {app.icon}
+                              </div>
+                              <span className='text-xs text-gray-800 dark:text-gray-200'>
+                                {app.name}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()}
                   </div>
                 </motion.div>
               ) : (
@@ -168,7 +182,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
                   animate={{ x: 0 }}
                   exit={{ x: '-100%' }}
                   transition={{ type: 'spring', stiffness: 400, damping: 35, mass: 0.8 }}
-                  className='absolute inset-0 px-4 sm:px-8 py-4 overflow-y-auto'
+                  className='absolute inset-0 px-8 sm:px-14 py-4 overflow-y-auto'
                 >
                   <div className='flex justify-between items-center mb-4'>
                     <h3 className='text-sm font-semibold text-gray-800 dark:text-white'>
@@ -239,7 +253,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Bottom Profile/Power Bar */}
-          <div className='relative h-16 bg-black/5 dark:bg-black/20 border-t border-black/5 dark:border-white/5 flex items-center justify-between px-6 mt-auto shrink-0'>
+          <div className='relative h-16 bg-black/5 dark:bg-black/20 border-t border-black/5 dark:border-white/5 flex items-center justify-between px-8 sm:px-14 mt-auto shrink-0'>
             {/* Profile Popup Card */}
             <AnimatePresence>
               {isProfileOpen && (
