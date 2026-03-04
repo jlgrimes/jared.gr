@@ -48,9 +48,7 @@ export const Taskbar = () => {
       />
       <div className='fixed bottom-0 left-0 right-0 h-12 bg-[#f3f3f3]/80 dark:bg-[#202020]/90 backdrop-blur-2xl border-t border-white/20 dark:border-white/5 flex items-center justify-between px-2 z-[9999] shadow-[0_-2px_10px_rgba(0,0,0,0.1)]'>
         {/* Invisible spacer for flex balance */}
-        <div className='flex-1 flex items-center justify-start hidden md:flex'>
-          <div className='w-10 h-10'></div>
-        </div>
+        <div className='flex-1' />
 
         {/* Center Apps */}
         <div className='flex-1 flex items-center justify-center'>
@@ -113,7 +111,7 @@ export const Taskbar = () => {
             <ChevronUpRegular className='w-4 h-4' />
           </button>
 
-          <div className='flex items-center h-full hover:bg-white/50 dark:hover:bg-white/10 rounded my-1 px-2 gap-2 cursor-pointer text-gray-800 dark:text-gray-200'>
+          <div className='hidden sm:flex items-center h-full hover:bg-white/50 dark:hover:bg-white/10 rounded my-1 px-2 gap-2 cursor-pointer text-gray-800 dark:text-gray-200'>
             <Wifi120Regular className='w-4 h-4' />
             <Speaker2Regular className='w-4 h-4' />
           </div>

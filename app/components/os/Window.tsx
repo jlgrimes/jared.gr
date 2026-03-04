@@ -29,7 +29,11 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
   const windowRef = useRef<HTMLDivElement>(null);
 
   // Responsive default width handling based on screen size
-  const [defaultWidth, setDefaultWidth] = useState(800);
+  const [defaultWidth, setDefaultWidth] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth < 1024
+      ? Math.min(window.innerWidth - 32, 800)
+      : 800
+  );
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,12 +49,13 @@ export const Window: React.FC<WindowProps> = ({ id }) => {
   }, []);
 
   // Track the exact dragged position
-  const [dragPos, setDragPos] = useState({
-    x:
-      typeof window !== 'undefined'
-        ? window.innerWidth / 2 - defaultWidth / 2
-        : 0,
-    y: typeof window !== 'undefined' ? window.innerHeight / 2 - 300 : 100,
+  const [dragPos, setDragPos] = useState(() => {
+    if (typeof window === 'undefined') return { x: 0, y: 100 };
+    const w = window.innerWidth < 1024 ? Math.min(window.innerWidth - 32, 800) : 800;
+    return {
+      x: Math.max(0, window.innerWidth / 2 - w / 2),
+      y: Math.max(0, window.innerHeight / 2 - 300),
+    };
   });
 
   const [isDragging, setIsDragging] = useState(false);

@@ -292,7 +292,7 @@ export const Projects = () => {
             </div>
 
             {/* Rows */}
-            <div className='flex-1 overflow-y-auto bg-white dark:bg-[#1e1e1e]'>
+            <div className='flex-1 overflow-y-auto overflow-x-hidden bg-white dark:bg-[#1e1e1e]'>
               {/* Folder rows when at root */}
               {showFolderRows &&
                 folderNames.map(folder => {

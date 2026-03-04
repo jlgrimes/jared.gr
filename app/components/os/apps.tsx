@@ -19,7 +19,7 @@ export const desktopApps = [
     name: 'Project Explorer',
     icon: <AppIcon src="/assets/icons/explorer.ico" />,
     content: (
-      <div className='bg-[#f3f3f3] dark:bg-[#202020] h-full'>
+      <div className='bg-[#f3f3f3] dark:bg-[#202020] h-full overflow-hidden'>
         <Projects />
       </div>
     ),
