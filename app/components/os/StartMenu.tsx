@@ -101,10 +101,10 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
             damping: 30,
             mass: 0.8,
           }}
-          className='fixed bottom-16 left-1/2 -translate-x-1/2 w-[600px] h-[640px] bg-[#f2f2f2]/90 dark:bg-[#202020]/90 backdrop-blur-2xl rounded-lg shadow-2xl border border-white/20 dark:border-white/10 flex flex-col overflow-hidden z-[9998] transform-gpu'
+          className='fixed bottom-16 left-1/2 -translate-x-1/2 w-[calc(100vw-16px)] max-w-[600px] h-[min(640px,calc(100vh-80px))] bg-[#f2f2f2]/90 dark:bg-[#202020]/90 backdrop-blur-2xl rounded-lg shadow-2xl border border-white/20 dark:border-white/10 flex flex-col overflow-hidden z-[9998] transform-gpu'
         >
           {/* Search Bar */}
-          <div className='p-6 pb-2'>
+          <div className='p-4 sm:p-6 pb-2'>
             <div className='relative flex items-center bg-white dark:bg-black/20 rounded-full border-b-2 border-b-blue-500 shadow-inner overflow-hidden h-10'>
               <div className='pl-4 pr-3 flex items-center pt-1'>
                 <Search16Regular className='text-gray-500 dark:text-gray-400' />
@@ -126,7 +126,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
                   animate={{ x: 0 }}
                   exit={{ x: '100%' }}
                   transition={{ type: 'spring', stiffness: 400, damping: 35, mass: 0.8 }}
-                  className='absolute inset-0 px-8 py-4 overflow-y-auto'
+                  className='absolute inset-0 px-4 sm:px-8 py-4 overflow-y-auto'
                 >
                   <div className='flex justify-between items-center mb-4'>
                     <h3 className='text-sm font-semibold text-gray-800 dark:text-white'>
@@ -168,7 +168,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
                   animate={{ x: 0 }}
                   exit={{ x: '-100%' }}
                   transition={{ type: 'spring', stiffness: 400, damping: 35, mass: 0.8 }}
-                  className='absolute inset-0 px-8 py-4 overflow-y-auto'
+                  className='absolute inset-0 px-4 sm:px-8 py-4 overflow-y-auto'
                 >
                   <div className='flex justify-between items-center mb-4'>
                     <h3 className='text-sm font-semibold text-gray-800 dark:text-white'>
@@ -182,7 +182,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
                     </button>
                   </div>
 
-                  <div className='grid grid-cols-6 gap-x-2 gap-y-6'>
+                  <div className='grid grid-cols-4 sm:grid-cols-6 gap-x-2 gap-y-4 sm:gap-y-6'>
                     {pinnedApps.map(app => (
                       <div
                         key={app.id}
@@ -211,7 +211,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
                       </h3>
                     </div>
 
-                    <div className='grid grid-cols-2 gap-4'>
+                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                       {desktopApps.slice(0, 2).map(app => (
                         <div
                           key={`rec-${app.id}`}
@@ -254,7 +254,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
                     damping: 30,
                     mass: 0.8,
                   }}
-                  className='absolute bottom-full left-4 mb-2 w-[340px] bg-white/95 dark:bg-[#2d2d2d]/95 backdrop-blur-xl rounded-lg shadow-xl border border-black/10 dark:border-white/10 overflow-hidden'
+                  className='absolute bottom-full left-4 mb-2 w-[calc(100%-2rem)] max-w-[340px] bg-white/95 dark:bg-[#2d2d2d]/95 backdrop-blur-xl rounded-lg shadow-xl border border-black/10 dark:border-white/10 overflow-hidden'
                 >
                   <div className='p-5'>
                     <div className='flex items-center gap-4 mb-4'>
