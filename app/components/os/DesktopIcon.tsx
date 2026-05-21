@@ -7,13 +7,22 @@ interface DesktopIconProps {
   id: string;
   name: string;
   icon: React.ReactNode;
-  content: React.ReactNode;
+  content?: React.ReactNode;
+  url?: string;
   isSelected?: boolean;
   onSelect?: (id: string) => void;
 }
 
-export const DesktopIcon: React.FC<DesktopIconProps> = ({ id, name, icon, content, isSelected, onSelect }) => {
+export const DesktopIcon: React.FC<DesktopIconProps> = ({ id, name, icon, content, url, isSelected, onSelect }) => {
   const { openWindow } = useDesktop();
+
+  const activate = () => {
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      openWindow({ id, title: name, icon, content });
+    }
+  };
 
   return (
     <div
@@ -22,10 +31,10 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({ id, name, icon, conten
         e.stopPropagation();
         onSelect?.(id);
       }}
-      onDoubleClick={() => openWindow({ id, title: name, icon, content })}
+      onDoubleClick={activate}
       onTouchEnd={(e) => {
           e.preventDefault();
-          openWindow({ id, title: name, icon, content });
+          activate();
       }}
     >
       <div className={`flex flex-col items-center gap-1 w-full py-1 rounded

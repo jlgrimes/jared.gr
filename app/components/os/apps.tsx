@@ -34,6 +34,12 @@ export const desktopApps = [
       </div>
     ),
   },
+  {
+    id: 'mail',
+    name: 'Mail',
+    icon: <AppIcon src="/assets/icons/mail.svg" />,
+    url: 'mailto:hi@jared.gr',
+  },
 ];
 
 export const allApps = [
