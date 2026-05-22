@@ -31,7 +31,8 @@ export default function Desktop() {
             id={app.id}
             name={app.name}
             icon={app.icon}
-            content={app.content}
+            content={'content' in app ? app.content : undefined}
+            url={'url' in app ? app.url : undefined}
             isSelected={selectedIconId === app.id}
             onSelect={setSelectedIconId}
           />

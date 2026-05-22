@@ -203,7 +203,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
                         className='flex flex-col items-center justify-start gap-2 p-2 rounded hover:bg-white/50 dark:hover:bg-white/10 cursor-pointer transition-colors'
                         onClick={() =>
                           'url' in app
-                            ? handleExternalClick(app.url)
+                            ? handleExternalClick((app as any).url)
                             : handleAppClick(app)
                         }
                       >
