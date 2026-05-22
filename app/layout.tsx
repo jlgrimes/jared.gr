@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { DesktopProvider } from './context/DesktopContext';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: 'Jared Grimes',
@@ -21,6 +22,7 @@ export default function RootLayout({
         <DesktopProvider>
           {children}
         </DesktopProvider>
+        <Analytics />
       </body>
     </html>
   );
