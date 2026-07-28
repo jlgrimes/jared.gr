@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# jared.gr
 
-## Getting Started
+Personal site, structured as a monorepo that separates **what the site says** from **how it looks**.
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+apps/
+  web/                    Next.js shell — routing, styles entry, public assets, deploy target
+packages/
+  info/                   @jared/info — pure content (profile, projects, testimonials,
+                          socials, skills, redirects) + the Info type. No React, no deps.
+  wrapper-windows/        @wrapper/windows — Windows 11 desktop renderer.
+                          Exports <WindowsWrapper info={...} />.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## The wrapper contract
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A wrapper is a package that renders an `Info` (from `@jared/info`) as a full site:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```tsx
+// apps/web/app/page.tsx
+import { info } from '@jared/info';
+import { WindowsWrapper } from '@wrapper/windows';
 
-## Learn More
+export default function Home() {
+  return <WindowsWrapper info={info} />;
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+To redesign the site, build a new package (e.g. `@wrapper/terminal`, `@wrapper/apple`)
+with the same `{ info: Info }` prop and swap it in `page.tsx`. Content changes only ever
+touch `packages/info/src/data.ts`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev      # runs apps/web on localhost:3000
+npm run build
+```
 
-## Deploy on Vercel
+## Deploy (Vercel)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The Vercel project's **Root Directory** must be set to `apps/web`
+(Project Settings → Build & Deployment). Install/build commands stay default;
+Vercel detects the npm workspace from the repo root.
