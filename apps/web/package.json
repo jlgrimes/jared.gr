@@ -11,7 +11,7 @@
   "dependencies": {
     "@jared/info": "*",
     "@wrapper/windows": "*",
-    "next": "15.6.0-canary.58",
+    "next": "16.2.12",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -22,7 +22,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.2.2-canary.1",
+    "eslint-config-next": "16.2.12",
     "tailwindcss": "^4",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5"
