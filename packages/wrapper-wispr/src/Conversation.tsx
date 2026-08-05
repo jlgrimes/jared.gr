@@ -31,7 +31,8 @@ export const Conversation = ({
       return (
         <ChatBubble key={message.id} variant={sent ? 'sent' : 'received'}>
           {/* Only the answering side gets a face — a second avatar just adds noise. */}
-          {!sent && <ChatBubbleAvatar src={info.profile.avatar} />}
+          {/* jared here - neither of them get a face! */}
+          {/* {!sent && <ChatBubbleAvatar src={info.profile.avatar} />} */}
           <ChatBubbleMessage variant={sent ? 'sent' : 'received'}>
             {message.text}
           </ChatBubbleMessage>
@@ -41,14 +42,14 @@ export const Conversation = ({
 
     {pending && !error && (
       <ChatBubble variant='received'>
-        <ChatBubbleAvatar src={info.profile.avatar} />
+        {/* <ChatBubbleAvatar src={info.profile.avatar} /> */}
         <ChatBubbleMessage variant='received' isLoading />
       </ChatBubble>
     )}
 
     {error && (
       <ChatBubble variant='received'>
-        <ChatBubbleAvatar src={info.profile.avatar} />
+        {/* <ChatBubbleAvatar src={info.profile.avatar} /> */}
         <ChatBubbleMessage variant='received'>
           You've maxed out on tokens! Or, something.
         </ChatBubbleMessage>
