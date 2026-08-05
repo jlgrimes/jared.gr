@@ -34,15 +34,14 @@ export const BIO_STYLE_KEY: Record<
 };
 
 /**
- * Panels the model can mount inside the notch, keyed by the tool that produced them.
- * The tool's *input* is the payload — there is no separate card protocol.
+ * One turn in the transcript, flattened to the only thing the notch renders. Answers are
+ * plain prose — there is no card protocol and no markdown to parse.
  */
-export type Card =
-  | { kind: 'projects'; stack?: string }
-  | { kind: 'project'; title: string }
-  | { kind: 'testimonials' }
-  | { kind: 'skills' }
-  | { kind: 'contact' };
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  text: string;
+}
 
 /**
  * What the Flow Bar needs from a speech source. Two adapters implement it — the browser's

@@ -1,4 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    // Matches the aliases in components.json, so `npx shadcn add` drops components
+    // straight into src/ui and they resolve without hand-editing imports.
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
   "include": ["src"]
 }

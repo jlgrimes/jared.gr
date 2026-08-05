@@ -1,7 +1,6 @@
 import { convertToModelMessages, streamText, type UIMessage } from 'ai';
 import { rateLimit, rateLimited } from '../../../lib/rate-limit';
 import { DOSSIER, PERSONA } from './dossier';
-import { flowTools } from './tools';
 
 // Edge keeps the cold start and the first token close to the visitor, which is most of what
 // "feels fast" actually means here.
@@ -12,8 +11,8 @@ export const runtime = 'edge';
  * easy task, and time-to-first-token matters far more than prose quality in a floating bar.
  *
  * Swapping this string is the entire cost of changing models — that's why the site talks to
- * the Gateway rather than to a provider SDK. If tool selection turns out to be unreliable
- * (nano's weakest area), move up a tier here and change nothing else.
+ * the Gateway rather than to a provider SDK. If the prose reads thin, move up a tier here
+ * and change nothing else.
  */
 const MODEL = 'openai/gpt-5.4-nano';
 
@@ -65,7 +64,6 @@ export async function POST(req: Request) {
     // across requests and across style changes.
     system: `${PERSONA}\n\n${DOSSIER}\n\n## Voice\n${styleDirection}`,
     messages: await convertToModelMessages(trimmed),
-    tools: flowTools,
     maxOutputTokens: 400,
   });
 

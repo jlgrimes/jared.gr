@@ -26,7 +26,7 @@ export interface FlowBarProps {
   /** Collapse the panel back to a bare pill. */
   onDismiss: () => void;
   dictation: Dictation;
-  /** Whatever the notch is currently holding — answer prose, cards, suggestions. */
+  /** The transcript, once there is one. Absent collapses the notch back to a bare pill. */
   panel?: React.ReactNode;
   /** Shown as the cycling placeholder, and as chips before the first question. */
   suggestions?: string[];
@@ -157,10 +157,8 @@ export const FlowBar = ({
               transition={notchSpring}
               className='overflow-hidden'
             >
-              <div
-                className='max-h-[58vh] overflow-y-auto px-5 pt-5 pb-4 sm:px-6'
-                style={{ fontFamily: 'var(--font-figtree)', color: ink }}
-              >
+              {/* The transcript caps its own height; the notch just grows to fit it. */}
+              <div style={{ fontFamily: 'var(--font-figtree)', color: ink }}>
                 {panel}
               </div>
               <div className='mx-5 sm:mx-6' style={{ borderTop: `1.5px solid ${inkHairline}` }} />
