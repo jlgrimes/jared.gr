@@ -12,7 +12,7 @@ export const info: Info = {
 
   hero: {
     greeting: "Hi, I'm Jared",
-    bio: 'Interfaces are my thing. Currently building the future of human-AI interaction at Wispr.',
+    bio: 'Interfaces are my thing. Currently building the future of human-AI interaction at Wispr. Been in the industry for 6 years, bringing Figmas to life across Amazon and Microsoft.',
   },
 
   socials: [
