@@ -1,7 +1,8 @@
 import { info } from '@jared/info';
-import { WindowsWrapper } from '@wrapper/windows';
+import { SiteShell } from './SiteShell';
 
-// Swap the wrapper to redesign the whole site — the info stays the same.
+// The shell picks a wrapper; the wrappers render the same info. Content changes only ever
+// touch packages/info/src/data.ts.
 export default function Home() {
-  return <WindowsWrapper info={info} />;
+  return <SiteShell info={info} />;
 }

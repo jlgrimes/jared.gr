@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname, '../..'),
   },
-  transpilePackages: ['@jared/info', '@wrapper/windows'],
+  transpilePackages: ['@jared/info', '@wrapper/windows', '@wrapper/wispr'],
   async redirects() {
     return generateRedirects();
   },

@@ -1,0 +1,22 @@
+{
+  "name": "@wrapper/wispr",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Wispr Flow-style renderer — a floating notch that is the entire site. Exports <WisprWrapper info={...} />.",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "dependencies": {
+    "@ai-sdk/react": "^4.0.55",
+    "@jared/info": "*",
+    "ai": "^7.0.52",
+    "motion": "^12.23.26"
+  },
+  "peerDependencies": {
+    "next": ">=15",
+    "react": ">=19",
+    "react-dom": ">=19"
+  }
+}

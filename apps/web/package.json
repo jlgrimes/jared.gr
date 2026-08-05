@@ -9,11 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/gateway": "^4.0.41",
+    "@ai-sdk/react": "^4.0.55",
     "@jared/info": "*",
     "@wrapper/windows": "*",
+    "@wrapper/wispr": "*",
+    "ai": "^7.0.52",
     "next": "16.2.12",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
