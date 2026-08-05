@@ -29,6 +29,7 @@ export interface FlowBarProps {
   onExpand?: () => void;
   hasMessages?: boolean;
   dictation: Dictation;
+  panelOpen?: boolean;
   /** The transcript, once there is one. Absent collapses the notch back to a bare pill. */
   panel?: React.ReactNode;
 }
@@ -49,6 +50,7 @@ export const FlowBar = ({
   onExpand,
   hasMessages = false,
   dictation,
+  panelOpen: panelOpenProp,
   panel,
 }: FlowBarProps) => {
   const [text, setText] = React.useState('');
@@ -59,19 +61,23 @@ export const FlowBar = ({
   // chat only knows about idle/processing/answering/open.
   const listening = dictation.listening;
   const busy = state === 'processing' || state === 'answering';
-  const panelOpen = Boolean(panel);
+  const panelOpen = Boolean(panelOpenProp ?? Boolean(panel)) && hasMessages;
+
+  const [isFocused, setIsFocused] = React.useState(false);
+  const active = isFocused || Boolean(text) || listening || panelOpen || busy;
 
   // Collapse when clicking outside the FlowBar component
   React.useEffect(() => {
-    if (!panelOpen || !onCollapse) return;
-
     const handlePointerDown = (e: PointerEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
       if (containerRef.current?.contains(target)) return;
       if (target.closest('[role="listbox"]')) return;
 
-      onCollapse();
+      setIsFocused(false);
+      if (panelOpen && onCollapse) {
+        onCollapse();
+      }
     };
 
     window.addEventListener('pointerdown', handlePointerDown);
@@ -180,6 +186,7 @@ export const FlowBar = ({
         if (dictation.listening) cancelDictation();
         else if (panelOpen) (onCollapse ?? onDismiss)();
         inputRef.current?.blur();
+        setIsFocused(false);
         return;
       }
       if (isTypingTarget(e.target)) return;
@@ -210,40 +217,37 @@ export const FlowBar = ({
     <div className='pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-6 sm:pb-8'>
       <motion.div
         ref={containerRef}
-        layout
         transition={notchSpring}
-        className='pointer-events-auto w-full max-w-2xl overflow-hidden rounded-[28px]'
+        className='pointer-events-auto w-full max-w-2xl overflow-hidden rounded-[28px] transition-[border-color,box-shadow] duration-200'
         style={{
           background: cream,
-          border: `2px solid ${ink}`,
+          border: `2px solid ${active ? ink : inkHairline}`,
+          boxShadow: active ? lift : 'none',
           borderRadius: 28,
-          boxShadow: lift,
         }}
       >
-        {/* Panel — grows upward out of the notch. */}
-        <AnimatePresence initial={false} mode='wait'>
+        {/* Panel — always mounted in DOM, height spring animates smoothly between 0 and 'auto' */}
+        <motion.div
+          initial={false}
+          animate={{
+            height: panelOpen ? 'auto' : 0,
+            opacity: panelOpen ? 1 : 0,
+          }}
+          transition={notchSpring}
+          className='overflow-hidden'
+        >
+          <div style={{ fontFamily: 'var(--font-figtree)', color: ink }}>
+            {panel}
+          </div>
           {panelOpen && (
-            <motion.div
-              key='panel'
-              layout
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={notchSpring}
-              className='overflow-hidden'
-            >
-              {/* The transcript caps its own height; the notch just grows to fit it. */}
-              <div style={{ fontFamily: 'var(--font-figtree)', color: ink }}>
-                {panel}
-              </div>
-              <div className='mx-5 sm:mx-6' style={{ borderTop: `1.5px solid ${inkHairline}` }} />
-            </motion.div>
+            <div className='mx-5 sm:mx-6' style={{ borderTop: `1.5px solid ${inkHairline}` }} />
           )}
-        </AnimatePresence>
+        </motion.div>
 
-        {/* Card Row 1: Text Input Area */}
-        <div className='px-4 pt-3.5 pb-1 sm:px-5 sm:pt-4'>
+        {/* Row 1: Text Input Area */}
+        <div className='flex h-14 items-center gap-3 px-3 sm:px-4'>
           <form
+            className='flex-1'
             onSubmit={e => {
               e.preventDefault();
               if (listening) {
@@ -258,9 +262,11 @@ export const FlowBar = ({
               value={text}
               onChange={e => setText(e.target.value)}
               onFocus={() => {
+                setIsFocused(true);
                 if (hasMessages && !panelOpen) onExpand?.();
               }}
               onClick={() => {
+                setIsFocused(true);
                 if (hasMessages && !panelOpen) onExpand?.();
               }}
               disabled={busy}
@@ -273,53 +279,63 @@ export const FlowBar = ({
           </form>
         </div>
 
-        {/* Card Row 2: Action Toolbar (Left: StylePill; Right: Waveform, Mic & Send buttons) */}
-        <div className='flex items-center justify-between gap-3 px-3 pb-3 pt-1.5 sm:px-4 sm:pb-3.5'>
-          {/* Left Controls */}
-          <div className='flex items-center gap-2 overflow-x-auto min-w-0'>
-            <StylePill value={style} onChange={onStyleChange} />
+        {/* Row 2: Action Toolbar — height spring animates smoothly between 0 and 'auto' */}
+        <motion.div
+          initial={false}
+          animate={{
+            height: active ? 'auto' : 0,
+            opacity: active ? 1 : 0,
+          }}
+          transition={notchSpring}
+          className='overflow-hidden'
+        >
+          <div className='flex items-center justify-between gap-3 px-3 pb-3 pt-1.5 sm:px-4 sm:pb-3.5'>
+            {/* Left Controls */}
+            <div className='flex items-center gap-2 overflow-x-auto min-w-0'>
+              <StylePill value={style} onChange={onStyleChange} />
+            </div>
+
+            {/* Right Controls */}
+            <div className='flex items-center gap-2.5 shrink-0'>
+              {busy ? (
+                <Shimmer />
+              ) : (
+                <>
+                  {listening && (
+                    <div className='flex items-center gap-2 max-w-[120px] sm:max-w-[180px] px-1'>
+                      <Waveform amplitudes={dictation.amplitudes} active />
+                    </div>
+                  )}
+
+                  <MicButton
+                    supported={dictation.supported}
+                    listening={listening}
+                    disabled={busy}
+                    onClick={() => {
+                      if (listening) {
+                        void finishDictation();
+                      } else {
+                        startDictation();
+                      }
+                    }}
+                    onWarm={dictation.prefetch}
+                  />
+
+                  <SendButton
+                    disabled={busy || (!text.trim() && !listening)}
+                    onClick={() => {
+                      if (listening) {
+                        void finishDictation();
+                      } else {
+                        submit(text);
+                      }
+                    }}
+                  />
+                </>
+              )}
+            </div>
           </div>
-
-          {/* Right Controls */}
-          <div className='flex items-center gap-2.5 shrink-0'>
-            {busy ? (
-              <Shimmer />
-            ) : (
-              <>
-                {listening && (
-                  <div className='flex items-center gap-2 max-w-[120px] sm:max-w-[180px] px-1'>
-                    <Waveform amplitudes={dictation.amplitudes} active />
-                  </div>
-                )}
-
-                <MicButton
-                  supported={dictation.supported}
-                  listening={listening}
-                  disabled={busy}
-                  onClick={() => {
-                    if (listening) {
-                      void finishDictation();
-                    } else {
-                      startDictation();
-                    }
-                  }}
-                  onWarm={dictation.prefetch}
-                />
-
-                <SendButton
-                  disabled={busy || (!text.trim() && !listening)}
-                  onClick={() => {
-                    if (listening) {
-                      void finishDictation();
-                    } else {
-                      submit(text);
-                    }
-                  }}
-                />
-              </>
-            )}
-          </div>
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );

@@ -78,15 +78,14 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
         onExpand={flow.expand}
         hasMessages={flow.hasMessages}
         dictation={dictation}
+        panelOpen={flow.isPanelOpen}
         panel={
-          flow.isPanelOpen ? (
-            <Conversation
-              messages={flow.transcript}
-              pending={flow.pending}
-              error={flow.error}
-              info={info}
-            />
-          ) : null
+          <Conversation
+            messages={flow.transcript}
+            pending={flow.pending}
+            error={flow.error}
+            info={info}
+          />
         }
       />
     </div>
