@@ -46,7 +46,7 @@ export const Canvas = ({ info }: { info: Info }) => (
         style={{
           fontFamily: 'var(--font-display)',
           fontWeight: 400,
-          fontSize: 'clamp(3rem, 8vw, 6rem)',
+          fontSize: 'clamp(2.25rem, 7vw, 6rem)',
           color: ink,
         }}
       >
@@ -54,14 +54,14 @@ export const Canvas = ({ info }: { info: Info }) => (
       </h1>
 
       <p
-        className='mt-7 max-w-xl max-w-full text-[17px] leading-relaxed break-words'
+        className='mt-4 sm:mt-7 max-w-xl text-[15px] sm:text-[17px] leading-relaxed break-words'
         style={{ fontFamily: 'var(--font-figtree)', color: inkMuted }}
       >
         {info.hero.bio}
       </p>
 
       {/* Contact Chips */}
-      <div className='mt-8 flex flex-wrap items-center gap-2.5 max-w-full'>
+      <div className='mt-6 sm:mt-8 flex flex-wrap items-center gap-2 sm:gap-2.5 max-w-full'>
         {info.profile.email && (
           <a
             href={`mailto:${info.profile.email}`}

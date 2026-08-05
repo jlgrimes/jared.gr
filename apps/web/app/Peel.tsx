@@ -44,7 +44,7 @@ export const PeelCorner = ({
       onBlur={() => onHoverChange(false)}
       aria-label={label}
       title={label}
-      className='group fixed top-0 right-0 z-[60] cursor-pointer focus:outline-none'
+      className='group fixed top-0 right-0 z-[60] cursor-pointer focus:outline-none overflow-hidden'
       style={{
         width: HOVER + 24,
         height: HOVER + 24,

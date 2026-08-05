@@ -17,29 +17,7 @@
   all: revert;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
 
-html,
-body,
-:root {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
-  touch-action: manipulation;
-  background-color: #ffffeb;
-  -webkit-text-size-adjust: 100%;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
@@ -162,11 +140,35 @@ body::-webkit-scrollbar {
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
   }
+
+  html,
+  body,
+  :root {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    position: relative !important;
+    overflow: hidden !important;
+    overscroll-behavior: none !important;
+    touch-action: manipulation !important;
+    background-color: #ffffeb !important;
+    -webkit-text-size-adjust: 100%;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    background-color: #ffffeb !important;
+    color: #1a1a1a;
   }
 }
 
