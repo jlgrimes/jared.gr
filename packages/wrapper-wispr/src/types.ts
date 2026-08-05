@@ -61,4 +61,9 @@ export interface Dictation {
   /** Resolves with the final transcript, or '' if nothing was heard. */
   stop: () => Promise<string>;
   cancel: () => void;
+  /**
+   * Optional: warm anything expensive before the user commits to speaking — minting a
+   * token, opening a socket. Called on mic hover. A no-op for adapters with nothing to warm.
+   */
+  prefetch?: () => void;
 }

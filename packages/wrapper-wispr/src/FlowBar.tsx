@@ -52,7 +52,9 @@ export const FlowBar = ({
   const [placeholderIndex, setPlaceholderIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const listening = state === 'listening';
+  // Whether the mic is open is the dictation hook's truth, not the conversation's — the
+  // chat only knows about idle/processing/answering/open.
+  const listening = dictation.listening;
   const busy = state === 'processing' || state === 'answering';
   const panelOpen = Boolean(panel);
 
@@ -174,6 +176,7 @@ export const FlowBar = ({
             disabled={busy}
             onPointerDown={startDictation}
             onPointerUp={() => void finishDictation()}
+            onWarm={dictation.prefetch}
           />
 
           {listening ? (
@@ -269,12 +272,14 @@ const MicButton = ({
   disabled,
   onPointerDown,
   onPointerUp,
+  onWarm,
 }: {
   supported: boolean;
   listening: boolean;
   disabled: boolean;
   onPointerDown: () => void;
   onPointerUp: () => void;
+  onWarm?: () => void;
 }) => {
   // No graceful degradation to show — if the browser can't dictate, the input is the whole UI.
   if (!supported) return null;
@@ -283,6 +288,9 @@ const MicButton = ({
     <button
       type='button'
       disabled={disabled}
+      // Warm the token on approach, so pressing the mic doesn't wait on a round-trip.
+      onPointerEnter={() => !disabled && onWarm?.()}
+      onFocus={() => !disabled && onWarm?.()}
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
       onPointerLeave={() => listening && onPointerUp()}
