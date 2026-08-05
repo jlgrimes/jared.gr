@@ -322,7 +322,21 @@ export const FlowBar = ({
         <motion.div
           ref={containerRef}
           transition={notchSpring}
-          className='w-full overflow-hidden rounded-[28px] transition-[border-color,box-shadow] duration-200'
+          className='w-full cursor-text overflow-hidden rounded-[28px] transition-[border-color,box-shadow] duration-200'
+          onClick={e => {
+            const target = e.target as HTMLElement | null;
+            if (
+              target &&
+              (target.tagName === 'BUTTON' ||
+                target.closest('button') ||
+                target.tagName === 'INPUT')
+            ) {
+              return;
+            }
+            setIsFocused(true);
+            if (hasMessages && !panelOpen) onExpand?.();
+            inputRef.current?.focus();
+          }}
           style={{
             background: cream,
             border: `2px solid ${active ? ink : inkHairline}`,
