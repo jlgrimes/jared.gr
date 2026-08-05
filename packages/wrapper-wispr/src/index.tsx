@@ -28,12 +28,10 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
   const flow = useFlow(style);
 
   const suggestions = React.useMemo(() => {
-    const newest = info.projects[0]?.title;
     return [
-      newest ? `Tell me about ${newest}` : 'Show me your projects',
+      'Show me your projects',
       "What's your stack?",
       'What do people say about working with you?',
-      'How do I reach you?',
     ];
   }, [info.projects]);
 
@@ -43,30 +41,6 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
       style={{ background: cream, color: ink }}
     >
       <Canvas info={info} />
-
-      {/* Before the first question the suggestions double as the site map. */}
-      {!flow.hasMessages && (
-        <div className='pointer-events-none fixed inset-x-0 bottom-24 z-40 flex justify-center px-4'>
-          <div className='pointer-events-auto flex max-w-2xl flex-wrap justify-center gap-2'>
-            {suggestions.map(s => (
-              <button
-                key={s}
-                type='button'
-                onClick={() => flow.ask(s)}
-                className='cursor-pointer px-3.5 py-1.5 text-[13px] transition-colors hover:bg-[rgba(26,26,26,0.05)]'
-                style={{
-                  fontFamily: 'var(--font-figtree)',
-                  color: inkMuted,
-                  border: `1.5px solid ${inkHairline}`,
-                  borderRadius: radius.pill,
-                }}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
 
       <FlowBar
         state={flow.state}
@@ -79,6 +53,7 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
         hasMessages={flow.hasMessages}
         dictation={dictation}
         panelOpen={flow.isPanelOpen}
+        suggestions={suggestions}
         panel={
           <Conversation
             messages={flow.transcript}

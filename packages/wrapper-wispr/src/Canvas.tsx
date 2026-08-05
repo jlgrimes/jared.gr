@@ -17,7 +17,7 @@ export const Canvas = ({ info }: { info: Info }) => (
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className='w-full max-w-2xl'
     >
-      <img
+      {/* <img
         src={info.profile.avatar}
         alt=''
         width={60}
@@ -25,7 +25,7 @@ export const Canvas = ({ info }: { info: Info }) => (
         draggable={false}
         className='mb-8 h-15 w-15 rounded-full object-cover select-none'
         style={{ border: `2px solid ${ink}`, height: 60, width: 60 }}
-      />
+      /> */}
 
       <h1
         className='leading-[0.95] tracking-[-0.015em]'

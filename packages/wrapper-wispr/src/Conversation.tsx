@@ -2,7 +2,11 @@
 
 import React from 'react';
 import type { Info } from '@jared/info';
-import { ChatBubble, ChatBubbleAvatar, ChatBubbleMessage } from './ui/chat-bubble';
+import {
+  ChatBubble,
+  ChatBubbleAvatar,
+  ChatBubbleMessage,
+} from './ui/chat-bubble';
 import { ChatMessageList } from './ui/chat-message-list';
 import type { ChatMessage } from './types';
 
@@ -46,14 +50,7 @@ export const Conversation = ({
       <ChatBubble variant='received'>
         <ChatBubbleAvatar src={info.profile.avatar} />
         <ChatBubbleMessage variant='received'>
-          Something went wrong reaching the model. Email{' '}
-          <a
-            href={`mailto:${info.profile.email}`}
-            className='underline underline-offset-4'
-          >
-            {info.profile.email}
-          </a>{' '}
-          and Jared will answer himself.
+          You've maxed out on tokens! Or, something.
         </ChatBubbleMessage>
       </ChatBubble>
     )}
