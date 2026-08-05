@@ -55,7 +55,6 @@ export const FlowBar = ({
   suggestions = [],
 }: FlowBarProps) => {
   const [text, setText] = React.useState('');
-  const [placeholderIndex, setPlaceholderIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -83,16 +82,6 @@ export const FlowBar = ({
       window.removeEventListener('pointerdown', handlePointerDown);
     };
   }, [panelOpen, onCollapse]);
-
-  // Cycle the placeholder only while idle and empty — movement anywhere else is noise.
-  React.useEffect(() => {
-    if (suggestions.length === 0 || state !== 'idle' || text) return;
-    const id = window.setInterval(
-      () => setPlaceholderIndex(i => (i + 1) % suggestions.length),
-      3800
-    );
-    return () => window.clearInterval(id);
-  }, [suggestions.length, state, text]);
 
   const submit = React.useCallback(
     (value: string) => {
@@ -280,11 +269,7 @@ export const FlowBar = ({
               disabled={busy}
               maxLength={400}
               aria-label='Ask about Jared'
-              placeholder={
-                busy
-                  ? 'Thinking…'
-                  : (suggestions[placeholderIndex] ?? 'Ask me anything…')
-              }
+              placeholder='Ask me anything…'
               className='w-full bg-transparent text-[15px] outline-none placeholder:transition-opacity disabled:opacity-60'
               style={{ fontFamily: 'var(--font-figtree)', color: ink }}
             />
