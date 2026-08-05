@@ -31,8 +31,6 @@ export interface FlowBarProps {
   dictation: Dictation;
   /** The transcript, once there is one. Absent collapses the notch back to a bare pill. */
   panel?: React.ReactNode;
-  /** Shown as the cycling placeholder, and as chips before the first question. */
-  suggestions?: string[];
 }
 
 const isTypingTarget = (el: EventTarget | null) =>
@@ -52,7 +50,6 @@ export const FlowBar = ({
   hasMessages = false,
   dictation,
   panel,
-  suggestions = [],
 }: FlowBarProps) => {
   const [text, setText] = React.useState('');
   const inputRef = React.useRef<HTMLInputElement>(null);

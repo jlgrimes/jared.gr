@@ -88,7 +88,6 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
             />
           ) : null
         }
-        suggestions={['Ask me anything…', ...suggestions]}
       />
     </div>
   );
