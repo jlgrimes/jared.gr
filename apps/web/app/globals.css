@@ -21,6 +21,12 @@ html,
 body,
 :root {
   height: 100%;
+  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  touch-action: manipulation;
+  background-color: #ffffeb;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }

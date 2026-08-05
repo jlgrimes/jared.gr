@@ -37,7 +37,7 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
 
   return (
     <div
-      className='relative h-screen w-screen overflow-hidden'
+      className='fixed inset-0 h-dvh w-dvh overflow-hidden'
       style={{ background: cream, color: ink }}
     >
       <Canvas info={info} />

@@ -34,7 +34,7 @@ const SocialIcon = ({ id }: { id: string }) => {
  * The page at rest: a cream sheet holding a hero and contact chips.
  */
 export const Canvas = ({ info }: { info: Info }) => (
-  <div className='flex h-full w-full items-center justify-center px-6 pb-40'>
+  <div className='flex h-full w-full items-center justify-center px-6 pb-24 sm:pb-36'>
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}

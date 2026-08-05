@@ -1,9 +1,13 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Jared Grimes',
   description: 'Personal website of Jared Grimes',
+};
+
+export const viewport: Viewport = {
+  themeColor: '#ffffeb',
 };
 
 export default function RootLayout({
@@ -12,11 +16,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' style={{ backgroundColor: '#ffffeb' }}>
       <head>
+        <meta name='theme-color' content='#ffffeb' />
         <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
       </head>
-      <body className={`font-sans antialiased overflow-hidden`}>
+      <body className='font-sans antialiased overflow-hidden' style={{ backgroundColor: '#ffffeb' }}>
         {children}
       </body>
     </html>
