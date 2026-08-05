@@ -8,7 +8,6 @@ import { PEEL_DURATION_MS, PeelCorner, peelClipPath } from './Peel';
 
 export type SiteMode = 'wispr' | 'windows';
 
-const STORAGE_KEY = 'jared.gr:mode';
 const REST = 34;
 const HOVER = 62;
 
@@ -41,12 +40,6 @@ export const SiteShell = ({ info }: { info: Info }) => {
   const [tornPx, setTornPx] = React.useState(4000);
 
   React.useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored === 'windows' || stored === 'wispr') setMode(stored);
-    } catch {
-      // Private mode or blocked storage — the default is fine.
-    }
     setHydrated(true);
   }, []);
 
@@ -76,15 +69,7 @@ export const SiteShell = ({ info }: { info: Info }) => {
   React.useEffect(() => {
     if (!tearing) return;
     const id = window.setTimeout(() => {
-      setMode(current => {
-        const next: SiteMode = current === 'wispr' ? 'windows' : 'wispr';
-        try {
-          window.localStorage.setItem(STORAGE_KEY, next);
-        } catch {
-          // Non-fatal: the mode just won't persist.
-        }
-        return next;
-      });
+      setMode(current => (current === 'wispr' ? 'windows' : 'wispr'));
       setTearing(false);
       setArmed(false);
     }, PEEL_DURATION_MS);

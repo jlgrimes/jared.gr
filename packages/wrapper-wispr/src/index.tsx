@@ -85,7 +85,6 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
               pending={flow.pending}
               error={flow.error}
               info={info}
-              onClear={flow.reset}
             />
           ) : null
         }

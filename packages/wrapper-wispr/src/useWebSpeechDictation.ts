@@ -94,24 +94,28 @@ export const useWebSpeechDictation = (): Dictation => {
   const startAudioMeter = React.useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const ctx = new AudioContext();
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const ctx = new AudioContextClass();
+      if (ctx.state === 'suspended') {
+        await ctx.resume();
+      }
       const analyser = ctx.createAnalyser();
-      analyser.fftSize = 512;
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.5;
       ctx.createMediaStreamSource(stream).connect(analyser);
 
-      const buffer = new Uint8Array(analyser.fftSize);
+      const buffer = new Uint8Array(analyser.frequencyBinCount);
       const tick = () => {
-        analyser.getByteTimeDomainData(buffer);
-        // RMS around the 128 midpoint, scaled so normal speech lands near the top.
+        analyser.getByteFrequencyData(buffer);
         let sum = 0;
         for (let i = 0; i < buffer.length; i++) {
-          const v = (buffer[i] - 128) / 128;
-          sum += v * v;
+          sum += buffer[i];
         }
-        const rms = Math.sqrt(sum / buffer.length);
-        setAmplitudes(prev =>
-          [...prev, Math.min(1, rms * 3.2)].slice(-AMPLITUDE_WINDOW)
-        );
+        const average = sum / buffer.length;
+        const normalized = Math.min(1, average / 60);
+        setAmplitudes(prev => [...prev, normalized].slice(-AMPLITUDE_WINDOW));
         const raf = requestAnimationFrame(tick);
         if (audioRef.current) audioRef.current.raf = raf;
       };

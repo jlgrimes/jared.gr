@@ -104,18 +104,85 @@ export const FlowBar = ({
     [busy, onSubmit]
   );
 
+  const prefixRef = React.useRef('');
+  const suffixRef = React.useRef('');
+
   const startDictation = React.useCallback(() => {
     if (!dictation.supported || dictation.listening || busy) return;
+    const input = inputRef.current;
+    if (input && typeof input.selectionStart === 'number' && typeof input.selectionEnd === 'number') {
+      const start = input.selectionStart;
+      const end = input.selectionEnd;
+      prefixRef.current = text.slice(0, start);
+      suffixRef.current = text.slice(end);
+    } else {
+      prefixRef.current = text;
+      suffixRef.current = '';
+    }
+    input?.focus();
     dictation.start();
-  }, [busy, dictation]);
+  }, [busy, dictation, text]);
+
+  // Dynamic sync: stream partial speech directly into selection position in text input field while preserving focus & cursor
+  React.useEffect(() => {
+    if (dictation.listening) {
+      const prefix = prefixRef.current;
+      const suffix = suffixRef.current;
+      const partial = dictation.partial;
+      const needsLeadingSpace = prefix && partial && !prefix.endsWith(' ');
+      const needsTrailingSpace = suffix && partial && !partial.endsWith(' ') && !suffix.startsWith(' ');
+      const combined = `${prefix}${needsLeadingSpace ? ' ' : ''}${partial}${needsTrailingSpace ? ' ' : ''}${suffix}`;
+      const cursorPos = prefix.length + (needsLeadingSpace ? 1 : 0) + partial.length;
+
+      setText(combined);
+      requestAnimationFrame(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          inputRef.current.setSelectionRange(cursorPos, cursorPos);
+        }
+      });
+    }
+  }, [dictation.listening, dictation.partial]);
+
+  const cancelDictation = React.useCallback(() => {
+    dictation.cancel();
+    const originalText = `${prefixRef.current}${suffixRef.current}`;
+    const cursorPos = prefixRef.current.length;
+    prefixRef.current = '';
+    suffixRef.current = '';
+    setText(originalText);
+    requestAnimationFrame(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.setSelectionRange(cursorPos, cursorPos);
+      }
+    });
+  }, [dictation]);
 
   const finishDictation = React.useCallback(async () => {
     if (!dictation.listening) return;
     const transcript = await dictation.stop();
-    if (transcript.trim()) submit(transcript);
-  }, [dictation, submit]);
+    const prefix = prefixRef.current;
+    const suffix = suffixRef.current;
+    prefixRef.current = '';
+    suffixRef.current = '';
+    const inserted = transcript.trim();
+    const needsLeadingSpace = prefix && inserted && !prefix.endsWith(' ');
+    const needsTrailingSpace = suffix && inserted && !inserted.endsWith(' ') && !suffix.startsWith(' ');
+    const finalString = `${prefix}${needsLeadingSpace ? ' ' : ''}${inserted}${needsTrailingSpace ? ' ' : ''}${suffix}`;
+    const finalCursorPos = prefix.length + (needsLeadingSpace ? 1 : 0) + inserted.length;
 
-  // ⌘K / `/` to focus, Esc to back out, hold Space to dictate — the web analog of holding Fn.
+    // Place transcribed text in input field without auto-submitting, maintaining focus & cursor
+    setText(finalString);
+    requestAnimationFrame(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        inputRef.current.setSelectionRange(finalCursorPos, finalCursorPos);
+      }
+    });
+  }, [dictation]);
+
+  // ⌘K / `/` to focus, Esc to back out, Space to toggle dictation
   React.useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -124,7 +191,7 @@ export const FlowBar = ({
         return;
       }
       if (e.key === 'Escape') {
-        if (dictation.listening) dictation.cancel();
+        if (dictation.listening) cancelDictation();
         else if (panelOpen) (onCollapse ?? onDismiss)();
         inputRef.current?.blur();
         return;
@@ -137,26 +204,21 @@ export const FlowBar = ({
         return;
       }
       // `repeat` guards against key-repeat restarting the recognizer every few ms.
-      if (e.code === 'Space' && !e.repeat) {
+      if (e.code === 'Space' && !e.repeat && !isTypingTarget(e.target)) {
         e.preventDefault();
-        startDictation();
-      }
-    };
-
-    const onKeyUp = (e: KeyboardEvent) => {
-      if (e.code === 'Space' && dictation.listening && !isTypingTarget(e.target)) {
-        e.preventDefault();
-        void finishDictation();
+        if (dictation.listening) {
+          void finishDictation();
+        } else {
+          startDictation();
+        }
       }
     };
 
     window.addEventListener('keydown', onKeyDown);
-    window.addEventListener('keyup', onKeyUp);
     return () => {
       window.removeEventListener('keydown', onKeyDown);
-      window.removeEventListener('keyup', onKeyUp);
     };
-  }, [dictation, finishDictation, onCollapse, onDismiss, panelOpen, startDictation]);
+  }, [cancelDictation, dictation.listening, finishDictation, onCollapse, onDismiss, panelOpen, startDictation]);
 
   return (
     <div className='pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-6 sm:pb-8'>
@@ -164,7 +226,7 @@ export const FlowBar = ({
         ref={containerRef}
         layout
         transition={notchSpring}
-        animate={{ borderRadius: panelOpen ? radius.panel : radius.pill }}
+        animate={{ borderRadius: radius.panel }}
         className='pointer-events-auto w-full max-w-2xl overflow-hidden'
         style={{
           background: cream,
@@ -172,7 +234,7 @@ export const FlowBar = ({
           boxShadow: lift,
         }}
       >
-        {/* Panel — grows upward out of the pill. Same element, so it reads as a notch. */}
+        {/* Panel — grows upward out of the notch. */}
         <AnimatePresence initial={false} mode='wait'>
           {panelOpen && (
             <motion.div
@@ -193,159 +255,135 @@ export const FlowBar = ({
           )}
         </AnimatePresence>
 
-        {/* The pill row — always present, always the same height. */}
-        <motion.div layout className='flex h-14 items-center gap-3 px-3 sm:px-4'>
-          <MicButton
-            supported={dictation.supported}
-            listening={listening}
-            disabled={busy}
-            onPointerDown={startDictation}
-            onPointerUp={() => void finishDictation()}
-            onWarm={dictation.prefetch}
-          />
+        {/* Card Row 1: Text Input Area */}
+        <div className='px-4 pt-3.5 pb-1 sm:px-5 sm:pt-4'>
+          <form
+            onSubmit={e => {
+              e.preventDefault();
+              if (listening) {
+                void finishDictation();
+              } else {
+                submit(text);
+              }
+            }}
+          >
+            <input
+              ref={inputRef}
+              value={text}
+              onChange={e => setText(e.target.value)}
+              onFocus={() => {
+                if (hasMessages && !panelOpen) onExpand?.();
+              }}
+              onClick={() => {
+                if (hasMessages && !panelOpen) onExpand?.();
+              }}
+              disabled={busy}
+              maxLength={400}
+              aria-label='Ask about Jared'
+              placeholder={
+                busy
+                  ? 'Thinking…'
+                  : (suggestions[placeholderIndex] ?? 'Ask me anything…')
+              }
+              className='w-full bg-transparent text-[15px] outline-none placeholder:transition-opacity disabled:opacity-60'
+              style={{ fontFamily: 'var(--font-figtree)', color: ink }}
+            />
+          </form>
+        </div>
 
-          {listening ? (
-            <>
-              {dictation.partial ? (
-                <span
-                  className='flex-1 truncate text-[15px]'
-                  style={{ fontFamily: 'var(--font-figtree)', color: ink }}
-                >
-                  {dictation.partial}
-                </span>
-              ) : (
-                <Waveform amplitudes={dictation.amplitudes} active />
-              )}
-              <button
-                type='button'
-                onClick={() => dictation.cancel()}
-                className='shrink-0 cursor-pointer px-2 text-[13px]'
-                style={{ fontFamily: 'var(--font-figtree)', color: inkMuted }}
-              >
-                Cancel
-              </button>
-              <button
-                type='button'
-                onClick={() => void finishDictation()}
-                className='shrink-0 cursor-pointer px-3 py-1.5 text-[13px]'
-                style={{
-                  fontFamily: 'var(--font-figtree)',
-                  color: ink,
-                  background: lavender,
-                  border: `1.5px solid ${ink}`,
-                  borderRadius: radius.pill,
-                }}
-              >
-                Done
-              </button>
-            </>
-          ) : (
-            <>
-              <form
-                className='flex-1'
-                onSubmit={e => {
-                  e.preventDefault();
-                  submit(text);
-                }}
-              >
-                <input
-                  ref={inputRef}
-                  value={text}
-                  onChange={e => setText(e.target.value)}
-                  onFocus={() => {
-                    if (hasMessages && !panelOpen) onExpand?.();
-                  }}
-                  onClick={() => {
-                    if (hasMessages && !panelOpen) onExpand?.();
-                  }}
+        {/* Card Row 2: Action Toolbar (Left: StylePill; Right: Waveform, Mic & Send buttons) */}
+        <div className='flex items-center justify-between gap-3 px-3 pb-3 pt-1.5 sm:px-4 sm:pb-3.5'>
+          {/* Left Controls */}
+          <div className='flex items-center gap-2 overflow-x-auto min-w-0'>
+            <StylePill value={style} onChange={onStyleChange} />
+          </div>
+
+          {/* Right Controls */}
+          <div className='flex items-center gap-2.5 shrink-0'>
+            {busy ? (
+              <Shimmer />
+            ) : (
+              <>
+                {listening && (
+                  <div className='flex items-center gap-2 max-w-[120px] sm:max-w-[180px] px-1'>
+                    <Waveform amplitudes={dictation.amplitudes} active />
+                  </div>
+                )}
+
+                <MicButton
+                  supported={dictation.supported}
+                  listening={listening}
                   disabled={busy}
-                  maxLength={400}
-                  aria-label='Ask about Jared'
-                  placeholder={
-                    busy
-                      ? 'Thinking…'
-                      : (suggestions[placeholderIndex] ?? 'Ask me anything…')
-                  }
-                  className='w-full bg-transparent text-[15px] outline-none placeholder:transition-opacity disabled:opacity-60'
-                  style={{ fontFamily: 'var(--font-figtree)', color: ink }}
+                  onClick={() => {
+                    if (listening) {
+                      void finishDictation();
+                    } else {
+                      startDictation();
+                    }
+                  }}
+                  onWarm={dictation.prefetch}
                 />
-              </form>
 
-              {busy ? (
-                <Shimmer />
-              ) : (
-                <>
-                  {hasMessages && (
-                    panelOpen ? (
-                      <button
-                        type='button'
-                        onClick={onCollapse ?? onDismiss}
-                        aria-label='Collapse panel'
-                        className='flex shrink-0 cursor-pointer items-center gap-1 px-2.5 py-1.5 text-[13px] transition-colors hover:opacity-80'
-                        style={{ fontFamily: 'var(--font-figtree)', color: inkMuted }}
-                      >
-                        <span>Collapse</span>
-                        <svg width='9' height='6' viewBox='0 0 9 6' fill='none' aria-hidden='true'>
-                          <path
-                            d='M1 1.5 4.5 5 8 1.5'
-                            stroke={inkMuted}
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </svg>
-                      </button>
-                    ) : (
-                      <button
-                        type='button'
-                        onClick={onExpand}
-                        aria-label='Expand panel'
-                        className='flex shrink-0 cursor-pointer items-center gap-1.5 px-3 py-1.5 text-[13px] transition-colors'
-                        style={{
-                          fontFamily: 'var(--font-figtree)',
-                          color: ink,
-                          background: lavender,
-                          border: `1.5px solid ${ink}`,
-                          borderRadius: radius.pill,
-                        }}
-                      >
-                        <span>Expand chat</span>
-                        <svg width='9' height='6' viewBox='0 0 9 6' fill='none' aria-hidden='true'>
-                          <path
-                            d='M1 4.5 4.5 1 8 4.5'
-                            stroke={ink}
-                            strokeWidth='1.5'
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                          />
-                        </svg>
-                      </button>
-                    )
-                  )}
-                  <StylePill value={style} onChange={onStyleChange} />
-                </>
-              )}
-            </>
-          )}
-        </motion.div>
+                <SendButton
+                  disabled={busy || (!text.trim() && !listening)}
+                  onClick={() => {
+                    if (listening) {
+                      void finishDictation();
+                    } else {
+                      submit(text);
+                    }
+                  }}
+                />
+              </>
+            )}
+          </div>
+        </div>
       </motion.div>
     </div>
   );
 };
 
+const SendButton = ({
+  disabled,
+  onClick,
+}: {
+  disabled: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    type='button'
+    disabled={disabled}
+    onClick={onClick}
+    aria-label='Send message'
+    className='flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors disabled:cursor-default disabled:opacity-30'
+    style={{
+      background: ink,
+      color: cream,
+    }}
+  >
+    <svg width='14' height='14' viewBox='0 0 16 16' fill='none' aria-hidden='true'>
+      <path
+        d='M8 13V3M8 3L3 8M8 3L13 8'
+        stroke={cream}
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  </button>
+);
+
 const MicButton = ({
   supported,
   listening,
   disabled,
-  onPointerDown,
-  onPointerUp,
+  onClick,
   onWarm,
 }: {
   supported: boolean;
   listening: boolean;
   disabled: boolean;
-  onPointerDown: () => void;
-  onPointerUp: () => void;
+  onClick: () => void;
   onWarm?: () => void;
 }) => {
   // No graceful degradation to show — if the browser can't dictate, the input is the whole UI.
@@ -358,10 +396,8 @@ const MicButton = ({
       // Warm the token on approach, so pressing the mic doesn't wait on a round-trip.
       onPointerEnter={() => !disabled && onWarm?.()}
       onFocus={() => !disabled && onWarm?.()}
-      onPointerDown={onPointerDown}
-      onPointerUp={onPointerUp}
-      onPointerLeave={() => listening && onPointerUp()}
-      aria-label={listening ? 'Stop dictating' : 'Hold to dictate'}
+      onClick={onClick}
+      aria-label={listening ? 'Stop recording' : 'Start recording'}
       className='flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center transition-colors disabled:cursor-default disabled:opacity-40'
       style={{
         background: listening ? ember : 'transparent',
@@ -369,15 +405,21 @@ const MicButton = ({
         borderRadius: radius.pill,
       }}
     >
-      <svg width='14' height='18' viewBox='0 0 14 18' fill='none' aria-hidden='true'>
-        <rect x='4.25' y='0.75' width='5.5' height='9.5' rx='2.75' stroke={ink} strokeWidth='1.5' />
-        <path
-          d='M1.25 8.25v.75a5.75 5.75 0 0 0 11.5 0v-.75M7 14.75v2.5'
-          stroke={ink}
-          strokeWidth='1.5'
-          strokeLinecap='round'
-        />
-      </svg>
+      {listening ? (
+        <svg width='12' height='12' viewBox='0 0 12 12' fill='none' aria-hidden='true'>
+          <rect width='12' height='12' rx='2.5' fill={ink} />
+        </svg>
+      ) : (
+        <svg width='14' height='18' viewBox='0 0 14 18' fill='none' aria-hidden='true'>
+          <rect x='4.25' y='0.75' width='5.5' height='9.5' rx='2.75' stroke={ink} strokeWidth='1.5' />
+          <path
+            d='M1.25 8.25v.75a5.75 5.75 0 0 0 11.5 0v-.75M7 14.75v2.5'
+            stroke={ink}
+            strokeWidth='1.5'
+            strokeLinecap='round'
+          />
+        </svg>
+      )}
     </button>
   );
 };
