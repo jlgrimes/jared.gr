@@ -16,13 +16,19 @@ export const info: Info = {
   },
 
   socials: [
-    { id: 'github', name: 'GitHub', url: 'https://github.com/jlgrimes' },
+    {
+      id: 'github',
+      name: 'GitHub',
+      handle: 'jlgrimes',
+      url: 'https://github.com/jlgrimes',
+    },
     {
       id: 'linkedin',
       name: 'LinkedIn',
+      handle: 'jaredlgrimes',
       url: 'https://linkedin.com/in/jaredlgrimes',
     },
-    { id: 'x', name: 'X', url: 'https://x.com/jgrimesey' },
+    { id: 'x', name: 'X', handle: 'jgrimesey', url: 'https://x.com/jgrimesey' },
   ],
 
   skills: [

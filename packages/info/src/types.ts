@@ -34,6 +34,7 @@ export interface Testimonial {
 export interface Social {
   id: string;
   name: string;
+  handle: string;
   url: string;
 }
 
