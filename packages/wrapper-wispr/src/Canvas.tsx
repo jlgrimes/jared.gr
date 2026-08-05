@@ -9,7 +9,7 @@ import { ink, inkMuted } from './tokens';
  * The page at rest: a cream sheet holding a hero and nothing else. Every other surface lives
  * inside the notch, so this deliberately stays empty — the restraint is the design.
  */
-export const Canvas = ({ info, bio }: { info: Info; bio: string }) => (
+export const Canvas = ({ info }: { info: Info }) => (
   <div className='flex h-full w-full items-center justify-center px-6 pb-40'>
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -39,17 +39,12 @@ export const Canvas = ({ info, bio }: { info: Info; bio: string }) => (
         {info.hero.greeting}
       </h1>
 
-      {/* Keyed on the text so a style change cross-fades rather than snapping. */}
-      <motion.p
-        key={bio}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.35 }}
+      <p
         className='mt-7 max-w-xl text-[17px] leading-relaxed'
         style={{ fontFamily: 'var(--font-figtree)', color: inkMuted }}
       >
-        {bio}
-      </motion.p>
+        {info.hero.bio}
+      </p>
     </motion.div>
   </div>
 );

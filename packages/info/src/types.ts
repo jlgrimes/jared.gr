@@ -7,18 +7,9 @@ export interface Profile {
   avatar: string;
 }
 
-/**
- * Registers the hero copy can be written in. Mirrors Wispr Flow's writing-style pill —
- * a wrapper can offer the reader a voice, and this is where the words live.
- */
-export type BioStyle = 'casual' | 'formal' | 'veryCasual' | 'excited';
-
 export interface Hero {
   greeting: string;
-  /** The default voice. Always present; every variant is optional. */
   bio: string;
-  /** Same facts, different register. A wrapper falls back to `bio` for anything missing. */
-  bioVariants?: Partial<Record<BioStyle, string>>;
 }
 
 export interface Project {

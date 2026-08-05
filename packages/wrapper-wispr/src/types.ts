@@ -7,7 +7,7 @@ export type FlowState =
   | 'answering' // response streaming into the panel
   | 'open'; // panel holds a settled answer
 
-/** Wispr's writing-style pill. Steers both the hero copy and the model's register. */
+/** Wispr's writing-style pill. Steers the model's register. */
 export const WRITING_STYLES = [
   'Default',
   'Casual',
@@ -17,21 +17,6 @@ export const WRITING_STYLES = [
 ] as const;
 
 export type WritingStyle = (typeof WRITING_STYLES)[number];
-
-/**
- * Maps the pill's label onto the key the hero copy is stored under. 'Default' has no
- * variant — it is `hero.bio` itself.
- */
-export const BIO_STYLE_KEY: Record<
-  WritingStyle,
-  'casual' | 'formal' | 'veryCasual' | 'excited' | null
-> = {
-  Default: null,
-  Casual: 'casual',
-  Formal: 'formal',
-  'Very casual': 'veryCasual',
-  Excited: 'excited',
-};
 
 /**
  * One turn in the transcript, flattened to the only thing the notch renders. Answers are
