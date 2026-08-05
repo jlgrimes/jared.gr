@@ -7,7 +7,7 @@ import { FlowBar } from './FlowBar';
 import { CardView, PanelProvider } from './panels';
 import { useDictation } from './useDictation';
 import { useFlow } from './useFlow';
-import type { WritingStyle } from './types';
+import { BIO_STYLE_KEY, type WritingStyle } from './types';
 import { cream, ink, inkHairline, inkMuted, radius } from './tokens';
 
 export type { FlowState, WritingStyle, Card, Dictation } from './types';
@@ -19,6 +19,13 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
   const [style, setStyle] = React.useState<WritingStyle>('Default');
   const dictation = useDictation();
   const flow = useFlow(style);
+
+  // Pre-authored, so switching voice is instant and costs nothing — and the words stay
+  // Jared's rather than the model's. The same style also steers the answers.
+  const bio = React.useMemo(() => {
+    const key = BIO_STYLE_KEY[style];
+    return (key && info.hero.bioVariants?.[key]) || info.hero.bio;
+  }, [info.hero, style]);
 
   const suggestions = React.useMemo(() => {
     const newest = info.projects[0]?.title;
@@ -74,7 +81,7 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
         className='relative h-screen w-screen overflow-hidden'
         style={{ background: cream, color: ink }}
       >
-        <Canvas info={info} bio={info.hero.bio} />
+        <Canvas info={info} bio={bio} />
 
         {/* Before the first question the suggestions double as the site map. */}
         {!flow.hasPanel && (

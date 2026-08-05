@@ -19,6 +19,21 @@ export const WRITING_STYLES = [
 export type WritingStyle = (typeof WRITING_STYLES)[number];
 
 /**
+ * Maps the pill's label onto the key the hero copy is stored under. 'Default' has no
+ * variant — it is `hero.bio` itself.
+ */
+export const BIO_STYLE_KEY: Record<
+  WritingStyle,
+  'casual' | 'formal' | 'veryCasual' | 'excited' | null
+> = {
+  Default: null,
+  Casual: 'casual',
+  Formal: 'formal',
+  'Very casual': 'veryCasual',
+  Excited: 'excited',
+};
+
+/**
  * Panels the model can mount inside the notch, keyed by the tool that produced them.
  * The tool's *input* is the payload — there is no separate card protocol.
  */

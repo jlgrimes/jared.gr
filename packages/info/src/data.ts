@@ -13,6 +13,17 @@ export const info: Info = {
   hero: {
     greeting: "Hi, I'm Jared",
     bio: "I'm a front-end engineer at Microsoft. I work on UI/UX for Copilot Actions, focusing on creating thoughtful, intuitive experiences for the new AI scape. Collaborating closely with design, I aim to optimize the delivery of high-performance applications that don't sacrifice user experience.",
+    // Same facts, different voice. Edit freely — this is the one place the site speaks as me.
+    bioVariants: {
+      casual:
+        "I'm a front-end engineer at Microsoft, working on UI/UX for Copilot Actions. I like building AI interfaces that feel considered rather than bolted on — quick, but never at the expense of how they feel to use.",
+      formal:
+        'Front-end engineer at Microsoft, working on UI/UX for Copilot Actions. My focus is the design and delivery of high-performance AI interfaces, developed in close collaboration with design and without compromising the user experience.',
+      veryCasual:
+        'front-end engineer at microsoft. i work on copilot actions — mostly making AI interfaces feel good to use instead of bolted together. fast, and still nice to look at.',
+      excited:
+        "I'm a front-end engineer at Microsoft building Copilot Actions — I get to shape what AI interfaces actually feel like, and I care a LOT about making them fast without making them feel cheap.",
+    },
   },
 
   socials: [
