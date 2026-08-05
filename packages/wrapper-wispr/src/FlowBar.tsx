@@ -212,11 +212,11 @@ export const FlowBar = ({
         ref={containerRef}
         layout
         transition={notchSpring}
-        animate={{ borderRadius: radius.panel }}
-        className='pointer-events-auto w-full max-w-2xl overflow-hidden'
+        className='pointer-events-auto w-full max-w-2xl overflow-hidden rounded-[28px]'
         style={{
           background: cream,
           border: `2px solid ${ink}`,
+          borderRadius: 28,
           boxShadow: lift,
         }}
       >
