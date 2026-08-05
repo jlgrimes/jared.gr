@@ -25,6 +25,9 @@ export interface FlowBarProps {
   onSubmit: (text: string) => void;
   /** Collapse the panel back to a bare pill. */
   onDismiss: () => void;
+  onCollapse?: () => void;
+  onExpand?: () => void;
+  hasMessages?: boolean;
   dictation: Dictation;
   /** The transcript, once there is one. Absent collapses the notch back to a bare pill. */
   panel?: React.ReactNode;
@@ -44,6 +47,9 @@ export const FlowBar = ({
   onStyleChange,
   onSubmit,
   onDismiss,
+  onCollapse,
+  onExpand,
+  hasMessages = false,
   dictation,
   panel,
   suggestions = [],
@@ -51,12 +57,32 @@ export const FlowBar = ({
   const [text, setText] = React.useState('');
   const [placeholderIndex, setPlaceholderIndex] = React.useState(0);
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   // Whether the mic is open is the dictation hook's truth, not the conversation's — the
   // chat only knows about idle/processing/answering/open.
   const listening = dictation.listening;
   const busy = state === 'processing' || state === 'answering';
   const panelOpen = Boolean(panel);
+
+  // Collapse when clicking outside the FlowBar component
+  React.useEffect(() => {
+    if (!panelOpen || !onCollapse) return;
+
+    const handlePointerDown = (e: PointerEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      if (containerRef.current?.contains(target)) return;
+      if (target.closest('[role="listbox"]')) return;
+
+      onCollapse();
+    };
+
+    window.addEventListener('pointerdown', handlePointerDown);
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown);
+    };
+  }, [panelOpen, onCollapse]);
 
   // Cycle the placeholder only while idle and empty — movement anywhere else is noise.
   React.useEffect(() => {
@@ -99,7 +125,7 @@ export const FlowBar = ({
       }
       if (e.key === 'Escape') {
         if (dictation.listening) dictation.cancel();
-        else if (panelOpen) onDismiss();
+        else if (panelOpen) (onCollapse ?? onDismiss)();
         inputRef.current?.blur();
         return;
       }
@@ -130,11 +156,12 @@ export const FlowBar = ({
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
     };
-  }, [dictation, finishDictation, onDismiss, panelOpen, startDictation]);
+  }, [dictation, finishDictation, onCollapse, onDismiss, panelOpen, startDictation]);
 
   return (
     <div className='pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-6 sm:pb-8'>
       <motion.div
+        ref={containerRef}
         layout
         transition={notchSpring}
         animate={{ borderRadius: panelOpen ? radius.panel : radius.pill }}
@@ -225,6 +252,12 @@ export const FlowBar = ({
                   ref={inputRef}
                   value={text}
                   onChange={e => setText(e.target.value)}
+                  onFocus={() => {
+                    if (hasMessages && !panelOpen) onExpand?.();
+                  }}
+                  onClick={() => {
+                    if (hasMessages && !panelOpen) onExpand?.();
+                  }}
                   disabled={busy}
                   maxLength={400}
                   aria-label='Ask about Jared'
@@ -242,16 +275,52 @@ export const FlowBar = ({
                 <Shimmer />
               ) : (
                 <>
-                  {panelOpen && (
-                    <button
-                      type='button'
-                      onClick={onDismiss}
-                      aria-label='Close panel'
-                      className='shrink-0 cursor-pointer px-2 text-[13px]'
-                      style={{ fontFamily: 'var(--font-figtree)', color: inkMuted }}
-                    >
-                      Esc
-                    </button>
+                  {hasMessages && (
+                    panelOpen ? (
+                      <button
+                        type='button'
+                        onClick={onCollapse ?? onDismiss}
+                        aria-label='Collapse panel'
+                        className='flex shrink-0 cursor-pointer items-center gap-1 px-2.5 py-1.5 text-[13px] transition-colors hover:opacity-80'
+                        style={{ fontFamily: 'var(--font-figtree)', color: inkMuted }}
+                      >
+                        <span>Collapse</span>
+                        <svg width='9' height='6' viewBox='0 0 9 6' fill='none' aria-hidden='true'>
+                          <path
+                            d='M1 1.5 4.5 5 8 1.5'
+                            stroke={inkMuted}
+                            strokeWidth='1.5'
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                          />
+                        </svg>
+                      </button>
+                    ) : (
+                      <button
+                        type='button'
+                        onClick={onExpand}
+                        aria-label='Expand panel'
+                        className='flex shrink-0 cursor-pointer items-center gap-1.5 px-3 py-1.5 text-[13px] transition-colors'
+                        style={{
+                          fontFamily: 'var(--font-figtree)',
+                          color: ink,
+                          background: lavender,
+                          border: `1.5px solid ${ink}`,
+                          borderRadius: radius.pill,
+                        }}
+                      >
+                        <span>Expand chat</span>
+                        <svg width='9' height='6' viewBox='0 0 9 6' fill='none' aria-hidden='true'>
+                          <path
+                            d='M1 4.5 4.5 1 8 4.5'
+                            stroke={ink}
+                            strokeWidth='1.5'
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                          />
+                        </svg>
+                      </button>
+                    )
                   )}
                   <StylePill value={style} onChange={onStyleChange} />
                 </>

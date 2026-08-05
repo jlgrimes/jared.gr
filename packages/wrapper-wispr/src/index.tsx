@@ -45,7 +45,7 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
       <Canvas info={info} />
 
       {/* Before the first question the suggestions double as the site map. */}
-      {!flow.hasPanel && (
+      {!flow.hasMessages && (
         <div className='pointer-events-none fixed inset-x-0 bottom-24 z-40 flex justify-center px-4'>
           <div className='pointer-events-auto flex max-w-2xl flex-wrap justify-center gap-2'>
             {suggestions.map(s => (
@@ -74,14 +74,18 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
         onStyleChange={setStyle}
         onSubmit={flow.ask}
         onDismiss={flow.reset}
+        onCollapse={flow.collapse}
+        onExpand={flow.expand}
+        hasMessages={flow.hasMessages}
         dictation={dictation}
         panel={
-          flow.hasPanel ? (
+          flow.isPanelOpen ? (
             <Conversation
               messages={flow.transcript}
               pending={flow.pending}
               error={flow.error}
               info={info}
+              onClear={flow.reset}
             />
           ) : null
         }

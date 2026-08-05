@@ -16,9 +16,20 @@ export const useFlow = (style: WritingStyle) => {
   const { messages, sendMessage, status, setMessages, error, stop } = useChat({
     transport: new DefaultChatTransport({ api: '/api/flow' }),
   });
+  const [isExpanded, setIsExpanded] = React.useState(true);
+
+  // Automatically expand when a new message is submitted or being answered
+  const prevCount = React.useRef(messages.length);
+  React.useEffect(() => {
+    if (messages.length > prevCount.current || status === 'submitted' || status === 'streaming') {
+      setIsExpanded(true);
+    }
+    prevCount.current = messages.length;
+  }, [messages.length, status]);
 
   const ask = React.useCallback(
     (question: string) => {
+      setIsExpanded(true);
       // Style rides along per-message rather than being baked into the transport, so
       // switching styles mid-conversation takes effect on the very next question.
       void sendMessage({ text: question }, { body: { style } });
@@ -26,9 +37,14 @@ export const useFlow = (style: WritingStyle) => {
     [sendMessage, style]
   );
 
+  const expand = React.useCallback(() => setIsExpanded(true), []);
+  const collapse = React.useCallback(() => setIsExpanded(false), []);
+  const toggleExpand = React.useCallback(() => setIsExpanded(prev => !prev), []);
+
   const reset = React.useCallback(() => {
     stop();
     setMessages([]);
+    setIsExpanded(true);
   }, [setMessages, stop]);
 
   const transcript = React.useMemo<ChatMessage[]>(
@@ -57,16 +73,26 @@ export const useFlow = (style: WritingStyle) => {
           ? 'open'
           : 'idle';
 
+  const hasMessages = messages.length > 0;
+  const isPanelOpen = hasMessages && isExpanded;
+
   return {
     state,
     transcript,
     /** Request is in flight and the answer hasn't started arriving — show the indicator. */
     pending:
       (status === 'submitted' || status === 'streaming') && last?.role !== 'assistant',
-    /** True once the notch has a conversation worth expanding for. */
-    hasPanel: messages.length > 0,
+    /** True once the notch has messages to display. */
+    hasMessages,
+    /** Whether the panel is currently open/expanded. */
+    isExpanded,
+    isPanelOpen,
+    hasPanel: isPanelOpen,
     error,
     ask,
+    expand,
+    collapse,
+    toggleExpand,
     reset,
   };
 };
