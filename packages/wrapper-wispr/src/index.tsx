@@ -37,7 +37,7 @@ export const WisprWrapper = ({ info }: { info: Info }) => {
 
   return (
     <div
-      className='fixed inset-0 h-dvh w-dvh overflow-hidden'
+      className='fixed inset-0 w-full h-full overflow-hidden'
       style={{ background: cream, color: ink }}
     >
       <Canvas info={info} />

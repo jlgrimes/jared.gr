@@ -14,7 +14,7 @@ export const Desktop = () => {
   const [selectedIconId, setSelectedIconId] = useState<string | null>(null);
 
   return (
-    <div className='fixed inset-0 w-dvh h-dvh overflow-hidden bg-cover bg-center select-none'
+    <div className='fixed inset-0 w-full h-full overflow-hidden bg-cover bg-center select-none'
       style={{
         // A generic Windows 11 style blue bloom gradient
         backgroundImage: 'linear-gradient(to bottom right, #f8f9fa, #e6f2ff)',

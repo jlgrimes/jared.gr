@@ -54,14 +54,14 @@ export const Canvas = ({ info }: { info: Info }) => (
       </h1>
 
       <p
-        className='mt-7 max-w-xl text-[17px] leading-relaxed'
+        className='mt-7 max-w-xl max-w-full text-[17px] leading-relaxed break-words'
         style={{ fontFamily: 'var(--font-figtree)', color: inkMuted }}
       >
         {info.hero.bio}
       </p>
 
       {/* Contact Chips */}
-      <div className='mt-8 flex flex-wrap items-center gap-2.5'>
+      <div className='mt-8 flex flex-wrap items-center gap-2.5 max-w-full'>
         {info.profile.email && (
           <a
             href={`mailto:${info.profile.email}`}

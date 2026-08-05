@@ -82,7 +82,7 @@ export const SiteShell = ({ info }: { info: Info }) => {
   const size = tearing ? tornPx : hovered ? HOVER : REST;
 
   return (
-    <div className='fixed inset-0 h-dvh w-dvh overflow-hidden'>
+    <div className='fixed inset-0 w-full h-full overflow-hidden'>
       {/* The other mode's signature surface, always present so the lifted corner shows
           something underneath rather than the bare page. Costs one div and one image. */}
       <div
