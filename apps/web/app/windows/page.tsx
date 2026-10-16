@@ -1,10 +1,8 @@
-import { info } from '@jared/info';
-import { WindowsWrapper } from '@wrapper/windows';
+import { redirect } from 'next/navigation';
 
-// Direct route to the Windows desktop. A static segment outranks app/[...slug], so this
-// survives the catch-all redirect to /links.
-//
-// Stopgap until the corner peel ships (Phase 3) — without it Windows mode is unreachable.
+// The desktop used to live here while Flow held the home page. It's the home page now, so
+// keep old links working. A static segment outranks app/[...slug], which would send this
+// to /links instead.
 export default function WindowsPage() {
-  return <WindowsWrapper info={info} />;
+  redirect('/');
 }

@@ -289,6 +289,9 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose }) => {
                         <p className='text-xs text-gray-500 dark:text-gray-400'>
                           {profile.title}
                         </p>
+                        <p className='text-xs text-gray-500 dark:text-gray-400'>
+                          {profile.location}
+                        </p>
                       </div>
                     </div>
                     <p className='text-xs text-gray-600 dark:text-gray-300 leading-relaxed'>

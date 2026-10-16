@@ -5,7 +5,7 @@ Personal site, structured as a monorepo that separates **what the site says** fr
 ```
 apps/
   web/                    Next.js shell — routing, styles entry, public assets, deploy target
-                          SiteShell picks a wrapper; the corner peel switches between them.
+                          page.tsx renders the Windows wrapper.
                           api/flow            answers questions (AI Gateway)
                           api/transcribe-token mints a short-lived speech-to-text token
 packages/
@@ -20,15 +20,13 @@ packages/
 
 ## The two faces
 
-The site opens as **Flow** — a cream canvas and a floating bar you talk or type to. Ask it
-something and the bar grows into a panel holding the answer plus a card (projects,
-a project, testimonials, skills, contact).
+The site opens as the **Windows** desktop.
 
-The **Windows** desktop is still there. Peel the top-right corner and the whole page tears
-away to reveal it; peel again to come back. The choice persists.
+**Flow** (`@wrapper/wispr`) — a cream canvas and a floating bar you talk or type to — is
+still in the repo but isn't mounted on any route. To bring it back, render
+`<WisprWrapper info={info} />` from a page.
 
-Both are pure functions of the same `Info`. Neither knows the other exists — `SiteShell`
-owns the switch.
+Both are pure functions of the same `Info`. Neither knows the other exists.
 
 ## The wrapper contract
 

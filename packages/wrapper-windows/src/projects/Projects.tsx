@@ -19,6 +19,7 @@ const folderCompanies: Record<string, string> = {
   'Microsoft Office AI': 'Microsoft',
   'Microsoft Office Media Group': 'Microsoft',
   Amazon: 'Amazon',
+  'Wispr Flow': 'Wispr',
 };
 
 // Companies whose projects are loose (no folder)
@@ -28,7 +29,7 @@ const looseCompanies = new Set([
 ]);
 
 // Folders where the latest date should show as "Present" (still active)
-const folderPresent = new Set(['Microsoft']);
+const folderPresent = new Set<string>();
 
 function buildTree(projects: ProjectType[]) {
   const folders: Record<string, ProjectType[]> = {};

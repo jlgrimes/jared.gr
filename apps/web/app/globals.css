@@ -160,14 +160,14 @@ body::-webkit-scrollbar {
     overflow: hidden !important;
     overscroll-behavior: none !important;
     touch-action: manipulation !important;
-    background-color: #ffffeb !important;
+    background-color: #97bbd5 !important;
     -webkit-text-size-adjust: 100%;
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
 
   body {
-    background-color: #ffffeb !important;
+    background-color: #97bbd5 !important;
     color: #1a1a1a;
   }
 }

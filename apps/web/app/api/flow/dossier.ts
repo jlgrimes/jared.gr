@@ -36,6 +36,7 @@ const buildDossier = () => {
     `Name: ${profile.name}`,
     `Title: ${profile.title}`,
     `Email: ${profile.email}`,
+    `Location: ${profile.location}`,
     '',
     '## Bio',
     hero.bio,

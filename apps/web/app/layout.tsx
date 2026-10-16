@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#ffffeb',
+  themeColor: '#97bbd5',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -21,12 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' style={{ backgroundColor: '#ffffeb' }}>
+    <html lang='en' style={{ backgroundColor: '#97bbd5' }}>
       <head>
-        <meta name='theme-color' content='#ffffeb' />
+        <meta name='theme-color' content='#97bbd5' />
         <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover' />
       </head>
-      <body className='font-sans antialiased overflow-hidden' style={{ backgroundColor: '#ffffeb' }}>
+      <body className='font-sans antialiased overflow-hidden' style={{ backgroundColor: '#97bbd5' }}>
         {children}
       </body>
     </html>

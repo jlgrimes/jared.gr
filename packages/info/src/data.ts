@@ -7,12 +7,13 @@ export const info: Info = {
     name: 'Jared Grimes',
     title: 'Technical Staff',
     email: 'hi@jared.gr',
+    location: 'San Francisco, CA',
     avatar: '/assets/propic.jpg',
   },
 
   hero: {
     greeting: "Hi, I'm Jared",
-    bio: 'Interfaces are my thing. Currently building the future of human-AI interaction at Wispr. Been in the industry for 6 years, bringing Figmas to life across Amazon and Microsoft.',
+    bio: "I'm a design engineer who builds polished, user-first products across web and iOS. Over 6 years at Amazon and Microsoft, I've shipped frontend for enterprise customers worldwide, including Copilot features in Microsoft 365 and the transcript experience across SharePoint, OneDrive, and Stream.",
   },
 
   socials: [
@@ -39,6 +40,18 @@ export const info: Info = {
   ],
 
   projects: [
+    {
+      title: 'Wispr Flow for iOS',
+      company: 'Wispr Flow',
+      year: 2026,
+      stack: 'iOS',
+      team: '',
+      content:
+        "Led iOS development for Wispr Flow's mobile app as a Product Engineer. Built the notetaker feature end to end and redesigned the full app for iOS 27 design standards, optimized for Apple's iPhone Duo. Ran 20+ rounds of internal beta testing before shipping to 700+ external beta users.",
+      image: '',
+      url: '',
+      infoUrl: '',
+    },
     {
       title: 'Conch',
       company: 'Freelance',
