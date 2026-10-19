@@ -53,6 +53,18 @@ export const info: Info = {
       infoUrl: '',
     },
     {
+      title: 'qrtz ai',
+      company: 'Freelance',
+      year: 2026,
+      stack: 'macOS, On-device AI',
+      team: '',
+      content:
+        'Building qrtz, a suite of offline power tools for Mac. One app where you install only the tools you need, each running fully on-device: echo for fast dictation in the apps you already use, nano for meeting transcription with summaries and follow-ups, snap for keyboard-driven window management, and ctrl for handing tasks to your computer by voice, with on-device models working out intent. Currently in waitlist.',
+      image: '',
+      url: 'qrtz.ai',
+      infoUrl: '',
+    },
+    {
       title: 'Conch',
       company: 'Freelance',
       year: 2026,
@@ -77,15 +89,15 @@ export const info: Info = {
       infoUrl: 'https://docs.gen.band',
     },
     {
-      title: 'qrtz ai',
+      title: 'Neuron',
       company: 'Freelance',
       year: 2025,
       stack: 'TypeScript, Node.js',
       team: '',
       content:
-        'Created qrtz, a new semantic back-end language for LLMs to communicate intent through tool calls. Enables cleaner, more structured AI-to-system interactions.',
+        'Created Neuron, a new semantic back-end language for LLMs to communicate intent through tool calls. Enables cleaner, more structured AI-to-system interactions.',
       image: 'qrtz.png',
-      url: 'neuron.qrtz.ai',
+      url: '',
       infoUrl: '',
     },
     {
