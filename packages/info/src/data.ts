@@ -60,7 +60,7 @@ export const info: Info = {
       team: '',
       content:
         'Building qrtz, a suite of offline power tools for Mac. One app where you install only the tools you need, each running fully on-device: echo for fast dictation in the apps you already use, nano for meeting transcription with summaries and follow-ups, snap for keyboard-driven window management, and ctrl for handing tasks to your computer by voice, with on-device models working out intent. Currently in waitlist.',
-      image: '',
+      image: 'qrtz-suite.webp',
       url: 'qrtz.ai',
       infoUrl: '',
     },
